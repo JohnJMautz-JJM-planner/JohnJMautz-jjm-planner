@@ -1,0 +1,1195 @@
+<title>The Vault</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: a phone-first game shell. Fixed animated world canvas behind, one scrolling screen at a time, bottom tab bar. Each world is a committed single look, so worlds set every token explicitly. */
+:root{
+  color-scheme:dark;
+  --bg:#0a0614; --sky1:#0a0614; --sky2:#2a0b3d;
+  --surface:rgba(22,12,42,.78); --surface2:rgba(40,22,70,.72); --line:rgba(255,120,200,.22);
+  --ink:#f6efff; --muted:#b5a6d6; --accent:#ff3d9a; --accent2:#2ef2ff; --gold:#ffd166; --onaccent:#1a0010;
+  --display:"Chakra Petch","Avenir Next Condensed","Arial Narrow",sans-serif;
+  --body:"DM Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --puzzle:"DM Sans",ui-sans-serif,system-ui,-apple-system,sans-serif; /* identical in every world: readability parity (L10) */
+  --r:16px;
+}
+body[data-world="archive"]{
+  --bg:#160e08; --sky1:#120a05; --sky2:#3a2412;
+  --surface:rgba(38,24,13,.82); --surface2:rgba(62,40,22,.75); --line:rgba(224,168,79,.25);
+  --ink:#f6e8cf; --muted:#c9ad88; --accent:#e9ad52; --accent2:#d4663f; --gold:#ffd88a; --onaccent:#241404;
+  --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+}
+body[data-world="wildwood"]{
+  color-scheme:light;
+  --bg:#dce8cf; --sky1:#eef4e2; --sky2:#b9d3a6;
+  --surface:rgba(250,252,244,.86); --surface2:rgba(226,238,212,.9); --line:rgba(40,90,50,.2);
+  --ink:#16261a; --muted:#4c6450; --accent:#2b7a46; --accent2:#c8661f; --gold:#a8730f; --onaccent:#f4fbef;
+  --display:"Fraunces",Georgia,serif;
+}
+body[data-world="deep"]{
+  --bg:#021619; --sky1:#021216; --sky2:#06414a;
+  --surface:rgba(4,34,40,.8); --surface2:rgba(8,58,66,.75); --line:rgba(62,230,193,.24);
+  --ink:#e8fffa; --muted:#93c9c0; --accent:#3ee6c1; --accent2:#ffb36b; --gold:#ffd27a; --onaccent:#01231d;
+  --display:"Fraunces",Georgia,serif;
+}
+body[data-world="orbit"]{
+  --bg:#040714; --sky1:#030512; --sky2:#141c4a;
+  --surface:rgba(12,18,44,.8); --surface2:rgba(24,34,80,.72); --line:rgba(142,162,255,.24);
+  --ink:#eef1ff; --muted:#a3aedb; --accent:#8ea2ff; --accent2:#ff9ad5; --gold:#ffe08a; --onaccent:#070b26;
+  --display:"Space Grotesk","Avenir Next",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent;overflow-x:hidden;transition:background .6s}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation}
+:focus-visible{outline:2px solid var(--accent2);outline-offset:3px;border-radius:6px}
+.app{position:relative;z-index:1;max-width:560px;margin:0 auto;min-height:100%;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 110px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:8px;padding:12px 4px;margin-inline:-4px;background:linear-gradient(var(--bg) 55%,color-mix(in srgb,var(--bg) 0%,transparent))}
+.logo{white-space:nowrap;font-family:var(--display);font-weight:700;font-size:clamp(17px,5.2vw,21px);letter-spacing:.14em;text-transform:uppercase;margin-right:auto;text-shadow:0 0 18px color-mix(in srgb,var(--accent) 60%,transparent)}
+.logo b{color:var(--accent)}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:7px 11px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+.iconbtn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.iconbtn svg{width:18px;height:18px}
+.me{width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);background:var(--surface2)}
+.ribbon{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center;margin:-4px 0 10px}
+.ribbon b{color:var(--gold)}
+
+/* generic */
+.screen{display:none;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.screen.on{display:block}
+@keyframes rise{from{opacity:.0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.stack{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.stack>*{min-width:0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2)}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.08;text-wrap:balance}
+h1{font-size:clamp(34px,10vw,48px);font-weight:700}
+h2{font-size:26px;font-weight:700}
+h3{font-size:19px;font-weight:700}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;font-weight:700;background:var(--surface2);border:1px solid var(--line);transition:transform .12s,box-shadow .2s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);color:var(--onaccent);border-color:transparent;box-shadow:0 8px 28px color-mix(in srgb,var(--accent) 45%,transparent)}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:4px 9px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.free{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
+.pill.gold{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 50%,transparent)}
+input[type=text],textarea{width:100%;background:color-mix(in srgb,var(--bg) 55%,transparent);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;outline:none}
+input[type=text]:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:84px;resize:vertical}
+
+/* splash */
+.splash{min-height:calc(100vh - 140px);display:flex;flex-direction:column;justify-content:center;gap:22px;padding-block:20px}
+.door{width:min(62vw,250px);aspect-ratio:1;margin:0 auto;position:relative;max-width:100%}
+.door svg{width:100%;height:100%;overflow:visible}
+.spin{transform-origin:100px 100px;animation:spin 26s linear infinite}
+.spin.rev{animation-duration:40s;animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.promise{display:grid;gap:8px}
+.promise div{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.promise svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--accent)}
+
+/* persona builder */
+.avatarStage{display:grid;place-items:center;padding:6px 0 2px}
+.avatarStage .av{width:170px;height:170px;animation:bob 4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.opts{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+.opts::-webkit-scrollbar{display:none}
+.opt{flex:none;min-width:48px;height:48px;border-radius:13px;border:2px solid var(--line);background:var(--surface2);display:grid;place-items:center;font-size:12px;font-weight:700;padding:0 10px;position:relative}
+.opt.sel{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.opt.sw{width:48px;padding:0}
+.opt .tag{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);font-size:8.5px;letter-spacing:.06em;padding:1px 5px;border-radius:6px;background:var(--gold);color:#1b1200;white-space:nowrap}
+.optlabel{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+
+/* world picker */
+.worlds{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.world{border-radius:16px;overflow:hidden;border:2px solid var(--line);text-align:left;background:var(--surface);position:relative}
+.world.sel{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.world canvas{display:block;width:100%;height:96px}
+.world .wn{padding:9px 11px 11px}
+.world .wn b{display:block;font-size:15px}
+.world .wn span{font-size:11.5px;color:var(--muted)}
+
+/* hub */
+.season{position:relative;overflow:hidden}
+.season h2{font-size:30px}
+.count{display:flex;gap:8px;margin-top:12px}
+.count div{flex:1;text-align:center;background:color-mix(in srgb,var(--bg) 50%,transparent);border:1px solid var(--line);border-radius:12px;padding:8px 2px}
+.count b{display:block;font-family:var(--mono);font-size:20px;font-variant-numeric:tabular-nums}
+.count span{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.map{position:relative}
+.map svg{width:100%;height:auto;display:block}
+.node{cursor:pointer}
+.node .halo{animation:pulse 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{50%{opacity:.25;transform:scale(1.25)}}
+.node:focus-visible{outline:none}
+.node:focus-visible .ring{stroke:var(--accent2);stroke-width:4}
+.ep-list{display:grid;gap:10px}
+.ep{display:flex;gap:12px;align-items:center;text-align:left;width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--surface)}
+.ep .n{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;font-family:var(--mono);font-weight:500;background:var(--surface2);color:var(--accent)}
+.ep .t{flex:1;min-width:0}
+.ep .t b{display:block}
+.ep .t span{font-size:12.5px;color:var(--muted)}
+.ep.locked{opacity:.55}
+
+/* episode */
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--muted);min-height:40px}
+.journal{font-family:var(--display);font-size:19px;line-height:1.4;font-style:italic}
+body[data-world="neon"] .journal,body[data-world="orbit"] .journal{font-style:normal}
+.canon{border:1px dashed color-mix(in srgb,var(--accent2) 55%,transparent);border-radius:14px;padding:16px;background:color-mix(in srgb,var(--bg) 40%,transparent);font-family:var(--puzzle)}
+.canon .ct{font-size:16px;line-height:1.55}
+.fp{display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.fp svg{width:13px;height:13px;color:var(--accent2)}
+.ledgerbox label{font-weight:700;font-size:14px;display:block;margin-bottom:6px}
+.saved{font-size:12.5px;color:var(--muted);min-height:18px}
+
+/* cipher wheel */
+.wheel{width:min(100%,320px);margin:0 auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.wheel text{font-family:var(--mono);font-size:11px;font-weight:500}
+.decode{font-family:var(--mono);font-size:14.5px;line-height:1.7;letter-spacing:.06em;word-break:break-word;background:color-mix(in srgb,var(--bg) 55%,transparent);border-radius:12px;padding:12px 14px;border:1px solid var(--line)}
+.enc{color:var(--muted);font-size:12.5px}
+.wctl{display:flex;justify-content:center;gap:10px;align-items:center}
+.wctl .iconbtn{width:46px;height:46px}
+.shiftv{font-family:var(--mono);min-width:96px;text-align:center;font-size:13px}
+
+/* supper table */
+.room{width:100%;max-width:340px;display:block;margin:0 auto}
+.room text{font-family:var(--body)}
+.seat{cursor:pointer}
+.tray{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.guest{display:flex;align-items:center;gap:7px;padding:6px 12px 6px 6px;border-radius:99px;border:2px solid var(--line);background:var(--surface2);font-weight:700;font-size:14px}
+.guest i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal;color:#fff;font-size:13px}
+.guest.sel{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.guest.placed{opacity:.5}
+.clues{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.clues li button{display:flex;gap:10px;text-align:left;width:100%;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--bg) 45%,transparent);border:1px solid var(--line);font-family:var(--puzzle);font-size:15px;line-height:1.45}
+.clues li button span.k{font-family:var(--mono);color:var(--accent2);font-size:12px;margin-top:2px}
+.clues li button.struck{opacity:.5;text-decoration:line-through}
+
+/* floor grid */
+.floor{position:relative;width:min(100%,330px);margin:0 auto;aspect-ratio:1;max-width:100%}
+.floor .grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.tile{display:grid;place-items:center;font-family:var(--mono);font-size:22px;font-weight:500;position:relative;transition:background .2s,transform .15s}
+.tile.d{background:color-mix(in srgb,var(--ink) 9%,transparent)}
+.tile.l{background:color-mix(in srgb,var(--ink) 3%,transparent)}
+.tile.start::after{content:"★";position:absolute;top:3px;right:6px;font-size:12px;color:var(--gold)}
+.tile.can{background:color-mix(in srgb,var(--accent2) 26%,transparent);animation:glow 1.4s ease-in-out infinite}
+@keyframes glow{50%{background:color-mix(in srgb,var(--accent2) 12%,transparent)}}
+.tile.on{background:var(--accent);color:var(--onaccent)}
+.tile.cur{transform:scale(.92);border-radius:10px}
+.floor svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.trail{display:flex;gap:6px;justify-content:center;min-height:44px;flex-wrap:wrap}
+.trail span{width:38px;height:44px;border-radius:10px;display:grid;place-items:center;font-family:var(--mono);font-size:20px;background:var(--surface2);border:1px solid var(--line)}
+
+/* vault */
+.vaultwrap{perspective:900px;display:grid;place-items:center;padding:8px 0}
+.vdoor{width:min(78vw,280px);aspect-ratio:1;position:relative;transform-origin:left center;transition:transform 1.6s cubic-bezier(.6,0,.2,1);max-width:100%}
+.vdoor svg{width:100%;height:100%;overflow:visible}
+.vdoor.open{transform:rotateY(-68deg)}
+.vdoor.shake{animation:shake .5s}
+@keyframes shake{20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+.dialg{transform-origin:100px 100px;transition:transform 1.2s cubic-bezier(.3,1.4,.4,1)}
+.beam{position:absolute;inset:8% 8%;border-radius:50%;background:radial-gradient(circle,var(--gold),transparent 65%);opacity:0;transition:opacity 1.2s .6s;pointer-events:none}
+.vaultwrap.opened .beam{opacity:.9}
+.inscription{font-family:var(--puzzle);font-size:15.5px;line-height:1.6;text-align:center}
+.inscription b{font-family:var(--mono);letter-spacing:.16em;font-size:13px;color:var(--gold);display:block;margin-bottom:8px}
+.mine{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mine div{background:color-mix(in srgb,var(--bg) 50%,transparent);border:1px solid var(--line);border-radius:12px;padding:9px;min-width:0}
+.mine span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:block}
+.mine b{font-family:var(--mono);font-size:13px;word-break:break-word}
+.result{text-align:center;font-weight:700;min-height:24px}
+.attempts{font-family:var(--mono);font-size:12px;display:grid;gap:4px;max-height:160px;overflow:auto}
+.attempts div{display:flex;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:8px;background:color-mix(in srgb,var(--bg) 45%,transparent)}
+.reward{text-align:center}
+.reward .badge{width:96px;height:96px;margin:0 auto 10px;display:block}
+
+/* commons */
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:8px 13px;border-radius:99px;font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.tab.on{background:var(--accent);color:var(--onaccent);border-color:transparent}
+.feed{display:grid;gap:10px}
+.msg{display:flex;gap:10px;align-items:flex-start;animation:rise .4s}
+.msg .pic{width:38px;height:38px;flex:none;border-radius:50%;overflow:hidden;background:var(--surface2);border:1px solid var(--line)}
+.msg .bub{flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:9px 12px}
+.msg .who{font-size:12.5px;font-weight:700;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.msg .who .team{font-size:10px;padding:1px 6px;border-radius:6px;background:var(--surface2);color:var(--accent2)}
+.msg .who time{font-weight:400;color:var(--muted);font-size:11px}
+.msg .tx{font-size:14px;margin-top:2px;word-wrap:break-word}
+.msg.mine .bub{border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
+.spoiler{filter:blur(6px);cursor:pointer;transition:filter .3s}
+.spoiler.shown{filter:none}
+.reacts{display:flex;gap:6px;margin-top:6px}
+.reacts button{font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);background:color-mix(in srgb,var(--bg) 40%,transparent)}
+.reacts button.on{border-color:var(--accent);color:var(--accent)}
+.compose{display:flex;gap:8px}
+.compose input{flex:1;min-width:0}
+.teams{display:grid;gap:10px}
+.team{display:flex;align-items:center;gap:12px}
+.team .crest{width:44px;height:44px;border-radius:12px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:18px;color:#fff}
+.team .t{flex:1;min-width:0}
+.team .t span{font-size:12px;color:var(--muted)}
+
+/* hall */
+.curtain{position:relative;border-radius:16px;overflow:hidden;min-height:250px;display:grid;place-items:center;text-align:center;padding:20px}
+.curtain .veil{position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--accent) 70%,#000) 0 22px,color-mix(in srgb,var(--accent) 50%,#000) 22px 44px);transition:transform 1.2s cubic-bezier(.7,0,.2,1);z-index:2}
+.curtain.up .veil{transform:translateY(-102%)}
+.timeline{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.timeline li{display:flex;gap:12px;align-items:flex-start;padding-bottom:12px;position:relative}
+.timeline li::before{content:"";position:absolute;left:7px;top:18px;bottom:0;width:2px;background:var(--line)}
+.timeline li:last-child::before{display:none}
+.timeline i{width:16px;height:16px;border-radius:50%;flex:none;border:2px solid var(--line);margin-top:3px;background:var(--bg)}
+.timeline li.now i{background:var(--accent);border-color:var(--accent);box-shadow:0 0 12px var(--accent)}
+
+/* ledger */
+.lg{display:grid;gap:10px}
+.lg .item{display:grid;gap:4px}
+.lg .item b{font-size:13px}
+.lg .item p{font-family:var(--mono);font-size:13px;background:color-mix(in srgb,var(--bg) 50%,transparent);border-radius:10px;padding:9px 11px;border:1px solid var(--line);white-space:pre-wrap;word-break:break-word}
+
+/* explorers */
+.planets{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.planet{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);border:2px solid transparent;transition:transform .2s}
+.planet:active{transform:scale(.92)}
+.planet.done{opacity:.25;pointer-events:none}
+.orbitline{display:flex;gap:4px;align-items:center;overflow-x:auto;padding:8px 2px;min-height:56px}
+.orbitline .sun{width:34px;height:34px;border-radius:50%;flex:none;background:radial-gradient(circle,#fff6b0,#ffb020 60%,#ff7a00);box-shadow:0 0 18px #ffb020}
+.orbitline .p{width:26px;height:26px;border-radius:50%;flex:none;animation:rise .4s}
+.fact{font-size:14px;min-height:42px}
+
+.pulse-ep{display:grid;gap:7px}
+.bar{position:relative;height:34px;border-radius:10px;background:color-mix(in srgb,var(--bg) 55%,transparent);border:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-weight:700;font-size:14px}
+.bar i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 55%,transparent),color-mix(in srgb,var(--accent2) 35%,transparent));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.bar span{position:relative;font-family:var(--mono)}
+.pshield{display:grid;place-items:center;gap:10px;text-align:center;padding:18px;border:1px dashed var(--line);border-radius:14px}
+.teaser{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;background:color-mix(in srgb,var(--accent) 12%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.teaser .n{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;font-family:var(--mono);background:var(--accent);color:var(--onaccent)}
+.potrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--gold) 12%,transparent);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent)}
+.potrow span{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);display:block}
+.potrow b{font-family:var(--mono);font-size:26px;color:var(--gold);font-variant-numeric:tabular-nums;transition:text-shadow .3s}
+.potrow b.bump{text-shadow:0 0 16px var(--gold)}
+.potrow .small{max-width:150px;text-align:right}
+.strip{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:14px}
+.strip div{height:30px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-size:10px;border:1px solid var(--line);color:var(--muted)}
+.strip .out{background:var(--accent);color:var(--onaccent);border-color:transparent;font-weight:700}
+.strip .next{border-color:var(--accent);color:var(--accent);animation:glow2 1.6s ease-in-out infinite}
+@keyframes glow2{50%{box-shadow:0 0 12px color-mix(in srgb,var(--accent) 60%,transparent)}}
+.crew{display:grid;gap:8px}
+.crew .m{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:color-mix(in srgb,var(--bg) 45%,transparent);border:1px solid var(--line)}
+.crew .pic{width:36px;height:36px;border-radius:50%;overflow:hidden;flex:none;background:var(--surface2)}
+.crew .t{flex:1;min-width:0;font-size:13px}
+.crew .t b{display:block;font-size:14px}
+.crew .wd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.garage{display:grid;place-items:center;padding:6px 0}
+.garage svg{width:min(100%,260px);height:auto;max-width:100%}
+.opt .tag.own{background:var(--accent);color:var(--onaccent)}
+.scene svg{width:100%;height:auto;display:block;border-radius:14px}
+.hs{cursor:pointer;outline:none}
+.hs:focus-visible>*:not(.spark){stroke:var(--accent2)}
+.hs .spark{animation:twinkle 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.hs.seen .spark{display:none}
+.hs:active{opacity:.75}
+@keyframes twinkle{50%{opacity:.25;transform:scale(.7)}}
+.found{display:grid;gap:8px}
+.wctl2{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.wctl2>div{display:flex;align-items:center;gap:8px}
+.wctl2 span{font-size:12px;font-weight:700;color:var(--muted)}
+.wctl2 .iconbtn{width:44px;height:44px;font-size:18px}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,.decode,.lg p,.msg .tx{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+.tile,.hs,.seat,.guest,.opt,.planet{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+#floorHelp.nudge{color:var(--accent);animation:nudge .5s}
+@keyframes nudge{30%{transform:translateX(-5px)}60%{transform:translateX(5px)}}
+/* bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:8px max(10px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));background:linear-gradient(transparent,color-mix(in srgb,var(--bg) 92%,transparent) 30%)}
+.nav .in{max-width:540px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:6px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.nav button{display:grid;justify-items:center;gap:2px;padding:6px 0;border-radius:14px;font-size:10.5px;font-weight:700;color:var(--muted)}
+.nav button svg{width:22px;height:22px}
+.nav button.on{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.nav[hidden]{display:none}
+
+/* sheet + toast */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;transform:translateY(105%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s .35s;max-height:88vh;overflow:auto}
+.sheet.on{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.sheet .in{max-width:560px;margin:0 auto;background:var(--bg);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;padding:18px max(18px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))}
+.grab{width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 14px}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;z-index:50;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;transition:all .3s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+#confetti{position:fixed;inset:0;z-index:45;pointer-events:none;width:100%;height:100%}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="app" id="app">
+  <header class="top" id="topbar" hidden>
+    <div class="logo">The <b>Vault</b></div>
+    <button class="chip" id="worldChip" aria-label="Change world"><span class="dot"></span><span id="worldName">Neon City</span></button>
+    <button class="iconbtn" id="soundBtn" aria-label="Sound on or off"></button>
+    <button class="me" id="meBtn" aria-label="Open the studio"></button>
+  </header>
+  <div class="ribbon" id="ribbon" hidden><b>Demo</b> · no real prize · no payments · free for everyone</div>
+
+  <!-- SPLASH -->
+  <section class="screen on" id="s-splash">
+    <div class="splash">
+      <div class="door" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <radialGradient id="dg" cx="50%" cy="45%"><stop offset="0" stop-color="var(--surface2)"/><stop offset="1" stop-color="var(--bg)"/></radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="96" fill="url(#dg)" stroke="var(--accent)" stroke-width="2" opacity=".95"/>
+          <g class="spin"><circle cx="100" cy="100" r="80" fill="none" stroke="var(--accent2)" stroke-width="1.5" stroke-dasharray="3 9"/></g>
+          <g class="spin rev"><circle cx="100" cy="100" r="64" fill="none" stroke="var(--gold)" stroke-width="6" stroke-dasharray="20 14" opacity=".7"/></g>
+          <circle cx="100" cy="100" r="40" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+          <path d="M100 76 L106 94 L124 100 L106 106 L100 124 L94 106 L76 100 L94 94Z" fill="var(--gold)"/>
+        </svg>
+      </div>
+      <div class="stack" style="text-align:center">
+        <div class="eyebrow">Season 1 · The Keeper's Absence</div>
+        <h1>One mystery.<br>Every world.</h1>
+        <p class="muted">The Keeper of the Vault has vanished and left three rooms behind. Everyone gets the same clues. Nobody is told who is right.</p>
+      </div>
+      <div class="card promise">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg><span><b>Free to play, free to win.</b> Every puzzle, every season, the final vault.</span></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg><span><b>No pay-to-win, ever.</b> Style is for expression. It never buys a clue, a second, or a try.</span></div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg><span><b>Your theories stay private.</b> Wrong answers never lock you out.</span></div>
+      </div>
+      <button class="btn primary block" id="beginBtn">Enter the Vault</button>
+      <p class="muted small" style="text-align:center">About 15 minutes. Works best on a phone. Progress is saved on this device only.</p>
+    </div>
+  </section>
+
+  <!-- PERSONA -->
+  <section class="screen" id="s-persona">
+    <div class="stack" style="padding-top:18px">
+      <div><div class="eyebrow">Step 1 of 2</div><h2 style="margin-top:6px">Make your persona</h2><p class="muted small" style="margin-top:6px">Everything here is free. Nobody can tell from your look how far you've got.</p></div>
+      <div class="card stack">
+        <div class="avatarStage"><div class="av" id="avBig"></div></div>
+        <div class="row"><input type="text" id="pname" maxlength="18" aria-label="Persona name"><button class="iconbtn" id="dice" aria-label="Random persona" style="flex:none;width:48px;height:48px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.3" fill="currentColor"/><circle cx="15" cy="15" r="1.3" fill="currentColor"/><circle cx="15" cy="9" r="1.3" fill="currentColor"/><circle cx="9" cy="15" r="1.3" fill="currentColor"/></svg></button></div>
+        <div id="quickOpts"></div>
+      </div>
+      <button class="btn primary block" id="toWorld">Choose a world</button>
+    </div>
+  </section>
+
+  <!-- WORLD PICK -->
+  <section class="screen" id="s-world">
+    <div class="stack" style="padding-top:18px">
+      <div><div class="eyebrow">Step 2 of 2</div><h2 style="margin-top:6px">Pick your world</h2><p class="muted small" style="margin-top:6px">All four are free and you can switch any time. The puzzles are word-for-word identical in every one of them.</p></div>
+      <div class="worlds" id="worldGrid"></div>
+      <button class="btn primary block" id="enterHub">Start Season 1</button>
+    </div>
+  </section>
+
+  <!-- HUNT / HUB -->
+  <section class="screen" id="s-hunt">
+    <div class="stack">
+      <div class="card season">
+        <div class="eyebrow">Season 1 · Live · 3 of 12 episodes out</div>
+        <h2 style="margin-top:6px">The Keeper's Absence</h2>
+        <p class="muted small" style="margin-top:8px">"If you are reading this, I am gone. I have hidden the way in where only patient eyes will find it." Episode 4 drops Friday, at the same moment for everyone:</p>
+        <div class="count" id="countdown" aria-live="off"></div>
+        <div class="potrow"><div><span>Season prize pot</span><b id="pot">$1,000.00</b></div><div class="small muted">$1,000 seed plus 10% of upgrade sales. Simulated.</div></div>
+        <div class="strip" id="strip" aria-label="12 weekly episodes: 3 released"></div>
+        <p class="small muted" style="margin-top:8px">12 episodes, one every Friday. Released episodes stay playable forever, even after the season is solved.</p>
+      </div>
+      <div class="card stack" id="pulseCard"></div>
+      <div class="card map" id="mapCard"></div>
+      <div class="ep-list" id="epList"></div>
+      <div class="card stack">
+        <div class="row" style="justify-content:space-between"><h3>Season library</h3><span class="pill free">All free</span></div>
+        <div class="ep" style="cursor:default"><div class="n">S0</div><div class="t"><b>The Lighthouse Ledger</b><span>Archive · 12 episodes · spoiler shield on · playable forever</span></div><span class="pill">Archive</span></div>
+        <div class="ep" style="cursor:default"><div class="n">S1</div><div class="t"><b>The Keeper's Absence</b><span>Live · new episode every Friday</span></div><span class="pill free">Live</span></div>
+        <div class="ep locked" style="cursor:default"><div class="n">S2</div><div class="t"><b>Untitled</b><span>Premieres with the Season 1 champion reveal</span></div><span class="pill">Soon</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EPISODE 1 -->
+  <section class="screen" id="s-e1">
+    <div class="stack">
+      <button class="back" data-go="hunt">‹ Season map</button>
+      <div><div class="eyebrow">Episode 1</div><h2 style="margin-top:4px">The Signal Tower</h2></div>
+      <p class="journal">"My last message went out from this tower, scrambled so only a patient mind could read it."</p>
+      <div class="card stack">
+        <div class="canon"><div class="ct">You've climbed to the top of the Keeper's signal tower. <b>Search the room.</b> Tap anything that catches your eye. Somewhere up here are a scrambled message, the tool to read it, and the key to set that tool.</div><div class="fp" data-fp="e1"></div></div>
+        <div class="scene" id="scene-e1"></div>
+        <div class="found" id="found-e1"></div>
+      </div>
+      <div class="card stack" id="tools-e1"></div>
+      <div class="card ledgerbox" data-ledger="e1"></div>
+      <button class="btn block" data-go="e2">Next room: The Supper Table ›</button>
+    </div>
+  </section>
+
+  <!-- EPISODE 2 -->
+  <section class="screen" id="s-e2">
+    <div class="stack">
+      <button class="back" data-go="hunt">‹ Season map</button>
+      <div><div class="eyebrow">Episode 2</div><h2 style="margin-top:4px">The Supper Table</h2></div>
+      <p class="journal">"Four guests came to my last supper. One of them sat where only I am meant to sit."</p>
+      <div class="card stack">
+        <div class="canon"><div class="ct">The Keeper's dining room, the morning after. Four guests: Ivy, Moss, Rook and Sable. <b>Who sat in the Keeper's own chair?</b> Search the room for what the guests left behind.</div><div class="fp" data-fp="e2"></div></div>
+        <div class="scene" id="scene-e2"></div>
+        <div class="found" id="found-e2"></div>
+      </div>
+      <div class="card stack">
+        <h3>The seating plan</h3>
+        <p class="small muted">The table seen from above. Tap a guest, then a chair, to try a seating. Tap a clue in your notebook to cross it off. The table never tells you if you're right.</p>
+        <svg class="room" id="room" viewBox="0 0 300 300" role="group" aria-label="Dining room seen from above"></svg>
+        <div class="tray" id="tray"></div>
+        <button class="btn" id="clearTable" style="justify-self:center;min-height:40px">Clear the table</button>
+      </div>
+      <div class="card ledgerbox" data-ledger="e2"></div>
+      <button class="btn block" data-go="e3">Next room: The Cartographer's Floor ›</button>
+    </div>
+  </section>
+
+  <!-- EPISODE 3 -->
+  <section class="screen" id="s-e3">
+    <div class="stack">
+      <button class="back" data-go="hunt">‹ Season map</button>
+      <div><div class="eyebrow">Episode 3</div><h2 style="margin-top:4px">The Cartographer's Floor</h2></div>
+      <p class="journal">"I never once walked straight across my floor."</p>
+      <div class="card stack">
+        <div class="canon"><div class="ct">The Keeper's map room has a floor of lettered tiles. <b>Search the room</b> to learn where the Keeper started, how the Keeper walked, and what the walk spells.</div><div class="fp" data-fp="e3"></div></div>
+        <div class="scene" id="scene-e3"></div>
+        <div class="found" id="found-e3"></div>
+      </div>
+      <div class="card stack">
+        <h3>The tiled floor</h3>
+        <p class="small muted" id="floorHelp"></p>
+        <div class="floor"><div class="grid" id="floorGrid"></div><svg id="floorSvg" viewBox="0 0 500 500" aria-hidden="true"></svg></div>
+        <div class="trail" id="trail" aria-live="polite"></div>
+        <div class="row" style="justify-content:center"><button class="btn" id="undoStep" style="min-height:40px">Undo</button><button class="btn" id="resetFloor" style="min-height:40px">Start over</button><button class="btn" id="copyTrail" style="min-height:40px">Copy to my theory</button></div>
+      </div>
+      <div class="card ledgerbox" data-ledger="e3"></div>
+      <button class="btn primary block" data-go="vault">Approach the Vault ›</button>
+    </div>
+  </section>
+
+  <!-- VAULT -->
+  <section class="screen" id="s-vault">
+    <div class="stack">
+      <button class="back" data-go="hunt">‹ Season map</button>
+      <div><div class="eyebrow">Season finale · demo</div><h2 style="margin-top:4px">The Vault</h2></div>
+      <div class="vaultwrap" id="vaultwrap">
+        <div class="beam"></div>
+        <div class="vdoor" id="vdoor"></div>
+      </div>
+      <div class="card stack">
+        <div class="inscription"><b>THREE KEYS · ONE GAME</b>The tower kept its time. The guest kept a chair. The floor kept its squares.<br><br>Speak the game's name, and the door will only listen.<br>Speak the word that <i>ends</i> the game, and it will open.<div class="fp" data-fp="vault" style="justify-content:center"></div></div>
+        <div><div class="small muted" style="margin-bottom:6px">Your private theories (only you can see these)</div><div class="mine" id="mine"></div></div>
+        <input type="text" id="vaultIn" placeholder="Speak to the door" autocomplete="off" autocapitalize="characters" aria-label="Your final answer">
+        <button class="btn primary block" id="tryVault">Try the vault</button>
+        <div class="result" id="vaultMsg" aria-live="polite"></div>
+        <p class="small muted" style="text-align:center">The door only ever says <b>open</b> or <b>locked</b>. It never says which part you got wrong. Every player waits the same 20 seconds between tries.</p>
+      </div>
+      <div class="card stack" id="rewardCard" hidden></div>
+      <div class="card stack">
+        <div class="row" style="justify-content:space-between"><h3>Your attempt record</h3><span class="pill">Permanent</span></div>
+        <div class="attempts" id="attempts"></div>
+        <p class="small muted">Final attempts can't be edited or erased. In the real game this record lives on the server, and the answer never reaches your phone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEDGER -->
+  <section class="screen" id="s-ledger">
+    <div class="stack">
+      <div><div class="eyebrow">Private</div><h2 style="margin-top:4px">My ledger</h2><p class="muted small" style="margin-top:6px">Your notes, for your eyes. Nothing here is checked, scored or shared.</p></div>
+      <div class="card lg" id="ledgerAll"></div>
+      <button class="btn block" id="resetAll">Reset this demo on this device</button>
+      <div class="card" id="resetConfirm" hidden><p style="margin-bottom:12px">Erase your persona, theories and attempts on this device?</p><div class="row"><button class="btn primary" id="resetYes">Erase and restart</button><button class="btn" id="resetNo">Keep playing</button></div></div>
+    </div>
+  </section>
+
+  <!-- COMMONS -->
+  <section class="screen" id="s-commons">
+    <div class="stack">
+      <div><div class="eyebrow">Community · simulated for the demo</div><h2 style="margin-top:4px">The Commons</h2></div>
+      <div class="card small" style="display:flex;gap:10px;align-items:flex-start"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent2)" stroke-width="2" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.5"/></svg><span>Nobody here knows who's right. Not the players, not the moderators. The crowd can be confidently wrong together.</span></div>
+      <div class="tabs" id="ctabs"></div>
+      <div id="cbody"></div>
+    </div>
+  </section>
+
+  <!-- STUDIO -->
+  <section class="screen" id="s-studio">
+    <div class="stack">
+      <div><div class="eyebrow">Style only</div><h2 style="margin-top:4px">The Studio</h2></div>
+      <div class="card stack">
+        <div class="avatarStage"><div class="av" id="avStudio"></div></div>
+        <p style="text-align:center;font-weight:700;font-family:var(--display);font-size:20px" id="studioName"></p>
+        <div id="studioOpts"></div>
+      </div>
+      <div class="card stack">
+        <div class="row" style="justify-content:space-between"><h3>Upgrades</h3><span class="pill gold" id="credBal"></span></div>
+        <p class="small muted">In the real game you could buy these, or unlock them free with Vault Credits. You earn one credit for every episode you finish, right or wrong. Anything you unlock stays yours in every world and every season. Nothing here changes a clue, a second or a try.</p>
+        <div class="tabs" id="shopTabs"></div>
+        <div class="opts" id="shopOpts"></div>
+        <div id="shopDetail"></div>
+      </div>
+      <div class="card stack">
+        <h3>Earned, never sold</h3>
+        <div class="opts" id="earnedOpts"></div>
+        <p class="small muted">Earned marks come only from solving. They can't be bought or gifted.</p>
+      </div>
+      <div class="card small stack">
+        <b>Fairness check</b>
+        <span class="muted">With your current look and world, the puzzle fingerprints are:</span>
+        <div class="fp" id="fairFp" style="margin-top:0"></div>
+        <span class="muted">Change anything above and they stay the same. That's the promise, made checkable.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- HALL -->
+  <section class="screen" id="s-hall">
+    <div class="stack">
+      <div><div class="eyebrow">Hall of Champions</div><h2 style="margin-top:4px">Premiere night</h2><p class="muted small" style="margin-top:6px">Each new season opens by revealing the last season's first solver, by persona only. Real names stay private unless the champion chooses otherwise.</p></div>
+      <div class="card curtain" id="curtain">
+        <div class="veil"><button class="btn primary" id="reveal">Reveal the Season 0 champion</button></div>
+        <div class="stack" style="justify-items:center">
+          <div id="champAv" style="width:130px;height:130px"></div>
+          <div class="eyebrow">First solver · Season 0 · The Lighthouse Ledger</div>
+          <h2>Marlow the Patient</h2>
+          <p class="muted small">Opened the vault 41 days after the premiere. 1,284 more players have solved it since, and every one of them earned their own mark.</p>
+        </div>
+      </div>
+      <div class="card stack">
+        <h3>Season 1 status</h3>
+        <ul class="timeline">
+          <li class="now"><i></i><div><b>Live</b><div class="small muted">Episodes 1 to 3 released. Everyone sees the same thing.</div></div></li>
+          <li><i></i><div><b>First prize claimed</b><div class="small muted">Not yet. The pot stands at <b id="hallPot">$1,000.00</b>. It is announced the moment a verified first solver exists, without naming them.</div></div></li>
+          <li><i></i><div><b>Answer key published</b><div class="small muted">Until then, every verified solver earns a small style credit.</div></div></li>
+          <li><i></i><div><b>Champion revealed</b><div class="small muted">At the Season 2 premiere.</div></div></li>
+        </ul>
+        <p class="small muted">Demo only. The real prize amount, rules and eligibility are still open decisions and need legal review.</p>
+      </div>
+      <div class="card stack"><h3>Your Season 1 status</h3><p id="myStatus"></p></div>
+    </div>
+  </section>
+</div>
+
+<nav class="nav" id="nav" hidden>
+  <div class="in">
+    <button data-tab="hunt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg>Hunt</button>
+    <button data-tab="ledger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h10l3 3v15H6zM9 9h7M9 13h7M9 17h4"/></svg>Ledger</button>
+    <button data-tab="commons"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H9l-5 4z"/></svg>Commons</button>
+    <button data-tab="studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/></svg>Studio</button>
+    <button data-tab="hall"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 01-10 0zM5 5H3a3 3 0 003 4M19 5h2a3 3 0 01-3 4M12 14v4M8 21h8"/></svg>Hall</button>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="in" id="sheetIn"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+/* ================================================================
+   THE VAULT · playable demo
+   DEMO ONLY. Browser-only. The final-vault check below compares a
+   hash in the page: this is an INSECURE FICTIONAL SAMPLE. In the real
+   game the answer lives only on the server and never ships to a phone.
+   Episode answers are not stored anywhere in this file: theories are
+   never validated (LOCKED rules L04/L05).
+   ================================================================ */
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const KEY="the-vault-demo-v1";
+const defaults={step:"splash",world:"neon",sound:true,
+  persona:{name:"Wanderer",skin:2,hair:0,hairColor:0,outfit:0,acc:0,aura:0,shop:null},
+  ledger:{e1:"",e2:"",e3:""},explored:{},attempts:[],solved:false,cooldownUntil:0,
+  team:null,posts:[],reacts:{},revealed:false,earned:{},unlocked:[],vehicle:null,lastFree:"neon",found:{}};
+let S;
+try{S=Object.assign({},defaults,JSON.parse(localStorage.getItem(KEY)||"{}"));S.persona=Object.assign({},defaults.persona,S.persona);S.ledger=Object.assign({},defaults.ledger,S.ledger)}catch(e){S=JSON.parse(JSON.stringify(defaults))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- canonical puzzle content: ONE object, every world ---------- */
+const CANON={
+  e1:{id:"s01e01",rev:2,title:"The Signal Tower",cipher:"P ZAHUK PU H AVDLY. P OHCL OHUKZ IBA OVSK UVAOPUN. P OHCL H MHJL IBA UV LFLZ. DOHA HT P?",objects:[
+    {id:"clock",label:"The tower clock",kind:"note",text:"The great clock has stopped. The hour hand points straight at VII. The minute hand points at XII.",note:"The tower clock stopped at 7 o'clock."},
+    {id:"log",label:"The Keeper's logbook",kind:"note",text:"The last entry, written in a hurry: \"For whoever comes after me. My key is the hour this tower fell silent. Count along the alphabet from A, one letter for each hour. Turn the disk until that letter on the inner ring sits beneath the A of the outer ring. Then find each scrambled letter on the inner ring, and read the letter above it.\"",note:"Key: the hour the tower fell silent, counted along from A. Put that inner letter under the outer A. Find scrambled letters on the inner ring, read the outer ring."},
+    {id:"tape",label:"Telegraph machine",kind:"item",text:"A strip of paper tape is still caught in the telegraph machine, covered in scrambled capital letters. The last message ever sent from this tower. You take it.",note:"Telegraph tape with a scrambled message."},
+    {id:"drawer",label:"Desk drawer",kind:"item",text:"Inside the drawer, wrapped in cloth: a brass cipher disk. An outer ring of letters and an inner ring of letters, and both rings turn. You take it.",note:"A brass cipher disk with two turning rings."},
+    {id:"window",label:"The arched window",kind:"look",text:"Below, the town is dark. Far away, a light blinks in another tower."},
+    {id:"scarf",label:"Scarf on a hook",kind:"look",text:"A wool scarf. The pockets hold a train ticket stub and nothing else."},
+    {id:"lamp",label:"Desk lamp",kind:"look",text:"The lamp is cold. Whoever left, left hours ago."}]},
+  e2:{id:"s01e02",rev:2,title:"The Supper Table",guests:["Ivy","Moss","Rook","Sable"],objects:[
+    {id:"clock",label:"Wall clock",kind:"note",text:"A clock hangs high on the north wall and ticks loudly. From the table you'd see it only if you were facing north.",note:"The clock hangs on the north wall."},
+    {id:"letter",label:"Letter on the mantel",kind:"note",text:"A thank-you letter from Ivy: \"What a supper! All evening I could watch your lovely clock, just over the shoulder of the guest sitting across from me.\"",note:"Ivy could see the clock over the shoulder of the guest across from her."},
+    {id:"coat",label:"Coat on the stand",kind:"note",text:"Moss's coat. In the pocket, a note in Moss's handwriting: \"I'll come, but do not seat me beside Ivy. Not after the hedge business.\"",note:"Moss would not sit beside Ivy."},
+    {id:"tray",label:"The butler's tray",kind:"note",text:"The butler's seating card: \"Rook: one place counter-clockwise from Moss, seen from above. As always.\"",note:"Rook sat one place counter-clockwise from Moss, seen from above."},
+    {id:"glasses",label:"Four wine glasses",kind:"note",text:"Four glasses on the side table, set out in the order of the chairs. The one for the west chair has a tiny key etched on its stem. Only the Keeper drinks from that one.",note:"The Keeper's chair is the west chair."},
+    {id:"window",label:"East window",kind:"note",text:"Sable's shawl is still draped over the chair by the east window. One side is faded where the morning sun reaches it first.",note:"Sable sat in the east chair."}]},
+  e3:{id:"s01e03",rev:2,title:"The Cartographer's Floor",grid:["TMASN","LEKUI","POWRG","FHYVC","BZJQD"],start:[4,0],objects:[
+    {id:"journal",label:"Journal on the lectern",kind:"note",text:"The Keeper's walking journal: \"I never take a straight path. Every step I take goes two tiles in a line, then one tile to the side. Never more, never less.\"",note:"Every step: two tiles in a straight line, then one tile to the side."},
+    {id:"pin",label:"Star pin",kind:"note",text:"A brass star is pinned to the bottom-left corner of the map, right above the bottom-left corner of the tiled floor.",note:"Start on the bottom-left tile (now marked with a star)."},
+    {id:"plaque",label:"Plaque by the door",kind:"note",text:"A small brass plaque: \"Five letters, one word: the thing I always walked upon.\"",note:"The walk spells a five-letter word, counting the start: what the Keeper walked upon."},
+    {id:"horse",label:"Carved horse",kind:"look",text:"A little carved wooden horse on a stand. Its base is worn smooth, as if it has been lifted and set down again and again."},
+    {id:"map",label:"Map of the town",kind:"look",text:"A huge hand-drawn map of the town. Every road on it turns at right angles."},
+    {id:"globe",label:"Old globe",kind:"look",text:"Someone has drawn a tiny vault on an island that doesn't exist."}]},
+  vault:{id:"s01vault",rev:1,inscription:"Three keys, one game. Speak the word that ends the game."}
+};
+function fnv(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return h.toString(16).padStart(8,"0")}
+const FP={};for(const k in CANON)FP[k]=fnv(JSON.stringify(CANON[k]));
+const shield='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/></svg>';
+function paintFp(){$$("[data-fp]").forEach(el=>{const k=el.dataset.fp;el.innerHTML=shield+`<span>${CANON[k].id} · fingerprint ${FP[k]} · identical in every world</span>`});
+  $("#fairFp").innerHTML=shield+["e1","e2","e3","vault"].map(k=>`${CANON[k].id}:${FP[k]}`).join(" · ")}
+
+/* ---------- worlds ---------- */
+const WORLDS={
+  neon:{name:"Neon City",blurb:"Rain, rooftops, signs that never sleep"},
+  archive:{name:"Grand Archive",blurb:"Candlelight and a million quiet books"},
+  wildwood:{name:"Wildwood",blurb:"Morning mist and drifting seeds"},
+  orbit:{name:"Orbit Station",blurb:"Starlight over a slow blue planet"},
+  deep:{name:"Coral Deep",blurb:"Sunlight through water, a sunken city",premium:true}
+};
+const WCOL={neon:"#ff3d9a",archive:"#e9ad52",wildwood:"#2b7a46",orbit:"#8ea2ff",deep:"#3ee6c1"};
+
+/* ---------- sound (tiny synth, starts after a tap) ---------- */
+let AC=null;
+function ac(){if(!S.sound)return null;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}catch(e){return null}}
+function tone(f,d=.08,type="sine",v=.06,when=0){try{const a=ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,a.currentTime+when);g.gain.linearRampToValueAtTime(v,a.currentTime+when+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+when+d);o.connect(g).connect(a.destination);o.start(a.currentTime+when);o.stop(a.currentTime+when+d+.05)}catch(e){}}
+const sfx={tick:()=>tone(1400,.03,"square",.025),tap:()=>tone(660,.06,"triangle",.05),save:()=>{tone(523,.12);tone(784,.16,"sine",.05,.08)},
+  lock:()=>{tone(140,.25,"sawtooth",.05);tone(110,.35,"sawtooth",.05,.12)},
+  open:()=>{[392,494,587,784,988].forEach((f,i)=>tone(f,.6,"triangle",.05,i*.11))},step:()=>tone(880,.07,"triangle",.045)};
+function paintSound(){$("#soundBtn").innerHTML=S.sound?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6"/></svg>'}
+
+/* ---------- toast / sheet ---------- */
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200)}
+function sheet(html,wire){$("#sheetIn").innerHTML='<div class="grab"></div>'+html;if(wire)wire();$("#sheet").classList.add("on");$("#scrim").classList.add("on")}
+function closeSheet(){$("#sheet").classList.remove("on");$("#scrim").classList.remove("on")}
+$("#scrim").onclick=closeSheet;
+
+/* ---------- avatar ---------- */
+const SKINS=["#f6d7c3","#eac0a0","#d39e7a","#b07650","#8a5636","#5e3a24"];
+const HAIRC=["#1d1a1f","#4a2e1e","#8a5a2b","#d9b46a","#c9562e","#e8e4dc","#5b6bff","#ff5fa8"];
+const OUTFITS=[{n:"Slate",c:"#3b4a63"},{n:"Ember",c:"#c2412d"},{n:"Moss",c:"#3f7a4a"},{n:"Ocean",c:"#2a62a8"},{n:"Plum",c:"#6b3f8a"},{n:"Sand",c:"#c7a46b"},{n:"Ink",c:"#1d2230"},{n:"Coral",c:"#e8735f"}];
+const HAIRS=["Crop","Long","Bun","Buzz","Curls","Swoop"];
+const ACCS=["None","Glasses","Scarf","Headphones","Star stud","Beanie"];
+const AURAS=["None","Sparks","Halo ring"];
+const SHOP=[{id:"aurora",n:"Aurora coat",p:"$3.99",cat:"wear"},{id:"gilded",n:"Gilded collar",p:"$1.99",cat:"wear"},{id:"comet",n:"Comet aura",p:"$2.49",cat:"wear"},{id:"lantern",n:"Lantern pet",p:"$2.99",cat:"wear"},
+ {id:"hover",n:"Hoverboard",p:"$1.99",cat:"ride"},{id:"moped",n:"Retro moped",p:"$2.99",cat:"ride"},{id:"coupe",n:"Vintage coupe",p:"$4.99",cat:"ride"},{id:"skiff",n:"Star skiff",p:"$4.99",cat:"ride"},
+ {id:"deep",n:"Coral Deep world",p:"$6.99",cat:"world"}];
+function avatarSVG(p,uid){
+  uid=uid||("a"+Math.random().toString(36).slice(2,7));
+  const skin=SKINS[p.skin],hc=HAIRC[p.hairColor],oc=OUTFITS[p.outfit].c,shop=p.shop;
+  let defs=`<linearGradient id="${uid}o" x1="0" y1="0" x2="1" y2="1">${shop==="aurora"?'<stop offset="0" stop-color="#36e0c8"/><stop offset=".5" stop-color="#6f5cff"/><stop offset="1" stop-color="#ff5fb0"/>':`<stop offset="0" stop-color="${oc}"/><stop offset="1" stop-color="${oc}" stop-opacity=".78"/>`}</linearGradient>
+  <radialGradient id="${uid}a"><stop offset=".55" stop-color="var(--accent)" stop-opacity="0"/><stop offset=".8" stop-color="var(--accent)" stop-opacity=".35"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></radialGradient>`;
+  let s=`<svg viewBox="0 0 120 120" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs>${defs}</defs>`;
+  if(p.aura===1)s+=`<circle cx="60" cy="58" r="58" fill="url(#${uid}a)"/>`+[[18,30],[100,26],[14,80],[106,74],[30,12],[92,100]].map(([x,y],i)=>`<path d="M${x} ${y-4}l1.3 2.7 2.7 1.3-2.7 1.3L${x} ${y+4}l-1.3-2.7-2.7-1.3 2.7-1.3z" fill="var(--gold)"><animate attributeName="opacity" values="1;.2;1" dur="${1.6+i*.3}s" repeatCount="indefinite"/></path>`).join("");
+  if(p.aura===2)s+=`<ellipse cx="60" cy="22" rx="24" ry="6" fill="none" stroke="var(--gold)" stroke-width="3"><animate attributeName="ry" values="6;7.5;6" dur="3s" repeatCount="indefinite"/></ellipse>`;
+  if(shop==="comet")s+=`<g><circle cx="60" cy="60" r="54" fill="none" stroke="var(--accent2)" stroke-width="2" stroke-dasharray="40 300" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="3s" repeatCount="indefinite"/></circle></g>`;
+  if(p.hair===1)s+=`<path d="M35 50C33 24 87 24 85 50L89 96H31Z" fill="${hc}"/>`;
+  s+=`<path d="M18 120C20 94 38 84 60 84S100 94 102 120Z" fill="url(#${uid}o)"/>`;
+  s+=`<path d="M48 84l12 12 12-12" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2.5"/>`;
+  if(shop==="gilded")s+=`<path d="M44 85l16 15 16-15" fill="none" stroke="#ffd166" stroke-width="4"/><circle cx="60" cy="102" r="3.5" fill="#ffd166"/>`;
+  s+=`<rect x="52" y="66" width="16" height="20" rx="6" fill="${skin}"/>`;
+  s+=`<ellipse cx="60" cy="52" rx="22" ry="25" fill="${skin}"/>`;
+  s+=`<ellipse cx="51" cy="54" rx="2.6" ry="3.2" fill="#1b1520"/><ellipse cx="69" cy="54" rx="2.6" ry="3.2" fill="#1b1520"/>`;
+  s+=`<path d="M53 64q7 5 14 0" fill="none" stroke="#1b1520" stroke-width="2" stroke-linecap="round"/>`;
+  s+=`<circle cx="46" cy="61" r="3.5" fill="#ff7a8a" opacity=".25"/><circle cx="74" cy="61" r="3.5" fill="#ff7a8a" opacity=".25"/>`;
+  const H={
+    0:`<path d="M37 50C35 28 48 23 60 23C75 23 87 31 83 52C80 41 71 36 60 37C50 37 42 41 37 50Z" fill="${hc}"/>`,
+    1:`<path d="M37 52C35 27 50 22 61 23C76 24 86 33 83 52C77 40 66 34 52 38C45 41 40 46 37 52Z" fill="${hc}"/>`,
+    2:`<circle cx="60" cy="21" r="10" fill="${hc}"/><path d="M38 48C37 30 49 26 60 26S83 30 82 48C77 38 70 35 60 35S43 38 38 48Z" fill="${hc}"/>`,
+    3:`<path d="M39 44C40 31 50 27 60 27S80 31 81 44C76 37 69 34 60 34S44 37 39 44Z" fill="${hc}" opacity=".8"/>`,
+    4:[[42,38],[50,30],[60,27],[70,30],[78,38],[38,47],[82,47],[46,33],[74,33]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="8" fill="${hc}"/>`).join(""),
+    5:`<path d="M36 52C32 30 48 20 64 22C80 24 90 36 84 50C78 38 62 30 44 40C40 43 38 47 36 52Z" fill="${hc}"/><path d="M64 22C72 14 84 16 86 24C80 21 72 22 64 22Z" fill="${hc}"/>`};
+  s+=H[p.hair];
+  const A={1:`<g fill="none" stroke="#111" stroke-width="2"><circle cx="51" cy="54" r="7" fill="rgba(255,255,255,.18)"/><circle cx="69" cy="54" r="7" fill="rgba(255,255,255,.18)"/><path d="M58 54h4M44 53l-6-2M76 53l6-2"/></g>`,
+    2:`<path d="M40 80C50 90 70 90 80 80L82 88C70 98 50 98 38 88Z" fill="var(--accent2)"/><path d="M70 88l6 20 7-3-5-18Z" fill="var(--accent2)" opacity=".85"/>`,
+    3:`<path d="M34 54C34 22 86 22 86 54" fill="none" stroke="#222" stroke-width="5"/><rect x="29" y="48" width="10" height="16" rx="4" fill="var(--accent)"/><rect x="81" y="48" width="10" height="16" rx="4" fill="var(--accent)"/>`,
+    4:`<path d="M38 62l1.5 3 3 1.5-3 1.5L38 71l-1.5-3-3-1.5 3-1.5z" fill="var(--gold)"/>`,
+    5:`<path d="M36 46C36 22 84 22 84 46Z" fill="var(--accent)"/><rect x="34" y="42" width="52" height="8" rx="4" fill="var(--accent2)"/><circle cx="60" cy="20" r="5" fill="var(--accent2)"/>`};
+  if(p.acc)s+=A[p.acc];
+  if(shop==="lantern")s+=`<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="2.4s" repeatCount="indefinite"/><circle cx="100" cy="84" r="9" fill="#ffd166" opacity=".35"/><rect x="95" y="78" width="10" height="13" rx="3" fill="#ffb347" stroke="#7a4b12" stroke-width="1.5"/><path d="M97 78q3-5 6 0" fill="none" stroke="#7a4b12" stroke-width="1.5"/></g>`;
+  return s+"</svg>";
+}
+function paintAvatars(){const h=avatarSVG(S.persona,"big");$("#avBig").innerHTML=h;$("#avStudio").innerHTML=avatarSVG(S.persona,"stu");$("#meBtn").innerHTML=avatarSVG(S.persona,"me");$("#studioName").textContent=S.persona.name}
+
+/* option rows */
+function optRows(target,full){
+  const p=S.persona;const rows=[
+    ["Skin","skin",SKINS.map(c=>({sw:c}))],
+    ["Hair","hair",HAIRS.map(n=>({t:n}))],
+    ["Hair colour","hairColor",HAIRC.map(c=>({sw:c}))],
+    ["Outfit","outfit",OUTFITS.map(o=>({sw:o.c,lab:o.n}))]];
+  if(full){rows.push(["Accessory","acc",ACCS.map(n=>({t:n}))]);rows.push(["Aura","aura",AURAS.map(n=>({t:n}))])}
+  else rows.push(["Accessory","acc",ACCS.map(n=>({t:n}))]);
+  target.innerHTML=rows.map(([label,key,items])=>`<div class="optlabel">${label}</div><div class="opts">${items.map((it,i)=>`<button class="opt ${it.sw?"sw":""} ${p[key]===i?"sel":""}" data-k="${key}" data-i="${i}" aria-label="${label} ${it.lab||it.t||i+1}" ${it.sw?`style="background:${it.sw}"`:""}>${it.t||""}</button>`).join("")}</div>`).join("");
+  target.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{S.persona[b.dataset.k]=+b.dataset.i;save();sfx.tap();paintAvatars();optRows(target,full)});
+}
+let shopCat="wear";
+function balance(){return Object.keys(S.earned).length-S.unlocked.length}
+function rideSVG(id){
+  const wheel=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#111" stroke="var(--muted)" stroke-width="3"/><circle cx="${x}" cy="${y}" r="${r/3}" fill="var(--muted)"/>`;
+  const V={hover:`<ellipse cx="100" cy="78" rx="70" ry="6" fill="var(--accent2)" opacity=".35"><animate attributeName="rx" values="70;58;70" dur="1.6s" repeatCount="indefinite"/></ellipse><rect x="30" y="52" width="140" height="14" rx="7" fill="var(--accent)"/><rect x="44" y="48" width="112" height="5" rx="2.5" fill="var(--ink)" opacity=".6"/>`,
+    moped:`${wheel(50,68,16)}${wheel(152,68,16)}<path d="M50 68L76 40h44l14 28M120 40l8-18h16" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M80 38h34q8 0 6 8H84z" fill="var(--accent2)"/>`,
+    coupe:`<path d="M18 66q0-14 18-16l26-18h62l26 18q34 2 34 16v6H18z" fill="var(--accent)"/><path d="M66 36h24v14H50zM96 36h24l20 14H96z" fill="var(--ink)" opacity=".55"/>${wheel(56,72,13)}${wheel(148,72,13)}<rect x="176" y="58" width="8" height="5" rx="2" fill="var(--gold)"/>`,
+    skiff:`<path d="M30 56L150 40l28 16-28 16z" fill="var(--accent)"/><path d="M90 48l30-22 14 18z" fill="var(--accent2)"/><circle cx="140" cy="54" r="6" fill="var(--ink)" opacity=".6"/><path d="M30 50l-22 6 22 6z" fill="var(--gold)"><animate attributeName="d" values="M30 50l-22 6 22 6z;M30 50l-34 6 34 6z;M30 50l-22 6 22 6z" dur=".5s" repeatCount="indefinite"/></path>`};
+  return `<svg viewBox="0 0 200 90">${V[id]||""}</svg>`;
+}
+function shopSel(){return shopCat==="wear"?S.persona.shop:shopCat==="ride"?S.vehicle:(S.world==="deep"?"deep":null)}
+function shopRow(){
+  const bal=balance();$("#credBal").textContent=`${bal} Vault Credit${bal===1?"":"s"}`;
+  $("#shopTabs").innerHTML=[["wear","Outfits"],["ride","Rides"],["world","Worlds"]].map(([k,l])=>`<button class="tab ${shopCat===k?"on":""}" data-cat="${k}">${l}</button>`).join("");
+  $$("#shopTabs .tab").forEach(b=>b.onclick=()=>{shopCat=b.dataset.cat;sfx.tap();shopRow()});
+  const sel=shopSel();
+  $("#shopOpts").innerHTML=SHOP.filter(it=>it.cat===shopCat).map(it=>{const own=S.unlocked.includes(it.id);return `<button class="opt ${sel===it.id?"sel":""}" data-s="${it.id}" style="height:56px">${it.n}<span class="tag ${own?"own":""}">${own?"Yours":it.p+" or 1 credit"}</span></button>`}).join("");
+  $$("#shopOpts .opt").forEach(b=>b.onclick=()=>{const id=b.dataset.s;sfx.tap();
+    if(shopCat==="wear"){S.persona.shop=S.persona.shop===id?null:id;paintAvatars()}
+    else if(shopCat==="ride"){S.vehicle=S.vehicle===id?null:id}
+    else{setWorld(S.world==="deep"?S.lastFree:"deep")}
+    save();shopRow();toast(shopSel()?"Previewing. Puzzle fingerprints unchanged.":"Back to your own look")});
+  const it=SHOP.find(x=>x.id===sel);let d="";
+  if(shopCat==="ride")d+=`<div class="garage">${S.vehicle?rideSVG(S.vehicle):'<p class="small muted" style="padding:20px 0">Pick a ride to see it in your garage.</p>'}</div><p class="small muted" style="text-align:center">Rides are for show. Travel between rooms is instant and equal for everyone.</p>`;
+  if(shopCat==="world")d+=`<p class="small muted">Premium worlds change the scenery only. A teammate in a free world sees the exact same puzzle.</p>`;
+  if(it){const own=S.unlocked.includes(it.id);d+=`<div class="row" style="justify-content:space-between;margin-top:10px"><div><b>${it.n}</b><div class="small muted">${own?"Unlocked. It stays with you.":it.p+" in the real game, or 1 Vault Credit"}</div></div>${own?'<span class="pill free">Yours</span>':`<button class="btn primary" id="unlockBtn" style="min-height:42px" ${bal<1?"disabled":""}>Unlock with 1 credit</button>`}</div>${!own&&bal<1?'<p class="small muted" style="margin-top:6px">Finish an episode to earn a credit.</p>':""}`}
+  $("#shopDetail").innerHTML=d;
+  const ub=$("#unlockBtn");if(ub)ub.onclick=()=>{if(balance()<1)return;S.unlocked.push(it.id);save();sfx.open();toast(`${it.n} unlocked. It's yours for good.`);shopRow()};
+  $("#earnedOpts").innerHTML=`<div class="opt" style="height:56px;${S.solved?"":"opacity:.5"}">${S.solved?"🗝 Keeper's Key pin":"Locked · open the vault"}</div>`;
+}
+
+/* ---------- world canvases ---------- */
+const sky=$("#sky"),sx=sky.getContext("2d");let W=0,H=0,DPR=1,parts=[],backdrop=null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function css(v){return getComputedStyle(document.body).getPropertyValue(v).trim()}
+function rnd(a,b){return a+Math.random()*(b-a)}
+function drawBackdrop(ctx,w,h,world,scale){
+  const g=ctx.createLinearGradient(0,0,0,h);
+  const pal={neon:["#07030f","#2b0a40","#5a0f4f"],archive:["#100804","#2e1a0c","#4a2b14"],wildwood:["#f3f7ea","#d4e5c3","#a9c895"],orbit:["#02040d","#0b1236","#1a2366"],deep:["#0a5a63","#053a42","#021619"]}[world];
+  g.addColorStop(0,pal[0]);g.addColorStop(.6,pal[1]);g.addColorStop(1,pal[2]);ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  const R=(seed=>()=>((seed=Math.imul(seed^seed>>>15,2246822507)+1013904223>>>0)/4294967296))(world.length*977);
+  if(world==="neon"){
+    ctx.fillStyle="rgba(255,61,154,.18)";ctx.beginPath();ctx.arc(w*.78,h*.28,Math.min(w,h)*.22,0,7);ctx.fill();
+    for(let layer=0;layer<2;layer++){let x=-10;while(x<w){const bw=(20+R()*50)*scale,bh=h*(layer?.18+R()*.3:.3+R()*.35);ctx.fillStyle=layer?"#14081f":"#1d0b2c";ctx.fillRect(x,h-bh,bw,bh);
+      for(let wy=h-bh+8*scale;wy<h-6;wy+=10*scale)for(let wx=x+5*scale;wx<x+bw-6*scale;wx+=9*scale)if(R()<.28){ctx.fillStyle=R()<.5?"rgba(46,242,255,.55)":"rgba(255,209,102,.5)";ctx.fillRect(wx,wy,3*scale,4*scale)}
+      if(!layer&&R()<.3){ctx.fillStyle="rgba(255,61,154,.8)";ctx.fillRect(x+bw*.2,h-bh-6*scale,bw*.6,3*scale)}x+=bw+2*scale}}
+  }else if(world==="archive"){
+    ctx.fillStyle="rgba(233,173,82,.12)";ctx.beginPath();ctx.arc(w*.5,h*.35,Math.min(w,h)*.4,0,7);ctx.fill();
+    const cols=Math.ceil(w/(90*scale));for(let c=0;c<=cols;c++){const x=c*90*scale;ctx.fillStyle="#1a0f07";ctx.fillRect(x-8*scale,h*.25,16*scale,h);
+      ctx.strokeStyle="#1a0f07";ctx.lineWidth=10*scale;ctx.beginPath();ctx.arc(x+45*scale,h*.25,45*scale,Math.PI,0);ctx.stroke();
+      for(let sh=h*.45;sh<h;sh+=36*scale){ctx.fillStyle="#24150a";ctx.fillRect(x+8*scale,sh,74*scale,4*scale);let bx=x+10*scale;while(bx<x+80*scale){const bw2=(4+R()*6)*scale,bh2=(18+R()*12)*scale;ctx.fillStyle=["#3b1f12","#4a2a14","#2a1a10","#5a3218","#3a2a18"][R()*5|0];ctx.fillRect(bx,sh-bh2,bw2,bh2);bx+=bw2+1}}}
+  }else if(world==="wildwood"){
+    ctx.fillStyle="rgba(255,240,180,.55)";ctx.beginPath();ctx.arc(w*.2,h*.18,Math.min(w,h)*.12,0,7);ctx.fill();
+    [["rgba(95,140,95,.35)",.55],["rgba(60,105,70,.55)",.68],["rgba(30,70,45,.8)",.8]].forEach(([c,base],li)=>{ctx.fillStyle=c;let x=-20;while(x<w+20){const th=(60+R()*90)*scale*(1+li*.3),tw=th*.42;ctx.beginPath();ctx.moveTo(x,h*base+th*.2);ctx.lineTo(x+tw/2,h*base-th*.8);ctx.lineTo(x+tw,h*base+th*.2);ctx.fill();x+=tw*.6}ctx.fillRect(0,h*base+10*scale,w,h)});
+  }else if(world==="deep"){
+    for(let i=0;i<6;i++){const x=w*(.1+i*.17);const rg=ctx.createLinearGradient(x,0,x+60*scale,h*.8);rg.addColorStop(0,"rgba(180,255,240,.16)");rg.addColorStop(1,"rgba(180,255,240,0)");ctx.fillStyle=rg;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+40*scale,0);ctx.lineTo(x+140*scale,h*.85);ctx.lineTo(x+60*scale,h*.85);ctx.fill()}
+    ctx.fillStyle="#04262b";for(let i=0;i<7;i++){const bx=R()*w,bw=(30+R()*50)*scale,bh=(60+R()*140)*scale;ctx.fillRect(bx,h*.88-bh,bw,bh);ctx.beginPath();ctx.arc(bx+bw/2,h*.88-bh,bw/2,Math.PI,0);ctx.fill()}
+    ctx.lineWidth=5*scale;for(let i=0;i<14;i++){const kx=R()*w,kh=(80+R()*160)*scale;ctx.strokeStyle=R()<.5?"#0c5a3e":"#0a4733";ctx.beginPath();ctx.moveTo(kx,h);for(let y=0;y<kh;y+=10*scale)ctx.lineTo(kx+Math.sin(y/(18*scale)+i)*7*scale,h-y);ctx.stroke()}
+    ctx.fillStyle="#3a3324";ctx.fillRect(0,h*.92,w,h*.08);
+  }else{
+    for(let i=0;i<260;i++){ctx.fillStyle=`rgba(255,255,255,${R()*.7})`;ctx.fillRect(R()*w,R()*h,R()<.1?2:1,R()<.1?2:1)}
+    const pr=Math.min(w,h)*.55;const pg=ctx.createRadialGradient(w*.7,h*1.05,pr*.2,w*.7,h*1.05,pr);pg.addColorStop(0,"#3b6fd6");pg.addColorStop(.85,"#1b2f7a");pg.addColorStop(1,"rgba(80,120,255,.0)");ctx.fillStyle=pg;ctx.beginPath();ctx.arc(w*.7,h*1.05,pr,0,7);ctx.fill();
+    ctx.strokeStyle="rgba(255,154,213,.35)";ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(w*.7,h*1.0,pr*1.3,pr*.22,-.15,Math.PI,2*Math.PI);ctx.stroke();
+    ctx.fillStyle="rgba(200,210,255,.6)";const sx0=w*.2,sy0=h*.22;ctx.fillRect(sx0-30*scale,sy0-2*scale,60*scale,4*scale);ctx.fillRect(sx0-4*scale,sy0-10*scale,8*scale,20*scale);ctx.fillStyle="rgba(142,162,255,.5)";ctx.fillRect(sx0-44*scale,sy0-7*scale,14*scale,14*scale);ctx.fillRect(sx0+30*scale,sy0-7*scale,14*scale,14*scale);
+  }
+}
+function makeParts(world,w,h,n){const a=[];for(let i=0;i<n;i++)a.push({x:rnd(0,w),y:rnd(0,h),v:rnd(.3,1),s:rnd(.5,1.5),p:rnd(0,6.28)});return a}
+function stepParts(ctx,world,w,h,arr,t,scale){
+  for(const q of arr){
+    if(world==="neon"){q.y+=q.v*9*scale;q.x-=q.v*1.5*scale;if(q.y>h){q.y=-20;q.x=rnd(0,w+40)}ctx.strokeStyle=`rgba(160,220,255,${.18+q.s*.12})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(q.x,q.y);ctx.lineTo(q.x+2*scale,q.y-14*scale*q.s);ctx.stroke()}
+    else if(world==="archive"){q.y-=q.v*.25*scale;q.x+=Math.sin(t/1500+q.p)*.3*scale;if(q.y<-5){q.y=h+5;q.x=rnd(0,w)}ctx.fillStyle=`rgba(255,214,140,${.25+.35*Math.abs(Math.sin(t/900+q.p))})`;ctx.beginPath();ctx.arc(q.x,q.y,q.s*1.3*scale,0,7);ctx.fill()}
+    else if(world==="wildwood"){q.y+=q.v*.5*scale;q.x+=Math.sin(t/1200+q.p)*.6*scale;if(q.y>h+5){q.y=-5;q.x=rnd(0,w)}const glow=.4+.4*Math.sin(t/700+q.p);ctx.fillStyle=`rgba(255,250,215,${glow})`;ctx.beginPath();ctx.arc(q.x,q.y,q.s*1.8*scale,0,7);ctx.fill();ctx.strokeStyle=`rgba(255,250,215,${glow*.5})`;ctx.beginPath();for(let k=0;k<3;k++){const an=q.p+k*2.1+t/2000;ctx.moveTo(q.x,q.y);ctx.lineTo(q.x+Math.cos(an)*5*scale,q.y+Math.sin(an)*5*scale)}ctx.stroke()}
+    else if(world==="deep"){q.y-=q.v*.8*scale;q.x+=Math.sin(t/500+q.p)*.4*scale;if(q.y<-6){q.y=h+6;q.x=rnd(0,w)}ctx.strokeStyle=`rgba(200,255,245,${.25+q.s*.2})`;ctx.lineWidth=1;ctx.beginPath();ctx.arc(q.x,q.y,q.s*2.6*scale,0,7);ctx.stroke()}
+    else{q.x-=q.v*.35*scale;if(q.x<-3){q.x=w+3;q.y=rnd(0,h)}const tw=.35+.6*Math.abs(Math.sin(t/600+q.p));ctx.fillStyle=`rgba(230,235,255,${tw})`;ctx.fillRect(q.x,q.y,q.s*1.6*scale,q.s*1.6*scale)}
+  }
+}
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;sky.width=W*DPR;sky.height=H*DPR;sx.setTransform(DPR,0,0,DPR,0,0);
+  backdrop=document.createElement("canvas");backdrop.width=W*DPR;backdrop.height=H*DPR;const b=backdrop.getContext("2d");b.setTransform(DPR,0,0,DPR,0,0);drawBackdrop(b,W,H,S.world,1);
+  parts=makeParts(S.world,W,H,S.world==="neon"?110:S.world==="orbit"?90:55);if(reduce)frame(0)}
+function frame(t){sx.setTransform(1,0,0,1,0,0);sx.drawImage(backdrop,0,0);sx.setTransform(DPR,0,0,DPR,0,0);stepParts(sx,S.world,W,H,parts,t,1);if(!reduce)requestAnimationFrame(frame)}
+addEventListener("resize",()=>{clearTimeout(resize.t);resize.t=setTimeout(resize,150)});
+
+/* world mini previews */
+const minis=[];
+function worldGrid(){
+  $("#worldGrid").innerHTML=Object.entries(WORLDS).filter(([k,w])=>!w.premium).map(([k,w])=>`<button class="world ${S.world===k?"sel":""}" data-w="${k}"><canvas data-mini="${k}"></canvas><div class="wn"><b>${w.name}</b><span>${w.blurb}</span></div></button>`).join("");
+  minis.length=0;
+  $$("#worldGrid canvas").forEach(c=>{const k=c.dataset.mini,r=c.getBoundingClientRect(),w=Math.max(150,r.width||160),h=96;c.width=w*DPR;c.height=h*DPR;const x=c.getContext("2d");x.setTransform(DPR,0,0,DPR,0,0);const bd=document.createElement("canvas");bd.width=w*DPR;bd.height=h*DPR;const bx=bd.getContext("2d");bx.setTransform(DPR,0,0,DPR,0,0);drawBackdrop(bx,w,h,k,.45);minis.push({c,x,bd,k,w,h,p:makeParts(k,w,h,k==="neon"?40:25)})});
+  $$("#worldGrid .world").forEach(b=>b.onclick=()=>{setWorld(b.dataset.w);sfx.tap();$$("#worldGrid .world").forEach(x=>x.classList.toggle("sel",x===b))});
+}
+function miniLoop(t){if(!$("#s-world").classList.contains("on"))return;for(const m of minis){m.x.setTransform(1,0,0,1,0,0);m.x.drawImage(m.bd,0,0);m.x.setTransform(DPR,0,0,DPR,0,0);stepParts(m.x,m.k,m.w,m.h,m.p,t,.5)}if(!reduce)requestAnimationFrame(miniLoop)}
+function setWorld(k){S.world=k;if(!WORLDS[k].premium)S.lastFree=k;document.body.dataset.world=k;save();$("#worldName").textContent=WORLDS[k].name;resize();if(cur==="hunt")paintMap();if(cur==="vault")paintDoor();if(["e1","e2","e3"].includes(cur))refreshRoom(cur)}
+$("#worldChip").onclick=()=>{sheet(`<h3>Switch world</h3><p class="small muted" style="margin:6px 0 14px">Same clues, same answers, same timing. Only the scenery changes. Your theories come with you.</p><div class="stack">${Object.entries(WORLDS).map(([k,w])=>`<button class="ep" data-sw="${k}"><div class="n">${S.world===k?"●":""}</div><div class="t"><b>${w.name}</b><span>${w.blurb}</span></div><span class="pill ${w.premium?"gold":"free"}">${w.premium?"Premium · preview":"Free"}</span></button>`).join("")}</div>`);
+  $$("[data-sw]").forEach(b=>b.onclick=()=>{setWorld(b.dataset.sw);sfx.tap();closeSheet();toast(`Welcome to ${WORLDS[b.dataset.sw].name}. Puzzles unchanged.`)})};
+
+/* ---------- navigation ---------- */
+let cur="splash";
+const TABS=["hunt","ledger","commons","studio","hall"];
+function go(v){
+  cur=v;$$(".screen").forEach(s=>s.classList.toggle("on",s.id==="s-"+v));
+  const inGame=!["splash","persona","world"].includes(v);
+  $("#topbar").hidden=!inGame;$("#ribbon").hidden=!inGame;$("#nav").hidden=!inGame;
+  const tab=TABS.includes(v)?v:(["e1","e2","e3","vault"].includes(v)?"hunt":null);
+  $$(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.tab===tab));
+  if(["e1","e2","e3","vault"].includes(v)){S.explored[v]=true}
+  if(inGame){S.step="game"}save();
+  try{({hunt:paintHunt,e1:()=>refreshRoom("e1"),e2:()=>refreshRoom("e2"),e3:()=>refreshRoom("e3"),vault:paintVault,ledger:paintLedger,commons:paintCommons,studio:paintStudio,hall:paintHall,world:()=>{worldGrid();requestAnimationFrame(miniLoop)},persona:paintPersona}[v]||(()=>{}))()}catch(err){console.error(err)}
+  try{scrollTo(0,0)}catch(e){}
+}
+$$(".nav button").forEach(b=>b.onclick=()=>{sfx.tap();go(b.dataset.tab)});
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g){sfx.tap();go(g.dataset.go)}});
+$("#meBtn").onclick=()=>go("studio");
+$("#soundBtn").onclick=()=>{S.sound=!S.sound;save();paintSound();if(S.sound)sfx.tap()};
+
+/* ---------- splash / persona ---------- */
+$("#beginBtn").onclick=()=>{go("persona");sfx.open()};
+const NAMES=["Quiet Fox","Lantern","Marigold","Cipher Wren","Patch","Nova Finch","Juniper","Ash Echo","Dusk Rider","Little Comet"];
+function paintPersona(){$("#pname").value=S.persona.name;paintAvatars();optRows($("#quickOpts"),false)}
+$("#pname").oninput=e=>{S.persona.name=e.target.value.trim()||"Wanderer";save();paintAvatars()};
+$("#dice").onclick=()=>{const p=S.persona;p.skin=Math.random()*6|0;p.hair=Math.random()*6|0;p.hairColor=Math.random()*8|0;p.outfit=Math.random()*8|0;p.acc=Math.random()*6|0;p.name=NAMES[Math.random()*NAMES.length|0];save();sfx.tap();paintPersona()};
+$("#toWorld").onclick=()=>go("world");
+$("#enterHub").onclick=()=>{go("hunt");setTimeout(()=>sheet(`<div class="eyebrow">Season 1 premiere</div><h2 style="margin:6px 0 10px">The Keeper's Absence</h2><p class="journal" style="margin-bottom:12px">"I kept the Vault for forty years. Now I've gone, and I've hidden the way in across three rooms. Read slowly. The crowd will be sure of many things."</p><p class="small muted" style="margin-bottom:16px">Visit the rooms in any order. Write down what you think in your private ledger. Nothing tells you if a room is right, and nothing stops you moving on. When you're ready, speak to the Vault.</p><button class="btn primary block" id="sheetGo">Go to the Signal Tower</button>`,()=>{$("#sheetGo").onclick=()=>{closeSheet();go("e1")}}),350)};
+
+/* ---------- hunt / map ---------- */
+const EPS=[{k:"e1",n:"01",t:"The Signal Tower",d:"A scrambled message from the tower"},{k:"e2",n:"02",t:"The Supper Table",d:"Four guests, one forbidden chair"},{k:"e3",n:"03",t:"The Cartographer's Floor",d:"A walk that was never straight"},{k:"vault",n:"✦",t:"The Vault",d:"Speak the word and it opens"}];
+function status(k){if(k==="vault")return S.solved?"Opened":S.attempts.length?`${S.attempts.length} attempt${S.attempts.length>1?"s":""}`:"Waiting";return S.ledger[k]?"Theory saved":S.explored[k]?"Explored":"New"}
+function paintHunt(){
+  paintMap();paintPulse();paintPot();paintStrip();
+  $("#epList").innerHTML=EPS.map(e=>`<button class="ep" data-go="${e.k}"><div class="n">${e.n}</div><div class="t"><b>${e.t}</b><span>${e.d}</span></div><span class="pill">${status(e.k)}</span></button>`).join("")+
+   [4,5].map(n=>`<div class="ep locked"><div class="n">0${n}</div><div class="t"><b>Locked until release</b><span>Same moment for every player, every world</span></div><span class="pill">Fri</span></div>`).join("");
+  tick();
+}
+function paintMap(){
+  const w=S.world;const pts=[[70,330],[262,262],[92,160],[232,62]];
+  const icon=[
+    `<path d="M-6 10h12L3-10h-6zM-9-12h18" stroke="currentColor" stroke-width="2.2" fill="none"/><circle cx="0" cy="-14" r="2.5" fill="currentColor"/>`,
+    `<rect x="-10" y="-5" width="20" height="10" rx="2" stroke="currentColor" stroke-width="2.2" fill="none"/><path d="M-12-9v18M12-9v18" stroke="currentColor" stroke-width="2.2"/>`,
+    `<path d="M-10-10h20v20h-20zM-10 0h20M0-10v20" stroke="currentColor" stroke-width="2" fill="none"/>`,
+    `<circle r="11" stroke="currentColor" stroke-width="2.2" fill="none"/><circle r="4" fill="currentColor"/><path d="M0-11v4M0 7v4M-11 0h4M7 0h4" stroke="currentColor" stroke-width="2"/>`];
+  const labels=["Signal Tower","Supper Table","Cartographer's Floor","The Vault"];
+  const dash={neon:"2 10",archive:"14 8",wildwood:"1 9",orbit:"6 6",deep:"4 12"}[w];
+  $("#mapCard").innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:6px"><h3>Season map</h3><span class="small muted">${WORLDS[w].name}</span></div>
+  <svg viewBox="0 0 340 380" role="group" aria-label="Season map">
+   <path d="M${pts[0]}C200 360 300 320 ${pts[1]}S20 220 ${pts[2]}S200 120 ${pts[3]}" fill="none" stroke="var(--accent)" stroke-opacity=".5" stroke-width="3" stroke-linecap="round" stroke-dasharray="${dash}"><animate attributeName="stroke-dashoffset" from="0" to="-48" dur="3s" repeatCount="indefinite"/></path>
+   ${pts.map((p,i)=>{const k=EPS[i].k,seen=k==="vault"?S.solved:!!S.ledger[k];return `<g class="node" tabindex="0" role="button" aria-label="${labels[i]}" data-go="${k}" transform="translate(${p})">
+     <circle class="halo" r="30" fill="var(--accent)" opacity=".18"/>
+     <circle class="ring" r="24" fill="var(--surface2)" stroke="${i===3?"var(--gold)":"var(--accent)"}" stroke-width="2.5"/>
+     <g style="color:${i===3?"var(--gold)":"var(--ink)"}">${icon[i]}</g>
+     ${seen?`<circle cx="18" cy="-18" r="6" fill="var(--accent2)"/>`:""}
+     <text y="44" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700" font-family="var(--body)">${labels[i]}</text></g>`}).join("")}
+  </svg><p class="small muted">A dot means you've saved a theory there. It says nothing about whether it's right.</p>`;
+  $$("#mapCard .node").forEach(n=>n.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go(n.dataset.go)}});
+}
+const SEASON_START=Date.UTC(2026,9,30,20,0,0);let potBump=0;
+function potVal(){return 1000+Math.max(0,(Date.now()-SEASON_START)/1000)*0.0005+potBump}
+function money(v){return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function paintPot(bump){["#pot","#hallPot"].forEach(s=>{const el=$(s);if(!el)return;el.textContent=money(potVal());if(bump&&s==="#pot"){el.classList.add("bump");setTimeout(()=>el.classList.remove("bump"),400)}})}
+function paintStrip(){$("#strip").innerHTML=Array.from({length:12},(_,i)=>`<div class="${i<3?"out":i===3?"next":""}">${i===3?"Fri":i+1}</div>`).join("")}
+setInterval(()=>{if(Math.random()<.5){potBump+=Math.round(rnd(30,200))/100;if(cur==="hunt"||cur==="hall")paintPot(true)}},2500);
+function nextFriday(){const n=new Date(),d=new Date(Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),20,0,0));let add=(5-d.getUTCDay()+7)%7;if(add===0&&n>=d)add=7;d.setUTCDate(d.getUTCDate()+add);return d}
+function tick(){const ms=nextFriday()-new Date();const d=Math.floor(ms/864e5),h=Math.floor(ms/36e5)%24,m=Math.floor(ms/6e4)%60,s=Math.floor(ms/1e3)%60;const el=$("#countdown");if(el)el.innerHTML=[[d,"days"],[h,"hrs"],[m,"min"],[s,"sec"]].map(([v,l])=>`<div><b>${String(v).padStart(2,"0")}</b><span>${l}</span></div>`).join("")}
+setInterval(()=>{if(cur==="hunt")tick();if(cur==="vault")cooldownTick()},1000);
+
+/* ---------- WEDNESDAY CROWD PULSE (simulated) ----------
+   Shows what the crowd BELIEVES, never what is right. Same numbers in every world. */
+const PULSE=[
+ {k:"e1",t:"Signal Tower",n:"18,402",opts:[["CLOCK",58],["WATCH",29],["BELL",6],["Other",7]]},
+ {k:"e2",t:"Supper Table",n:"16,977",opts:[["ROOK",44],["SABLE",33],["MOSS",15],["IVY",8]]},
+ {k:"e3",t:"Cartographer's Floor",n:"15,120",opts:[["BOARD",52],["BOAR",31],["Other",17]]}];
+let pulseOpen=false,pulseEp=0;
+function paintPulse(){
+  const c=$("#pulseCard");
+  const head=`<div class="row" style="justify-content:space-between"><div><div class="eyebrow">Wednesday Crowd Pulse</div><h3 style="margin-top:4px">What everyone believes</h3></div><span class="pill gold">Week 3</span></div>`;
+  if(!pulseOpen){c.innerHTML=head+`<div class="pshield"><p class="small muted">Every Wednesday, two days before the next episode, we share what the crowd thinks. It never says who's right, and the majority has been wrong before.</p><button class="btn primary" id="pulseGo">Show this week's pulse</button><span class="small muted">It may hint at answers. Skip it to solve blind.</span></div>`;$("#pulseGo").onclick=()=>{pulseOpen=true;sfx.save();paintPulse()};return}
+  const P=PULSE[pulseEp];
+  c.innerHTML=head+`<div class="tabs">${PULSE.map((p,i)=>`<button class="tab ${i===pulseEp?"on":""}" data-pe="${i}">0${i+1} · ${p.t}</button>`).join("")}</div>
+  <div class="pulse-ep">${P.opts.map(([a,v])=>`<div class="bar"><i data-w="${v}"></i><span>${a}</span><span>${v}%</span></div>`).join("")}</div>
+  <p class="small muted">${P.n} theories saved this week. Yours is never shown or compared.</p>
+  <div class="teaser"><div class="n">04</div><div style="min-width:0"><b>Friday: The Bell Without a Rope</b><div class="small muted">"Something in the tower rang last night. Nobody pulled it."</div></div></div>`;
+  $$("[data-pe]").forEach(b=>b.onclick=()=>{pulseEp=+b.dataset.pe;sfx.tap();paintPulse()});
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$$("#pulseCard .bar i").forEach(i=>i.style.width=i.dataset.w+"%")));
+}
+/* ---------- ledger boxes ---------- */
+function paintLedgerBoxes(){$$("[data-ledger]").forEach(box=>{const k=box.dataset.ledger;box.innerHTML=`<label for="led-${k}">Your theory · private, never checked</label><div class="small muted" style="margin:-2px 0 8px">Saving your first theory finishes the episode and earns 1 Vault Credit, right or wrong.</div><textarea id="led-${k}" placeholder="Write what you think, and why. You can change it any time.">${esc(S.ledger[k])}</textarea><div class="row" style="justify-content:space-between;margin-top:10px"><span class="saved" id="sv-${k}">${S.ledger[k]?"Theory saved":""}</span><button class="btn primary" data-save="${k}" style="min-height:42px">Save privately</button></div>`;
+  box.querySelector("[data-save]").onclick=()=>{S.ledger[k]=box.querySelector("textarea").value.trim();sfx.save();$("#sv-"+k).textContent=S.ledger[k]?"Theory saved":"";
+  if(S.ledger[k]&&!S.earned[k]){S.earned[k]=true;toast("Theory saved · episode finished · +1 Vault Credit")}else toast("Theory saved");save()}})}
+function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+/* ---------- SEARCHABLE ROOMS ---------- */
+let shift=0;
+function fnd(k){S.found=S.found||{};return (S.found[k]=S.found[k]||{})}
+function hasF(k,id){return !!(S.found&&S.found[k]&&S.found[k][id])}
+function objOf(k,id){return CANON[k].objects.find(o=>o.id===id)}
+const HIT=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="transparent"/>`;
+const SPARK=(x,y)=>`<g class="spark"><circle cx="${x}" cy="${y}" r="5" fill="var(--accent2)"/><circle cx="${x}" cy="${y}" r="9" fill="none" stroke="var(--accent2)" stroke-width="1.5"/></g>`;
+const ART={
+ e1:()=>{const tk=Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180;return `<line x1="${180+Math.sin(a)*31}" y1="${62-Math.cos(a)*31}" x2="${180+Math.sin(a)*26}" y2="${62-Math.cos(a)*26}" stroke="var(--ink)" stroke-width="${i%3?1.5:3}"/>`}).join("");
+  return `<svg viewBox="0 0 360 220" role="group" aria-label="The top room of the signal tower">
+  <rect width="360" height="220" rx="14" fill="var(--surface2)"/>
+  ${[40,80,120,160].map(y=>`<line x1="0" y1="${y}" x2="360" y2="${y}" stroke="var(--line)"/>`).join("")}
+  <rect y="190" width="360" height="30" fill="color-mix(in srgb,var(--bg) 70%,transparent)"/>
+  <g class="hs" data-o="window">${HIT(14,18,102,140)}<path d="M20 150V70a45 45 0 0 1 90 0v80z" fill="#0b1030" stroke="var(--gold)" stroke-width="3"/><path d="M65 25v125M20 100h90" stroke="var(--gold)" stroke-width="2" opacity=".6"/>${[[38,60],[90,52],[50,120],[96,90],[70,80]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.4" fill="#fff"/>`).join("")}<circle cx="92" cy="128" r="2.5" fill="#ffd166"><animate attributeName="opacity" values="1;.1;1" dur="1.8s" repeatCount="indefinite"/></circle>${SPARK(104,32)}</g>
+  <g class="hs" data-o="clock">${HIT(140,20,80,84)}<circle cx="180" cy="62" r="36" fill="var(--bg)" stroke="var(--gold)" stroke-width="3"/>${tk}<text x="180" y="45" text-anchor="middle" fill="var(--ink)" font-size="9" font-family="Georgia,serif">XII</text><text x="164" y="88" text-anchor="middle" fill="var(--ink)" font-size="8" font-family="Georgia,serif">VII</text><line x1="180" y1="62" x2="171" y2="77.6" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/><line x1="180" y1="62" x2="180" y2="35" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/><circle cx="180" cy="62" r="3" fill="var(--gold)"/>${SPARK(214,28)}</g>
+  <g class="hs" data-o="log">${HIT(244,36,104,42)}<line x1="246" y1="72" x2="346" y2="72" stroke="var(--gold)" stroke-width="3"/><rect x="258" y="50" width="12" height="22" fill="var(--accent)"/><rect x="272" y="46" width="10" height="26" fill="var(--muted)"/><rect x="290" y="58" width="36" height="14" rx="2" fill="var(--accent2)"/><path d="M294 65h28" stroke="var(--bg)" stroke-width="1.5"/>${SPARK(338,48)}</g>
+  <g class="hs" data-o="scarf">${HIT(124,98,34,82)}<circle cx="140" cy="104" r="3" fill="var(--gold)"/><path d="M134 106h12l-2 64h-8z" fill="var(--accent)"/><path d="M135 120h10M135 134h10M135 148h10" stroke="var(--bg)" stroke-width="3"/></g>
+  <rect x="190" y="150" width="164" height="10" rx="3" fill="var(--muted)"/><rect x="196" y="160" width="8" height="30" fill="var(--muted)"/><rect x="342" y="160" width="8" height="30" fill="var(--muted)"/>
+  <g class="hs" data-o="tape">${HIT(198,110,96,42)}<rect x="205" y="130" width="46" height="20" rx="3" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.5"/><path d="M215 130l16-12" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><circle cx="232" cy="117" r="4" fill="var(--accent)"/><path d="M251 142q10-6 16 2t18 2" fill="none" stroke="#f3ead2" stroke-width="7"/>${SPARK(286,128)}</g>
+  <g class="hs" data-o="drawer">${HIT(284,158,62,32)}<rect x="290" y="162" width="50" height="22" rx="3" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="315" cy="173" r="3" fill="var(--gold)"/>${SPARK(342,160)}</g>
+  <g class="hs" data-o="lamp">${HIT(306,96,40,56)}<path d="M330 150v-30" stroke="var(--ink)" stroke-width="2.5"/><path d="M316 120h28l-6-16h-16z" fill="var(--gold)" opacity=".75"/></g>
+  </svg>`},
+ e2:()=>`<svg viewBox="0 0 360 220" role="group" aria-label="The Keeper's dining room">
+  <rect width="360" height="220" rx="14" fill="var(--surface2)"/>
+  <rect y="130" width="360" height="4" fill="var(--line)"/><rect y="196" width="360" height="24" fill="color-mix(in srgb,var(--bg) 70%,transparent)"/>
+  <text x="180" y="14" text-anchor="middle" fill="var(--muted)" font-size="8" letter-spacing="2">NORTH WALL</text>
+  <g class="hs" data-o="clock">${HIT(150,18,60,52)}<circle cx="180" cy="44" r="20" fill="var(--bg)" stroke="var(--gold)" stroke-width="3"/><path d="M180 44v-13M180 44l9 5" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>${SPARK(206,24)}</g>
+  <g class="hs" data-o="letter">${HIT(10,70,116,46)}<rect x="20" y="112" width="90" height="84" fill="var(--bg)" stroke="var(--line)"/><path d="M40 196v-50a25 25 0 0 1 50 0v50" fill="#2a1408"/><path d="M52 190q13-26 26 0" fill="#ff8a3d" opacity=".8"/><rect x="14" y="104" width="102" height="8" rx="2" fill="var(--muted)"/><rect x="48" y="88" width="28" height="16" rx="1" fill="#f3ead2" transform="rotate(-8 62 96)"/><path d="M49 89l13 8 13-9" fill="none" stroke="#b9a" stroke-width="1" transform="rotate(-8 62 96)"/>${SPARK(84,80)}</g>
+  <g class="hs" data-o="coat">${HIT(122,66,40,130)}<path d="M140 76v118M128 194h24" stroke="var(--ink)" stroke-width="3"/><path d="M132 84h16l4 60h-24z" fill="#7a8a2e"/><ellipse cx="140" cy="78" rx="10" ry="4" fill="#3a3f55"/>${SPARK(158,90)}</g>
+  <g class="hs" data-o="tray">${HIT(160,148,52,48)}<rect x="168" y="172" width="36" height="5" fill="var(--muted)"/><path d="M172 177v19M200 177v19" stroke="var(--muted)" stroke-width="3"/><rect x="170" y="164" width="32" height="8" rx="3" fill="var(--gold)" opacity=".7"/><rect x="178" y="156" width="16" height="10" fill="#f3ead2"/>${SPARK(206,152)}</g>
+  <g class="hs" data-o="glasses">${HIT(212,140,56,56)}<rect x="216" y="168" width="48" height="5" fill="var(--muted)"/><path d="M222 173v23M258 173v23" stroke="var(--muted)" stroke-width="3"/>${[222,234,246,258].map((x,i)=>`<path d="M${x-4} 148h8l-1 10h-6zM${x} 158v9M${x-3} 167h6" fill="none" stroke="${i===0?"var(--gold)":"var(--ink)"}" stroke-width="1.5"/>`).join("")}${SPARK(266,144)}</g>
+  <g class="hs" data-o="window">${HIT(270,40,86,156)}<rect x="276" y="46" width="70" height="80" fill="#cfe8ff" opacity=".35" stroke="var(--ink)" stroke-width="2"/><path d="M311 46v80M276 86h70" stroke="var(--ink)" stroke-width="2"/><path d="M276 46q8 40 0 80" fill="var(--accent)" opacity=".7"/><text x="311" y="40" text-anchor="middle" fill="var(--muted)" font-size="8" letter-spacing="2">EAST</text><path d="M290 196v-46h40v46" fill="none" stroke="var(--ink)" stroke-width="3"/><path d="M288 150h44l-6 30h-32z" fill="#a0522d" opacity=".85"/>${SPARK(348,140)}</g>
+  </svg>`,
+ e3:()=>`<svg viewBox="0 0 360 220" role="group" aria-label="The Keeper's map room">
+  <rect width="360" height="220" rx="14" fill="var(--surface2)"/>
+  ${Array.from({length:9},(_,i)=>`<rect x="${i*40}" y="196" width="40" height="24" fill="${i%2?"color-mix(in srgb,var(--ink) 12%,transparent)":"color-mix(in srgb,var(--ink) 4%,transparent)"}"/>`).join("")}
+  <g class="hs" data-o="map">${HIT(14,20,132,96)}<rect x="20" y="26" width="120" height="84" fill="#e9dcb8" stroke="var(--gold)" stroke-width="4"/><path d="M30 40h40v30h30v-20h30M40 100v-20h50v20M100 40v20" fill="none" stroke="#6b4a2a" stroke-width="2"/>${SPARK(140,24)}</g>
+  <g class="hs" data-o="pin">${HIT(18,92,30,30)}<path d="M30 98l2.4 5 5.4.8-3.9 3.8.9 5.4-4.8-2.6-4.8 2.6.9-5.4-3.9-3.8 5.4-.8z" fill="var(--gold)" stroke="#7a4b12"/></g>
+  <g class="hs" data-o="journal">${HIT(156,92,64,104)}<path d="M188 196v-60M172 196h32" stroke="var(--muted)" stroke-width="4"/><path d="M164 132l24-8 24 8v-20l-24-8-24 8z" fill="#f3ead2" stroke="var(--ink)" stroke-width="1.5"/><path d="M188 104v20" stroke="var(--ink)"/><path d="M170 116h12M170 121h12M194 116h12M194 121h12" stroke="#8a7" stroke-width="1"/>${SPARK(216,98)}</g>
+  <g class="hs" data-o="horse">${HIT(226,110,46,86)}<rect x="232" y="170" width="34" height="26" fill="var(--muted)"/><path d="M240 170h20l-2-8c6-6 6-18-2-26-5-4-12-4-16 0l-6 8 4 4 6-3c-2 8-6 14-4 25z" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="249" cy="142" r="1.6" fill="var(--bg)"/>${SPARK(270,120)}</g>
+  <g class="hs" data-o="globe">${HIT(272,60,52,100)}<circle cx="298" cy="100" r="22" fill="#3d7dd8" stroke="var(--gold)" stroke-width="3"/><path d="M286 92q8-6 14 2t10 0M290 112q6 4 12-2" stroke="#4a9a5a" stroke-width="5" fill="none"/><path d="M298 122v34M284 156h28" stroke="var(--gold)" stroke-width="3"/></g>
+  <g class="hs" data-o="plaque">${HIT(318,40,40,150)}<rect x="326" y="70" width="30" height="126" fill="var(--bg)" stroke="var(--ink)" stroke-width="2"/><circle cx="332" cy="134" r="2.5" fill="var(--gold)"/><rect x="330" y="48" width="22" height="14" rx="2" fill="var(--gold)"/><path d="M334 55h14" stroke="var(--bg)" stroke-width="1.5"/>${SPARK(352,44)}</g>
+  </svg>`
+};
+function paintScene(k){
+  const el=$("#scene-"+k);el.innerHTML=ART[k]();
+  el.querySelectorAll(".hs").forEach(g=>{const o=objOf(k,g.dataset.o);g.classList.toggle("seen",hasF(k,o.id));g.setAttribute("tabindex","0");g.setAttribute("role","button");g.setAttribute("aria-label",o.label);
+    const act=()=>inspect(k,o.id);g.onclick=act;g.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}}});
+  paintFound(k);
+}
+function inspect(k,id){const o=objOf(k,id);const first=!hasF(k,id);fnd(k)[id]=true;save();o.kind==="item"&&first?sfx.save():sfx.tap();
+  sheet(`<div class="eyebrow">${o.kind==="item"?"You found something":"You look closer"}</div><h3 style="margin-top:6px">${o.label}</h3><p style="margin:10px 0 14px;font-family:var(--puzzle);font-size:16px;line-height:1.55">${o.text}</p>${o.note?`<p class="small muted" style="margin-bottom:14px">${o.kind==="item"?"Added to your workbench.":"Noted in your notebook."}</p>`:""}<button class="btn primary block" id="sheetOk">${o.kind==="item"?"Take it":"Got it"}</button>`,()=>{$("#sheetOk").onclick=closeSheet});
+  refreshRoom(k);
+}
+function refreshRoom(k){paintScene(k);if(k==="e1")paintTools();if(k==="e2")paintRoom();if(k==="e3")paintFloor()}
+function paintFound(k){const objs=CANON[k].objects,seen=objs.filter(o=>hasF(k,o.id)).length;const notes=objs.filter(o=>o.note&&hasF(k,o.id));
+  $("#found-"+k).innerHTML=`<div class="row" style="justify-content:space-between"><b>Notebook</b><span class="small muted">You've looked at ${seen} of ${objs.length} things</span></div>`+
+   (notes.length?`<ul class="clues">${notes.map(o=>`<li><button class="${struck[k+o.id]?"struck":""}" data-st="${k+o.id}"><span class="k">${o.kind==="item"?"ITEM":"NOTE"}</span><span>${o.note}</span></button></li>`).join("")}</ul>`:`<p class="small muted">Nothing yet. The sparkles show things you haven't looked at.</p>`);
+  $$("#found-"+k+" [data-st]").forEach(b=>b.onclick=()=>{struck[b.dataset.st]=!struck[b.dataset.st];b.classList.toggle("struck");sfx.tap()});
+}
+
+/* ---------- E1 workbench: two-ring cipher disk ---------- */
+const AB="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+let oRot=0,iRot=0,gDeg={o:null,i:null},gRAF={};
+function kOff(){return ((oRot-iRot)%26+26)%26}
+function decodeK(t,k){return t.replace(/[A-Z]/g,c=>AB[(AB.indexOf(c)-k+26)%26])}
+function paintTools(){
+  const disk=hasF("e1","drawer"),tape=hasF("e1","tape");const el=$("#tools-e1");
+  let h=`<div class="row" style="justify-content:space-between"><h3>Workbench</h3><span class="small muted">${disk&&tape?"Ready":"Keep searching"}</span></div>`;
+  h+=`<div><div class="small muted" style="margin-bottom:6px">Telegraph tape</div><div class="decode enc" id="encTxt">${tape?CANON.e1.cipher:"You haven't found a message yet."}</div></div>`;
+  if(disk){h+=`<svg class="wheel" id="wheel" viewBox="0 0 300 300" role="img" aria-label="Cipher disk with two rings. Drag either ring, or use the buttons."></svg>
+    <div class="wctl2"><div><span>Outer ring</span><button class="iconbtn" data-turn="o-1" aria-label="Turn outer ring left">‹</button><button class="iconbtn" data-turn="o1" aria-label="Turn outer ring right">›</button></div><div><span>Inner ring</span><button class="iconbtn" data-turn="i-1" aria-label="Turn inner ring left">‹</button><button class="iconbtn" data-turn="i1" aria-label="Turn inner ring right">›</button></div></div>
+    <p class="small muted" style="text-align:center">Drag the outer band or the inner circle. Both rings turn.</p>`}
+  else h+=`<p class="small muted">You haven't found anything to read it with yet.</p>`;
+  if(disk&&tape)h+=`<button class="btn primary block" id="readTape">Read the tape through the disk</button><div class="decode" id="decTxt" aria-live="polite" style="min-height:52px">Set the disk, then read the tape. Each scrambled letter is found on the inner ring and read off the outer ring.</div>`;
+  el.innerHTML=h;
+  if(disk){drawWheel();$$("[data-turn]").forEach(b=>b.onclick=()=>{const r=b.dataset.turn[0],d=+b.dataset.turn.slice(1);if(r==="o")oRot+=d;else iRot+=d;sfx.tick();updWheel(true)});wireWheel()}
+  if(disk&&tape)$("#readTape").onclick=readTape;
+}
+function drawWheel(){
+  const cx=150,cy=150,st=360/26;let o=`<circle cx="150" cy="150" r="146" fill="var(--surface2)" stroke="var(--line)"/>`;
+  o+=`<g id="outerG" transform="rotate(${oRot*st} 150 150)"><circle cx="150" cy="150" r="140" fill="none" stroke="var(--line)" stroke-dasharray="1 5"/>`;
+  for(let i=0;i<26;i++){const a=(i*st-90)*Math.PI/180;o+=`<text x="${cx+125*Math.cos(a)}" y="${cy+125*Math.sin(a)+4}" text-anchor="middle" fill="${i===0?"var(--gold)":"var(--ink)"}" style="font-size:${i===0?15:12}px;font-weight:700">${AB[i]}</text>`}
+  o+=`</g><circle cx="150" cy="150" r="106" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/>`;
+  o+=`<g id="innerG" transform="rotate(${iRot*st} 150 150)">`;
+  for(let i=0;i<26;i++){const a=(i*st-90)*Math.PI/180;o+=`<line x1="${cx+106*Math.cos(a)}" y1="${cy+106*Math.sin(a)}" x2="${cx+98*Math.cos(a)}" y2="${cy+98*Math.sin(a)}" stroke="var(--line)"/><text x="${cx+86*Math.cos(a)}" y="${cy+86*Math.sin(a)+4}" text-anchor="middle" fill="var(--accent)" style="font-size:12px;font-weight:700">${AB[i]}</text>`}
+  o+=`<circle cx="150" cy="150" r="62" fill="var(--surface)" stroke="var(--accent2)" stroke-dasharray="2 6"/></g>`;
+  o+=`<text x="150" y="134" text-anchor="middle" fill="var(--muted)" style="font-size:8px">OUTER A SITS OVER</text><text id="pairTxt" x="150" y="162" text-anchor="middle" fill="var(--accent)" style="font-size:26px;font-weight:700"></text><text x="150" y="178" text-anchor="middle" fill="var(--muted)" style="font-size:8px">ON THE INNER RING</text>`;
+  $("#wheel").innerHTML=o;gDeg={o:null,i:null};updWheel(false);
+}
+function tweenG(id,key,target,anim){const g=$("#"+id);if(!g)return;if(gDeg[key]===null||!anim||reduce){gDeg[key]=target;g.setAttribute("transform",`rotate(${target} 150 150)`);return}
+  cancelAnimationFrame(gRAF[key]);const from=gDeg[key],t0=performance.now();const f=now=>{const k=Math.min(1,(now-t0)/160);gDeg[key]=from+(target-from)*(1-Math.pow(1-k,3));g.setAttribute("transform",`rotate(${gDeg[key]} 150 150)`);if(k<1)gRAF[key]=requestAnimationFrame(f)};gRAF[key]=requestAnimationFrame(f)}
+function updWheel(anim){const st=360/26;tweenG("outerG","o",oRot*st,anim);tweenG("innerG","i",iRot*st,anim);const pt=$("#pairTxt");if(pt)pt.textContent=AB[kOff()]}
+function wireWheel(){const el=$("#wheel");let drag=null;
+  function polar(e){const r=el.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2);return {a:Math.atan2(y,x)*180/Math.PI,d:Math.hypot(x,y)/(r.width/2)*150}}
+  el.addEventListener("pointerdown",e=>{const p=polar(e);if(p.d>148)return;drag={ring:p.d>106?"o":"i",a0:p.a,r0:p.d>106?oRot:iRot};try{el.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()});
+  el.addEventListener("pointermove",e=>{if(!drag)return;let d=polar(e).a-drag.a0;if(d>180)d-=360;if(d<-180)d+=360;const n=drag.r0+Math.round(d/(360/26));
+    if(drag.ring==="o"&&n!==oRot){oRot=n;sfx.tick();updWheel(true)}if(drag.ring==="i"&&n!==iRot){iRot=n;sfx.tick();updWheel(true)}
+    if(Math.abs(d)>150){drag.a0=polar(e).a;drag.r0=drag.ring==="o"?oRot:iRot}});
+  ["pointerup","pointercancel"].forEach(t=>el.addEventListener(t,()=>{drag=null}));
+}
+let typeT=null;
+function readTape(){const out=decodeK(CANON.e1.cipher,kOff());const el=$("#decTxt");clearInterval(typeT);el.textContent="";let i=0;sfx.tap();
+  if(reduce){el.textContent=out;return}typeT=setInterval(()=>{i+=2;el.textContent=out.slice(0,i);if(i%6===0)sfx.tick();if(i>=out.length)clearInterval(typeT)},22)}
+
+/* ---------- E2 supper table ---------- */
+const GCOL={Ivy:"#3f9a6a",Moss:"#7a8a2e",Rook:"#3a3f55",Sable:"#a0522d"};
+let seating={N:null,E:null,S:null,W:null},selGuest=null,struck={};
+function paintRoom(){
+  const seats={N:[150,62],E:[238,150],S:[150,238],W:[62,150]};const keeperKnown=hasF("e2","glasses");
+  let o=`<rect x="6" y="6" width="288" height="288" rx="18" fill="var(--surface2)" stroke="var(--line)"/>
+  <rect x="6" y="6" width="288" height="16" rx="8" fill="color-mix(in srgb,var(--ink) 12%,transparent)"/>
+  <g transform="translate(150 22)"><circle r="15" fill="var(--bg)" stroke="var(--gold)" stroke-width="2.5"/><path d="M0 0V-9M0 0l6 4" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/></g>
+  <text x="150" y="292" text-anchor="middle" fill="var(--muted)" font-size="10" letter-spacing="2">S · DOOR</text>
+  <text x="18" y="154" fill="var(--muted)" font-size="10">W</text><text x="276" y="154" fill="var(--muted)" font-size="10">E</text><text x="196" y="26" fill="var(--muted)" font-size="10">N · clock</text>
+  <rect x="100" y="100" width="100" height="100" rx="10" fill="color-mix(in srgb,var(--accent) 22%,var(--bg))" stroke="var(--accent)" stroke-width="2"/>
+  <circle cx="150" cy="150" r="10" fill="var(--gold)" opacity=".7"/>`;
+  for(const [k,[x,y]] of Object.entries(seats)){const g=seating[k];const keeper=keeperKnown&&k==="W";
+    o+=`<g class="seat" data-seat="${k}" tabindex="0" role="button" aria-label="${{N:"North",E:"East",S:"South",W:"West"}[k]} chair${g?", "+g:""}">
+    <rect x="${x-26}" y="${y-26}" width="52" height="52" rx="12" fill="${g?GCOL[g]:"var(--bg)"}" stroke="${keeper?"var(--gold)":"var(--line)"}" stroke-width="${keeper?3:2}" ${g?"":'stroke-dasharray="4 4"'}/>
+    <text x="${x}" y="${y+5}" text-anchor="middle" fill="${g?"#fff":"var(--muted)"}" font-size="${g?13:11}" font-weight="700">${g||k}</text></g>`}
+  $("#room").innerHTML=o;
+  $$("#room .seat").forEach(s=>{const act=()=>{const k=s.dataset.seat;if(selGuest){for(const q in seating)if(seating[q]===selGuest)seating[q]=null;seating[k]=selGuest;selGuest=null;sfx.step()}else if(seating[k]){seating[k]=null;sfx.tap()}paintRoom()};s.onclick=act;s.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}}});
+  const placed=Object.values(seating);
+  $("#tray").innerHTML=CANON.e2.guests.map(g=>`<button class="guest ${selGuest===g?"sel":""} ${placed.includes(g)?"placed":""}" data-g="${g}"><i style="background:${GCOL[g]}">${g[0]}</i>${g}</button>`).join("");
+  $$("#tray .guest").forEach(b=>b.onclick=()=>{selGuest=selGuest===b.dataset.g?null:b.dataset.g;sfx.tap();paintRoom()});
+}
+$("#clearTable").onclick=()=>{seating={N:null,E:null,S:null,W:null};selGuest=null;sfx.tap();paintRoom()};
+
+/* ---------- E3 floor ---------- */
+let path=[];
+function knightOK(a,b){const dr=Math.abs(a[0]-b[0]),dc=Math.abs(a[1]-b[1]);return (dr===2&&dc===1)||(dr===1&&dc===2)}
+function paintFloor(){
+  const G=CANON.e3.grid,st=CANON.e3.start;const last=path[path.length-1];const star=hasF("e3","pin"),rule=hasF("e3","journal");
+  $("#floorHelp").textContent=!star?"Where did the Keeper start? Search the room first.":!rule?"Tap the star to begin, then tap tiles to walk. You don't know how the Keeper moved yet, so any tile is allowed.":"Tap the star to begin. Tiles you could reach with the Keeper's step are lit.";
+  let h="";for(let r=0;r<5;r++)for(let c=0;c<5;c++){const isS=star&&r===st[0]&&c===st[1];const on=path.some(p=>p[0]===r&&p[1]===c);const can=last?(!on&&(!rule||knightOK(last,[r,c]))):isS;const glow=can&&(rule||!last);const isCur=last&&last[0]===r&&last[1]===c;
+    h+=`<button class="tile ${(r+c)%2?"d":"l"} ${isS?"start":""} ${on?"on":""} ${glow?"can":""} ${isCur?"cur":""}" data-ok="${can?1:0}" data-r="${r}" data-c="${c}" aria-label="Row ${r+1}, column ${c+1}, letter ${G[r][c]}${isS?", star":""}">${G[r][c]}</button>`}
+  $("#floorGrid").innerHTML=h;
+  $$("#floorGrid .tile").forEach(t=>t.onclick=()=>{const p=[+t.dataset.r,+t.dataset.c];if(t.dataset.ok!=="1"){if(!path.length){toast(star?"Start on the star":"Where did the Keeper start? Search the room.");const fh=$("#floorHelp");fh.classList.remove("nudge");void fh.offsetWidth;fh.classList.add("nudge")}else toast("The Keeper never stepped like that");return}path.push(p);sfx.step();paintFloor()});
+  $("#floorSvg").innerHTML=path.length>1?`<polyline points="${path.map(([r,c])=>`${c*100+50},${r*100+50}`).join(" ")}" fill="none" stroke="var(--gold)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>`+path.map(([r,c],i)=>`<circle cx="${c*100+50}" cy="${r*100+50}" r="${i===path.length-1?11:7}" fill="var(--gold)"/>`).join(""):"";
+  $("#trail").innerHTML=path.length?path.map(([r,c])=>`<span>${G[r][c]}</span>`).join(""):'<span class="small muted" style="width:auto;padding:0 12px;font-family:var(--body);font-size:13px;background:none;border:0">Your trail appears here</span>';
+}
+$("#undoStep").onclick=()=>{path.pop();sfx.tap();paintFloor()};
+$("#resetFloor").onclick=()=>{path=[];sfx.tap();paintFloor()};
+$("#copyTrail").onclick=()=>{if(!path.length)return toast("Walk the floor first");const w=path.map(([r,c])=>CANON.e3.grid[r][c]).join("");const ta=$("#led-e3");ta.value=(ta.value?ta.value+"\n":"")+"Trail: "+w;ta.focus();toast("Added to your theory. Save it when ready.")};
+
+/* ---------- VAULT ---------- */
+/* INSECURE FICTIONAL SAMPLE: demo-only hash of the normalised final answer. */
+const VAULT_HASH="2f40053a";
+function norm(s){return s.toUpperCase().replace(/[^A-Z]/g,"")}
+function paintDoor(){
+  const bolts=Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180;return `<circle cx="${100+86*Math.cos(a)}" cy="${100+86*Math.sin(a)}" r="4" fill="var(--gold)" opacity=".85"/>`}).join("");
+  const ticks=Array.from({length:40},(_,i)=>{const a=i*9*Math.PI/180,l=i%5?4:9;return `<line x1="${100+52*Math.cos(a)}" y1="${100+52*Math.sin(a)}" x2="${100+(52-l)*Math.cos(a)}" y2="${100+(52-l)*Math.sin(a)}" stroke="var(--ink)" stroke-opacity=".6" stroke-width="1.5"/>`}).join("");
+  $("#vdoor").innerHTML=`<svg viewBox="0 0 200 200"><defs><radialGradient id="vg" cx="40%" cy="35%"><stop offset="0" stop-color="var(--surface2)"/><stop offset="1" stop-color="var(--bg)"/></radialGradient></defs>
+  <circle cx="100" cy="100" r="98" fill="url(#vg)" stroke="var(--accent)" stroke-width="3"/>
+  <circle cx="100" cy="100" r="78" fill="none" stroke="var(--line)" stroke-width="6"/>${bolts}
+  <g class="dialg" id="dialg"><circle cx="100" cy="100" r="56" fill="var(--surface)" stroke="var(--gold)" stroke-width="2"/>${ticks}<circle cx="100" cy="100" r="20" fill="var(--surface2)" stroke="var(--accent)" stroke-width="2"/><path d="M100 82v-14" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/></g>
+  <rect x="2" y="88" width="14" height="24" rx="4" fill="var(--gold)" opacity=".6"/></svg>`;
+  if(S.solved){$("#vdoor").classList.add("open");$("#vaultwrap").classList.add("opened")}
+}
+function paintVault(){
+  paintDoor();
+  $("#mine").innerHTML=[["Tower","e1"],["Table","e2"],["Floor","e3"]].map(([l,k])=>`<div><span>${l}</span><b>${esc((S.ledger[k]||"—").split("\n")[0].slice(0,40))}</b></div>`).join("");
+  paintAttempts();cooldownTick();paintReward();
+}
+function paintAttempts(){$("#attempts").innerHTML=S.attempts.length?S.attempts.slice().reverse().map((a,i)=>`<div><span>#${S.attempts.length-i} · ${new Date(a.t).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"})}</span><span>${a.r}</span></div>`).join(""):'<span class="muted" style="font-family:var(--body)">No attempts yet.</span>'}
+function cooldownTick(){const b=$("#tryVault");if(!b)return;if(S.solved){b.disabled=true;b.textContent="The vault is open";return}const left=Math.ceil((S.cooldownUntil-Date.now())/1000);if(left>0){b.disabled=true;b.textContent=`Same wait for everyone · ${left}s`}else{b.disabled=false;b.textContent="Try the vault"}}
+let spinDeg=0;
+$("#tryVault").onclick=()=>{
+  const v=$("#vaultIn").value;if(!norm(v)){toast("Speak to the door first");return}
+  if(Date.now()<S.cooldownUntil)return;
+  ac();const ok=fnv(norm(v))===VAULT_HASH;spinDeg+=720+Math.random()*360;$("#dialg").style.transform=`rotate(${spinDeg}deg)`;
+  for(let i=0;i<10;i++)setTimeout(sfx.tick,i*100);
+  $("#tryVault").disabled=true;$("#vaultMsg").textContent="The dial turns…";
+  setTimeout(()=>{
+    S.attempts.push({t:Date.now(),r:ok?"OPEN":"LOCKED"});
+    if(ok){S.solved=true;S.earned.vault=true;sfx.open();$("#vdoor").classList.add("open");$("#vaultwrap").classList.add("opened");$("#vaultMsg").textContent="OPEN";confetti();}
+    else{S.cooldownUntil=Date.now()+20000;sfx.lock();const d=$("#vdoor");d.classList.remove("shake");void d.offsetWidth;d.classList.add("shake");$("#vaultMsg").innerHTML="LOCKED<br><span class='small muted' style='font-weight:400'>The vault remains locked. Your reasoning remains yours.</span>"}
+    save();paintAttempts();cooldownTick();paintReward();
+  },1300);
+};
+function paintReward(){const c=$("#rewardCard");if(!S.solved){c.hidden=true;return}c.hidden=false;
+  c.innerHTML=`<div class="reward"><svg class="badge" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="var(--surface2)" stroke="var(--gold)" stroke-width="3"/><circle cx="50" cy="38" r="12" fill="none" stroke="var(--gold)" stroke-width="5"/><path d="M50 50v28M50 64h10M50 72h7" stroke="var(--gold)" stroke-width="5" stroke-linecap="round"/></svg>
+  <div class="eyebrow">Verified solver · Season 1 demo</div><h2 style="margin:6px 0">${esc(S.persona.name)} opened the vault</h2>
+  <p class="muted small">The Keeper's last word was the end of a game. The clock, the rook and the board were pieces of it all along.</p></div>
+  <div class="mine"><div><span>Earned mark</span><b>Keeper's Key pin</b></div><div><span>Vault Credit</span><b>+1 earned</b></div><div><span>First prize</span><b>None · demo</b></div></div>
+  <p class="small muted">In the real game, the first verified solver wins the season prize, and everyone who solves before the answer key is published earns a small style-only credit. The season stays open for everyone after that.</p>
+  <button class="btn block" data-go="studio">See your Keeper's Key in the Studio</button>`}
+function confetti(){if(reduce)return;const c=$("#confetti"),x=c.getContext("2d");c.width=innerWidth*DPR;c.height=innerHeight*DPR;x.setTransform(DPR,0,0,DPR,0,0);const cols=[css("--accent"),css("--accent2"),css("--gold"),"#ffffff"];
+  const ps=Array.from({length:160},()=>({x:innerWidth/2,y:innerHeight*.4,vx:rnd(-7,7),vy:rnd(-13,-3),r:rnd(3,7),c:cols[Math.random()*4|0],a:rnd(0,6),va:rnd(-.3,.3)}));let n=0;
+  (function f(){x.clearRect(0,0,innerWidth,innerHeight);for(const p of ps){p.x+=p.vx;p.y+=p.vy;p.vy+=.32;p.vx*=.99;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()}if(++n<200)requestAnimationFrame(f);else x.clearRect(0,0,innerWidth,innerHeight)})()}
+
+/* ---------- LEDGER ---------- */
+function paintLedger(){
+  $("#ledgerAll").innerHTML=[["e1","01 · The Signal Tower"],["e2","02 · The Supper Table"],["e3","03 · The Cartographer's Floor"]].map(([k,t])=>`<div class="item"><b>${t}</b><p>${S.ledger[k]?esc(S.ledger[k]):'<span class="muted">No theory yet.</span>'}</p></div>`).join("")+
+  `<div class="item"><b>✦ Final vault attempts</b><p>${S.attempts.length?S.attempts.map((a,i)=>`#${i+1} ${new Date(a.t).toLocaleString()} · ${a.r}`).join("\n"):'<span class="muted">None yet.</span>'}</p></div>`;
+}
+$("#resetAll").onclick=()=>{$("#resetConfirm").hidden=false};
+$("#resetNo").onclick=()=>{$("#resetConfirm").hidden=true};
+$("#resetYes").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}S=JSON.parse(JSON.stringify(defaults));document.body.dataset.world=S.world;resize();path=[];shift=0;oRot=0;iRot=0;seating={N:null,E:null,S:null,W:null};$("#vdoor").classList.remove("open");$("#vaultwrap").classList.remove("opened");$("#resetConfirm").hidden=true;$("#vaultIn").value="";$("#vaultMsg").textContent="";struck={};selGuest=null;paintLedgerBoxes();paintAvatars();go("splash")};
+
+/* ---------- COMMONS (simulated) ---------- */
+const PEOPLE=[
+ {n:"Quill",team:"Cartographers",p:{skin:1,hair:1,hairColor:4,outfit:3,acc:1,aura:0}},
+ {n:"Night Owl",team:"Night Shift",p:{skin:4,hair:4,hairColor:0,outfit:6,acc:3,aura:0,shop:"comet"}},
+ {n:"Bramble",team:"Wildcards",p:{skin:2,hair:2,hairColor:3,outfit:2,acc:2,aura:1}},
+ {n:"Static",team:null,p:{skin:0,hair:5,hairColor:7,outfit:4,acc:4,aura:0}},
+ {n:"Oriel",team:"Lantern Club",p:{skin:3,hair:0,hairColor:1,outfit:5,acc:5,aura:2,shop:"gilded"}},
+ {n:"Ferro",team:"Night Shift",p:{skin:5,hair:3,hairColor:0,outfit:1,acc:0,aura:0}},
+ {n:"Tamsin",team:"Cartographers",p:{skin:1,hair:1,hairColor:2,outfit:7,acc:1,aura:0,shop:"lantern"}}];
+const SCRIPT=[
+ [0,"Don't touch the disk until you've read the logbook. Trust me.",0],
+ [1,"Tower answer is WATCH. Hands, no holding, done.",1],
+ [3,"A watch doesn't stand in a tower though…",0],
+ [2,"Is it just me or are all the supper guests named after plants and birds?",0],
+ [4,"Our team has a seating that fits every clue. Not saying who.",0],
+ [5,"Floor trail gives me BOAR then nothing. Five letters, so I'm missing something.",1],
+ [6,"Tried the vault with my three answers in order. LOCKED. No idea which part is wrong 😩",0],
+ [1,"Same. We agree on all three rooms and the door still won't open.",0],
+ [0,"Re-read the inscription. It's not asking for your three answers at all.",1],
+ [3,"Clue 3 says 'as seen from above'. That matters.",0],
+ [4,"The door 'only listens' if you name the game? So naming it isn't enough.",1],
+ [2,"Wildcards are probably all wrong again. Having a great time.",0]];
+let ctab="theories",feedIdx=4,feedTimer=null;
+function personPic(p,id){return avatarSVG(Object.assign({shop:null},p),id)}
+function msgHTML(m,i){const P=m.me?{n:S.persona.name,team:S.team,p:S.persona}:PEOPLE[m.who];const rid="r"+i;const r=S.reacts[rid];
+  return `<div class="msg ${m.me?"mine":""}"><div class="pic">${personPic(P.p,"c"+i)}</div><div class="bub"><div class="who">${esc(P.n)}${P.team?`<span class="team">${P.team}</span>`:""}<time>${m.me?"just now":m.ago}</time></div><div class="tx ${m.sp?"spoiler":""}" ${m.sp?'title="Spoiler: tap to reveal"':""}>${esc(m.tx)}</div>${m.me?'<div class="small muted" style="margin-top:4px">Only you can see this in the demo.</div>':`<div class="reacts"><button data-r="${rid}" class="${r?"on":""}">${r?"🤔 1":"🤔"}</button></div>`}</div></div>`}
+function feedMsgs(){const base=SCRIPT.slice(0,feedIdx).map((s,i)=>({who:s[0],tx:s[1],sp:!!s[2],ago:`${(feedIdx-i)*3}m`}));return base.concat(S.posts.map(t=>({me:true,tx:t})))}
+function paintCommons(){
+  $("#ctabs").innerHTML=[["theories","#s1-theories"],["teams","Teams"],["general","#general"]].map(([k,l])=>`<button class="tab ${ctab===k?"on":""}" data-ct="${k}">${l}</button>`).join("");
+  $$("#ctabs .tab").forEach(b=>b.onclick=()=>{ctab=b.dataset.ct;sfx.tap();paintCommons()});
+  const body=$("#cbody");
+  if(ctab==="teams"){
+    const T=[["Cartographers","#2a62a8","Map people. Slow and sure. 2,140 members"],["Night Shift","#3a3f55","Late solvers, loud theories. 1,388 members"],["Wildcards","#c2412d","Every theory welcome. 960 members"],["Lantern Club","#a8730f","Archive-season veterans. 512 members"]];
+    const others=Object.keys(WORLDS).filter(k=>k!==S.world);const crew=[{n:S.persona.name+" (you)",p:S.persona,w:S.world},{n:"Quill",p:PEOPLE[0].p,w:others[0]},{n:"Night Owl",p:PEOPLE[1].p,w:others[1]},{n:"Bramble",p:PEOPLE[2].p,w:others[2]},{n:"Oriel",p:PEOPLE[4].p,w:others[3]}];
+    body.innerHTML=`<div class="card stack" style="margin-bottom:14px"><div class="row" style="justify-content:space-between"><h3>Your crew right now</h3><span class="pill free">5 worlds · 1 puzzle</span></div><div class="crew">${crew.map((m,i)=>`<div class="m"><div class="pic">${personPic(Object.assign({shop:null},m.p),"crew"+i)}</div><div class="t"><b>${esc(m.n)}</b><span class="wd" style="background:${WCOL[m.w]}"></span>${WORLDS[m.w].name}${WORLDS[m.w].premium?" · premium":""}</div><span class="pill">Ep 3</span></div>`).join("")}</div><p class="small muted">Five friends in five different worlds, all on Episode 3, word for word the same (fingerprint ${FP.e3}). Nobody gets an easier version.</p></div><div class="card stack"><p class="small muted">Every team is free to join or start. Membership never unlocks clues, tools or extra tries.</p><div class="teams">${T.map(([n,c,d])=>`<div class="team"><div class="crest" style="background:${c}">${n[0]}</div><div class="t"><b>${n}</b><br><span>${d}</span></div><button class="btn ${S.team===n?"primary":""}" data-team="${n}" style="min-height:38px;padding:0 14px">${S.team===n?"Joined":"Join free"}</button></div>`).join("")}</div><button class="btn block" id="startTeam">Start your own team</button></div>`;
+    $$("[data-team]").forEach(b=>b.onclick=()=>{S.team=S.team===b.dataset.team?null:b.dataset.team;save();sfx.save();paintCommons();if(S.team)toast(`You joined ${S.team}`)});
+    $("#startTeam").onclick=()=>toast("Team creation is free in the real game. Not wired up in the demo.");
+    return}
+  if(ctab==="general"){body.innerHTML=`<div class="card stack small"><p><b>Welcome to The Commons.</b> Share theories, tag spoilers, be kind.</p><p class="muted">In the real game: report, block and mute on every message, real moderators, spoiler tags, and streamer-friendly settings. Nobody, including staff, can see who's right.</p></div>`;return}
+  body.innerHTML=`<div class="feed" id="feed">${feedMsgs().map(msgHTML).join("")}</div><div class="compose" style="margin-top:12px"><input type="text" id="post" placeholder="Share a theory (tap the eye to spoiler-tag)" maxlength="160" aria-label="Write a message"><button class="btn primary" id="sendPost" style="min-height:48px">Post</button></div>`;
+  wireFeed();
+  $("#sendPost").onclick=()=>{const v=$("#post").value.trim();if(!v)return;S.posts.push(v);save();sfx.tap();paintCommons()};
+  clearInterval(feedTimer);feedTimer=setInterval(()=>{if(cur!=="commons"||ctab!=="theories"){clearInterval(feedTimer);return}if(feedIdx<SCRIPT.length){feedIdx++;const f=$("#feed");if(f){const ms=feedMsgs();const i=feedIdx-1;const tmp=document.createElement("div");tmp.innerHTML=msgHTML(ms[i],i);f.insertBefore(tmp.firstChild,f.children[i]||null);wireFeed();tone(990,.05,"sine",.03)}}},6000);
+}
+function wireFeed(){$$("#feed .spoiler").forEach(s=>s.onclick=()=>s.classList.toggle("shown"));$$("#feed [data-r]").forEach(b=>b.onclick=()=>{S.reacts[b.dataset.r]=!S.reacts[b.dataset.r];save();b.classList.toggle("on");b.textContent=S.reacts[b.dataset.r]?"🤔 1":"🤔"})}
+
+/* ---------- STUDIO / HALL ---------- */
+function paintStudio(){paintAvatars();optRows($("#studioOpts"),true);shopRow();paintFp()}
+function paintHall(){
+  paintPot();
+  $("#champAv").innerHTML=avatarSVG({skin:3,hair:2,hairColor:5,outfit:4,acc:2,aura:2,shop:null},"champ");
+  $("#curtain").classList.toggle("up",!!S.revealed);
+  $("#myStatus").innerHTML=S.solved?`<b>Verified solver (demo).</b> <span class="muted">You opened the vault after ${S.attempts.length} attempt${S.attempts.length>1?"s":""}. Your mark is permanent and can never be bought.</span>`:
+   `<b>Still hunting.</b> <span class="muted">${Object.values(S.ledger).filter(Boolean).length} of 3 theories saved, ${S.attempts.length} vault attempt${S.attempts.length===1?"":"s"}. That's all anyone can see about you: nothing about whether you're close.</span>`;
+}
+$("#reveal").onclick=()=>{S.revealed=true;save();sfx.open();$("#curtain").classList.add("up");setTimeout(confetti,700)};
+
+/* ---------- boot ---------- */
+document.body.dataset.world=S.world;$("#worldName").textContent=WORLDS[S.world].name;
+paintSound();paintFp();paintLedgerBoxes();paintAvatars();resize();if(!reduce)requestAnimationFrame(frame);
+go(S.step==="game"?"hunt":"splash");
+})();
+</script>

@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="en" data-world="starlight">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vault Explorers</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- The Vault: Explorers - Phase B prototype, adventure 1 "The Missing Beacon".
+     Self-contained: no network requests, no accounts, no links, no purchases, no tracking.
+     Progress is saved only in this browser (localStorage). -->
+<style>
+/* Layout: one centered column (max 720px) - top bar, guide bubble, then a light puzzle board.
+   Worlds only re-skin the frame (background, accents). Puzzle boards use one fixed palette in every world. */
+:root{
+  --font: ui-rounded, "SF Pro Rounded", "Nunito", "Varela Round", "Trebuchet MS", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --board:#fffdf7; --board-ink:#2b2547; --board-muted:#6d6690; --board-line:#e9e2d2;
+  --good:#2fae66; --oops:#e8544e;
+  --bg1:#1b1846; --bg2:#3a2a86; --onbg:#fff7e0; --panel:#fffaf0; --ink:#2a2346;
+  --accent:#ffc23d; --accent-ink:#3a2500; --accent2:#ff7aa8; --deco:"✨ 🌙 ⭐";
+  color-scheme: light;
+}
+html[data-world="starlight"]{--bg1:#1b1846;--bg2:#3d2c8c;--onbg:#fff7e0;--panel:#fffaf0;--ink:#2a2346;--accent:#ffc23d;--accent-ink:#3a2500;--accent2:#ff7aa8;
+  --pattern: radial-gradient(circle at 20% 30%, rgba(255,255,255,.9) 1px, transparent 2px) 0 0/90px 90px, radial-gradient(circle at 70% 80%, rgba(255,230,160,.7) 1px, transparent 2px) 0 0/130px 130px;}
+html[data-world="jungle"]{--bg1:#0d4d34;--bg2:#1f8a55;--onbg:#fffbe6;--panel:#fffdf2;--ink:#1d3324;--accent:#ffb703;--accent-ink:#3b2600;--accent2:#fb7a3c;
+  --pattern: radial-gradient(ellipse 18px 8px at 30% 40%, rgba(150,230,140,.18) 90%, transparent) 0 0/80px 70px, radial-gradient(ellipse 8px 16px at 70% 70%, rgba(255,240,150,.12) 90%, transparent) 0 0/110px 90px;}
+html[data-world="reef"]{--bg1:#0a5d7a;--bg2:#17a3b4;--onbg:#f2fffd;--panel:#f4fffd;--ink:#10343d;--accent:#ff8a73;--accent-ink:#3d1208;--accent2:#ffd166;
+  --pattern: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22) 4px, transparent 5px) 0 0/70px 90px, radial-gradient(circle at 75% 65%, rgba(255,255,255,.15) 7px, transparent 8px) 0 0/120px 140px;}
+html[data-world="clouds"]{--bg1:#9fc2ff;--bg2:#ffd3ee;--onbg:#33275a;--panel:#ffffff;--ink:#3b2d5c;--accent:#8a5cf6;--accent-ink:#ffffff;--accent2:#ff8fab;
+  --pattern: radial-gradient(ellipse 40px 16px at 30% 40%, rgba(255,255,255,.55) 90%, transparent) 0 0/170px 120px, radial-gradient(ellipse 28px 12px at 80% 80%, rgba(255,255,255,.45) 90%, transparent) 0 0/220px 160px;}
+
+html{font-size:17px;min-height:100%;-webkit-text-size-adjust:100%;background:var(--bg1);background:var(--pattern), linear-gradient(165deg,var(--bg1),var(--bg2))}
+html.big{font-size:20px}
+html.easy body{letter-spacing:.05em;word-spacing:.14em}
+html.easy p, html.easy .bubble p{line-height:1.75}
+body{margin:0;min-height:100vh;font-family:var(--font);color:var(--ink);background:transparent;
+  -webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+button:focus-visible{outline:4px solid var(--accent2);outline-offset:2px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.15}
+p{margin:0;line-height:1.5}
+#app{max-width:720px;margin:0 auto;padding-block:10px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:14px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:8px}
+.top .ttl{flex:1;min-width:0;color:var(--onbg);font-weight:900;font-size:1.05rem;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:46px;height:46px;border-radius:50%;border:0;background:var(--panel);display:grid;place-items:center;font-size:1.3rem;box-shadow:0 3px 0 rgba(0,0,0,.18);flex:none}
+.ib:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
+.sparks{display:flex;align-items:center;gap:6px;height:46px;padding:0 14px;border-radius:23px;background:var(--panel);font-weight:900;box-shadow:0 3px 0 rgba(0,0,0,.18);border:0;font-variant-numeric:tabular-nums;flex:none}
+.sparks b{color:#e29a00;font-size:1.15rem}
+.sparks.pop{animation:pop .6s}
+@keyframes pop{40%{transform:scale(1.18)}}
+
+/* guide */
+.guide{display:flex;align-items:flex-end;gap:8px}
+.pip{width:70px;flex:none;filter:drop-shadow(0 4px 0 rgba(0,0,0,.15))}
+.pip svg{width:100%;height:auto;display:block}
+.pip .eyes{animation:blink 5s infinite;transform-origin:40px 44px}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.bubble{position:relative;flex:1;min-width:0;background:var(--panel);border-radius:20px;padding:12px 14px;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.bubble::before{content:"";position:absolute;left:-9px;bottom:16px;border:10px solid transparent;border-right-color:var(--panel);border-left:0}
+.bubble p{font-size:1.02rem;font-weight:600}
+.brow{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.brow:empty{display:none}
+.mini{border:0;border-radius:14px;padding:8px 14px;min-height:40px;font-weight:800;background:#efe9fb;color:#3b2d5c}
+.mini.go{background:var(--accent);color:var(--accent-ink)}
+
+/* boards & buttons */
+.board{background:var(--board);color:var(--board-ink);border-radius:24px;padding:16px;box-shadow:0 4px 0 rgba(0,0,0,.16);display:flex;flex-direction:column;gap:14px}
+.board h2{font-size:1.25rem}
+.board .sub{color:var(--board-muted);font-weight:600;font-size:.92rem}
+.btn{border:0;border-radius:18px;min-height:54px;padding:12px 20px;font-weight:900;font-size:1.05rem;background:var(--accent);color:var(--accent-ink);box-shadow:0 4px 0 rgba(0,0,0,.22)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
+.btn.alt{background:#efe9fb;color:#3b2d5c}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.hintbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.hintbtn{border:0;border-radius:16px;min-height:48px;padding:8px 16px;font-weight:900;background:#fff3c4;color:#5a4300;box-shadow:0 3px 0 #e7cf7a}
+.hintbox{display:flex;gap:10px;align-items:flex-start;background:#fff3c4;border:2px solid #f0d36e;border-radius:16px;padding:12px 14px;font-weight:700;color:#4a3800;animation:rise .25s ease-out}
+.hintbox span{font-size:1.3rem;line-height:1.2}
+.free{font-size:.82rem;color:var(--board-muted);font-weight:700}
+.note{font-size:.8rem;color:var(--board-muted)}
+.msg{border-radius:16px;padding:10px 14px;font-weight:700;background:#f1edff;color:#3b2d5c}
+.msg.good{background:#dcf7e6;color:#155c33}
+.msg.oops{background:#ffe6e2;color:#7d211c}
+
+/* hub */
+.beacon-card{background:var(--panel);border-radius:24px;overflow:hidden;box-shadow:0 4px 0 rgba(0,0,0,.16)}
+.beacon-card svg{display:block;width:100%;height:auto}
+.stops{display:flex;flex-direction:column;gap:0}
+.stop{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;background:var(--panel);border-radius:22px;padding:12px 14px;box-shadow:0 4px 0 rgba(0,0,0,.16);min-height:84px}
+.stop:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.16)}
+.stop .ic{width:60px;height:60px;border-radius:18px;background:#f3eefe;display:grid;place-items:center;flex:none}
+.stop .ic svg{width:48px;height:48px}
+.stop .tx{flex:1;min-width:0}
+.stop .tx h3{font-size:1.1rem}
+.stop .tx p{font-size:.88rem;color:#6d6690;font-weight:600}
+.stop .st{font-size:1.5rem;flex:none}
+.stop.locked{opacity:.6}
+.stop.done .ic{background:#dcf7e6}
+.link{width:6px;height:16px;margin-left:42px;background:repeating-linear-gradient(var(--onbg) 0 4px,transparent 4px 8px);opacity:.7}
+.worldtag{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:20px;padding:8px 14px;min-height:44px;background:rgba(255,255,255,.18);color:var(--onbg);font-weight:800}
+html[data-world="clouds"] .worldtag{background:rgba(255,255,255,.6)}
+
+/* observatory */
+.sunbar{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.85rem;color:var(--board-muted)}
+.sunbar .sun{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#fff4b0,#ffb300 60%,#ff7a00);box-shadow:0 0 14px #ffc94d;flex:none}
+.sunbar .arrow{flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#ffb300,#c9c2e6)}
+.orbits{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#1d1a45;border-radius:18px;padding:10px;position:relative}
+.belt{grid-column:1/-1;text-align:center;font-size:.72rem;font-weight:800;color:#b9b2e8;letter-spacing:.06em;text-transform:uppercase;
+  background:radial-gradient(circle,#8d86b8 1px,transparent 1.6px) 0 0/9px 7px;padding:2px 0;border-radius:6px}
+.oslot{aspect-ratio:1/1.05;border-radius:14px;border:2px dashed #5d579a;background:rgba(255,255,255,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#cfc9f5;padding:4px;min-height:64px}
+.oslot .n{font-size:.72rem;font-weight:900;opacity:.85}
+.oslot svg{width:44px;height:44px;flex:none}
+.oslot .pn{font-size:.68rem;font-weight:800;color:#fff}
+.oslot.lock{border:2px solid #ffd76a;background:rgba(255,215,106,.14);box-shadow:0 0 14px rgba(255,215,106,.45)}
+.oslot.target{border-color:#ffd76a;background:rgba(255,215,106,.08)}
+.tray{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pchip{border:3px solid transparent;background:#f3eefe;border-radius:16px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:76px;font-weight:800;font-size:.78rem;color:#3b2d5c}
+.pchip svg{width:48px;height:48px}
+.pchip.sel{border-color:var(--accent2);background:#fff0f5;transform:translateY(-3px)}
+.pchip.gone{visibility:hidden}
+.wiggle{animation:wiggle .5s 2}
+@keyframes wiggle{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.comet{flex:none;border:0;background:transparent;font-size:1.3rem;width:44px;height:44px;padding:0;animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translate(-4px,4px)}}
+
+/* bridge */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.labbtn{border:0;background:#f3eefe;border-radius:18px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;color:#3b2d5c;min-height:120px}
+.labbtn svg{width:70px;height:70px;overflow:visible}
+.labbtn .shape{transform-box:fill-box;transform-origin:50% 100%;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.labbtn.pushed .sq{transform:skewX(28deg) scaleY(.88)}
+.labbtn.pushed .tri{animation:hold .5s}
+@keyframes hold{30%{transform:translateX(3px)}60%{transform:translateX(-2px)}}
+.labres{font-size:.8rem;font-weight:700;color:#6d6690;text-align:center;min-height:2.4em}
+.bridge-wrap{background:linear-gradient(#cdeeff,#eaf8ff);border-radius:18px;overflow:hidden}
+.bridge-svg{display:block;width:100%;height:auto}
+.bridge-wrap{position:relative}
+.btap{position:absolute;border:0;padding:0;margin:0;background:transparent;border-radius:10px;cursor:pointer;-webkit-appearance:none;appearance:none}
+.btap:active{background:rgba(125,107,214,.18)}
+.bridge-svg .squish{transform-box:fill-box;transform-origin:50% 100%;animation:squish .6s forwards}
+@keyframes squish{to{transform:skewX(30deg) scaleY(.6)}}
+.bridge-svg .rollaway{animation:roll 1s forwards}
+@keyframes roll{to{transform:translate(40px,60px)}}
+.shapes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.schip{border:3px solid transparent;background:#f3eefe;border-radius:16px;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:900;color:#3b2d5c;font-size:.8rem}
+.schip svg{width:34px;height:34px}
+.schip.sel{border-color:var(--accent2);background:#fff0f5;transform:translateY(-3px)}
+.schip[disabled]{opacity:.35}
+
+/* trail */
+.prints{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.print{border:3px solid transparent;background:#f5efe2;border-radius:18px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:120px;font-weight:800;color:#5a4a33;font-size:.8rem}
+.print svg{width:64px;height:64px}
+.print.no{background:#ffe9e4}
+.print.yes{border-color:var(--good);background:#dcf7e6}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:#6fb85a;padding:6px;border-radius:18px}
+.tile{aspect-ratio:1;border-radius:10px;background:#9bd67e;position:relative;display:grid;place-items:center;font-size:1.25rem;overflow:hidden}
+.tile.forest{background:#4f9a4a}
+.tile.water{background:#64c3ec}
+.tile.meadow{background:#b9e07e}
+.tile .deco{opacity:.95}
+.tile .tp{position:absolute;inset:14%;display:grid;place-items:center}
+.tile .tp svg{width:100%;height:100%}
+.tile.seen .tp{opacity:.35}
+.tile.here{box-shadow:inset 0 0 0 4px #ffd23f}
+.tile .me{position:absolute;right:3px;bottom:3px;width:38%;height:38%;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.tile .secretbtn{position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:transparent;font-size:1.1rem;padding:0;display:flex;align-items:flex-end;justify-content:flex-start;padding:4px}
+.compass{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,64px);gap:6px;justify-content:center}
+.cbtn{border:0;border-radius:18px;background:var(--accent);color:var(--accent-ink);font-weight:900;font-size:1.3rem;box-shadow:0 4px 0 rgba(0,0,0,.22)}
+.cbtn small{display:block;font-size:.6rem;font-weight:800;opacity:.85}
+.cbtn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
+.crose{display:grid;place-items:center;font-size:1.6rem;color:#8b83b8}
+
+/* vault */
+.vault{background:radial-gradient(circle at 50% 35%,#4b4380,#231f4a);border-radius:22px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:14px;color:#efeaff}
+.engrave{font-weight:800;text-align:center;font-size:1rem;color:#ffe9a8;letter-spacing:.02em;max-width:30ch}
+.dials{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:420px}
+.dial{aspect-ratio:1;border-radius:50%;border:5px solid #ffd76a;background:radial-gradient(circle,#3a336d,#1a1638);display:grid;place-items:center;box-shadow:0 0 0 4px #2a2552, 0 6px 0 rgba(0,0,0,.35)}
+.dial svg{width:62%;height:62%}
+.dial.spin{animation:spin .3s}
+@keyframes spin{from{transform:rotate(-40deg)}}
+.dlabel{text-align:center;font-size:.75rem;font-weight:800;color:#c9c2f0;margin-top:4px}
+.mysyms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.symcard{background:#f3eefe;border-radius:16px;padding:8px;text-align:center;font-weight:800;color:#3b2d5c;font-size:.78rem}
+.symcard svg{width:44px;height:44px}
+.symcard .num{display:inline-block;margin-top:2px;background:#ffd76a;color:#3a2500;border-radius:10px;padding:1px 9px;font-size:1rem;font-variant-numeric:tabular-nums}
+.symcard.empty{opacity:.45}
+
+/* room */
+.room{position:relative;aspect-ratio:4/3;border-radius:22px;overflow:hidden;box-shadow:0 4px 0 rgba(0,0,0,.16)}
+.room .wall{position:absolute;inset:0 0 34% 0}
+.room .floor{position:absolute;inset:66% 0 0 0;box-shadow:inset 0 10px 14px rgba(0,0,0,.15)}
+.room .win{position:absolute;left:6%;top:9%;width:26%;aspect-ratio:1;border-radius:14px 14px 4px 4px;border:6px solid #fff;background:var(--bg1);background:var(--pattern),linear-gradient(165deg,var(--bg1),var(--bg2));box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.room .win::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:5px;margin-left:-2.5px;background:#fff}
+.room .art{position:absolute;left:41%;top:10%;width:22%;aspect-ratio:1/1.1;border:5px solid #8a5a3c;background:#fff8ec;display:grid;place-items:center;font-size:clamp(1.4rem,7vw,2.8rem)}
+.room .art.empty{border-style:dashed;border-color:rgba(0,0,0,.2);background:transparent}
+.room .shelf{position:absolute;right:6%;top:38%;width:24%;height:4%;background:#8a5a3c;border-radius:3px}
+.room .shelf span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:clamp(1.4rem,7vw,2.8rem);line-height:1}
+.room .corner{position:absolute;left:5%;bottom:10%;font-size:clamp(2rem,11vw,4.4rem);line-height:1}
+.room .ava{position:absolute;left:50%;bottom:6%;width:24%;transform:translateX(-50%)}
+.room .ava svg{width:100%;height:auto;display:block}
+.room .pet{position:absolute;left:68%;bottom:8%;font-size:clamp(1.6rem,8vw,3.2rem);line-height:1}
+.room .rname{position:absolute;left:10px;bottom:8px;background:rgba(255,255,255,.85);border-radius:12px;padding:4px 10px;font-weight:900;font-size:.8rem;color:#3b2d5c}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;border-radius:14px;padding:8px 12px;min-height:44px;font-weight:800;background:#f3eefe;color:#3b2d5c;white-space:nowrap;flex:none}
+.tab.on{background:var(--accent);color:var(--accent-ink)}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.item{border:3px solid transparent;background:#f6f2ff;border-radius:16px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:112px;font-weight:800;color:#3b2d5c;font-size:.78rem;text-align:center}
+.item .pv{width:52px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.8rem}
+.item .cost{font-size:.75rem;color:#8a6a00}
+.item.using{border-color:var(--good);background:#e6f9ee}
+.item.cant{opacity:.55}
+.swatch{width:40px;height:40px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #d8d0ef}
+
+/* modal */
+#modal{position:fixed;inset:0;z-index:50;background:rgba(20,16,50,.55);display:flex;align-items:flex-end;justify-content:center;
+  padding:12px max(12px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+@media (min-width:600px){#modal{align-items:center}}
+.sheet{background:var(--board);color:var(--board-ink);width:100%;max-width:520px;max-height:88vh;overflow:auto;border-radius:26px;padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 10px 40px rgba(0,0,0,.35);animation:rise .25s ease-out}
+@keyframes rise{from{transform:translateY(30px);opacity:.4}}
+.sheet h2{font-size:1.35rem}
+.reward{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.reward .big{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff7cf,#ffd76a);display:grid;place-items:center;box-shadow:0 0 30px #ffd76a}
+.reward .big svg{width:72px;height:72px}
+.reward .plus{font-size:1.4rem;font-weight:900;color:#c98500}
+.fact{background:#f1edff;border-radius:16px;padding:12px 14px;font-weight:600;color:#3b2d5c;text-align:left}
+.fact b{display:block;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#7b6fb0;margin-bottom:2px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;background:#f6f2ff;border-radius:16px;padding:10px 14px;min-height:56px;width:100%;text-align:left;font-weight:800;color:#3b2d5c}
+.toggle small{display:block;font-weight:600;color:#6d6690;font-size:.78rem}
+.sw{width:52px;height:32px;border-radius:16px;background:#cfc8e6;position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle.on .sw{background:var(--good)}
+.toggle.on .sw::after{left:23px}
+.worlds{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wcard{border:3px solid transparent;border-radius:18px;min-height:96px;padding:10px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;font-weight:900;text-align:left}
+.wcard small{font-weight:700;font-size:.72rem;opacity:.9}
+.wcard.on{border-color:#fff;box-shadow:0 0 0 3px var(--accent2)}
+.names{display:grid;gap:8px}
+.namebtn{border:3px solid transparent;border-radius:16px;background:#f3eefe;min-height:54px;font-weight:900;font-size:1.05rem;color:#3b2d5c}
+.namebtn.on{border-color:var(--accent2);background:#fff0f5}
+.hold{position:relative;overflow:hidden;border:0;border-radius:16px;min-height:52px;width:100%;font-weight:900;background:#ffe6e2;color:#7d211c}
+.hold i{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(232,84,78,.35)}
+.hold span{position:relative}
+.grown{font-size:.82rem;color:#5d5680;background:#f7f5fb;border-radius:14px;padding:12px;line-height:1.5}
+
+/* finale & confetti */
+.beam{animation:beam 2.4s ease-in-out infinite;transform-origin:200px 64px}
+@keyframes beam{50%{opacity:.55}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+#fx i{position:absolute;top:-20px;width:10px;height:14px;border-radius:3px;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(720deg)}}
+html.calm *{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="g-mercury" cx="35%" cy="35%"><stop offset="0" stop-color="#e8ddd0"/><stop offset="1" stop-color="#8a7a6c"/></radialGradient>
+    <radialGradient id="g-venus" cx="35%" cy="35%"><stop offset="0" stop-color="#fff0c4"/><stop offset="1" stop-color="#d49a45"/></radialGradient>
+    <radialGradient id="g-earth" cx="35%" cy="35%"><stop offset="0" stop-color="#9be3ff"/><stop offset="1" stop-color="#1f62c9"/></radialGradient>
+    <radialGradient id="g-mars" cx="35%" cy="35%"><stop offset="0" stop-color="#ffab80"/><stop offset="1" stop-color="#b13c24"/></radialGradient>
+    <radialGradient id="g-jupiter" cx="35%" cy="35%"><stop offset="0" stop-color="#fbe3c4"/><stop offset="1" stop-color="#bd7c4a"/></radialGradient>
+    <radialGradient id="g-saturn" cx="35%" cy="35%"><stop offset="0" stop-color="#fff1c8"/><stop offset="1" stop-color="#cfa456"/></radialGradient>
+    <radialGradient id="g-uranus" cx="35%" cy="35%"><stop offset="0" stop-color="#dcfbfb"/><stop offset="1" stop-color="#4fb6bd"/></radialGradient>
+    <radialGradient id="g-neptune" cx="35%" cy="35%"><stop offset="0" stop-color="#a9c2ff"/><stop offset="1" stop-color="#2a40c4"/></radialGradient>
+    <radialGradient id="g-glow" cx="50%" cy="50%"><stop offset="0" stop-color="#fffbe0"/><stop offset=".6" stop-color="#ffd76a"/><stop offset="1" stop-color="#ffb02e"/></radialGradient>
+  </defs>
+</svg>
+<div id="app"></div>
+<div id="modal" hidden></div>
+<div id="fx" aria-hidden="true"></div>
+<script>
+(function(){
+'use strict';
+
+/* ---------- save (local only) ---------- */
+var KEY = 'vaultExplorers.v1';
+var store = {
+  get: function(){ try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){ return null; } },
+  set: function(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} },
+  clear: function(){ try { localStorage.removeItem(KEY); } catch(e){} }
+};
+function fresh(){
+  return { v:1, started:false, name:'', color:'#ff8a3d', hat:'hat.none', pet:'pet.none', world:'starlight',
+    sparks:0, earned:{}, ledger:[],
+    done:{obs:false,bridge:false,trail:false,vault:false},
+    secrets:{obs:false,bridge:false,trail:false},
+    facts:[], seen:{},
+    owned:['wall.sky','wall.sunny','floor.wood','hat.none','hat.cap','pet.none'],
+    room:{wall:'wall.sky',floor:'floor.wood',art:null,shelf:null,corner:null},
+    obs:{slots:[null,null,null,null,null,null,null,null], lock:[0,0,0,0,0,0,0,0]},
+    br:{slots:[null,null,null,null,null,null]},
+    tr:{found:false, step:0},
+    vault:{dials:[3,4,5]},
+    set:{read:false,big:false,easy:false,calm:false,sound:true} };
+}
+function load(){
+  var s = store.get(), f = fresh();
+  if (!s || s.v !== 1) return f;
+  for (var k in f){ if (!(k in s)) s[k] = f[k]; }
+  ['done','secrets','room','set','obs','br','tr','vault'].forEach(function(k){ for (var j in f[k]) if (!(j in s[k])) s[k][j] = f[k][j]; });
+  return s;
+}
+var S = load();
+function save(){ store.set(S); }
+
+var ui = { screen: S.started ? 'hub' : 'welcome', ob:0, lines:[], li:0, sel:null, hint:{obs:0,bridge:0,trail:0,vault:0},
+  msg:null, hintMsg:null, modal:null, replay:{}, tab:'wall', names:[], busy:false, lab:{}, picked:null, brBad:-1, brBadKind:'', wrong:[] };
+
+/* ---------- content ---------- */
+var PLANETS = [
+  {id:'mercury', name:'Mercury', r:11, clue:"I'm the closest planet to the Sun, and the smallest of all eight."},
+  {id:'venus',   name:'Venus',   r:15, clue:"I'm the hottest planet! My thick clouds trap heat. I sit between Mercury and Earth."},
+  {id:'earth',   name:'Earth',   r:15.5, clue:"You live on me! Count out from the Sun and I'm number three."},
+  {id:'mars',    name:'Mars',    r:13, clue:"Rusty dust makes me red. I'm Earth's neighbor, one step farther from the Sun."},
+  {id:'jupiter', name:'Jupiter', r:25, clue:"I'm the biggest planet. The asteroid belt sits between Mars and me."},
+  {id:'saturn',  name:'Saturn',  r:18, clue:"My rings are the most famous. The biggest planet is my neighbor, one step closer to the Sun."},
+  {id:'uranus',  name:'Uranus',  r:19, clue:"I spin tipped over on my side! Only one planet is farther from the Sun than me."},
+  {id:'neptune', name:'Neptune', r:18.5, clue:"I'm the farthest planet from the Sun, and my winds are the fastest of any planet."}
+];
+var ORD = ['1st','2nd','3rd','4th','5th','6th','7th','8th'];
+
+var FACTS = {
+  planets:"There are 8 planets. In order from the Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.",
+  venus:"Venus is the hottest planet, even though Mercury is closer to the Sun. Its thick clouds trap the heat.",
+  belt:"The asteroid belt is a ring of rocky chunks that circles the Sun between Mars and Jupiter.",
+  comet:"A comet is a ball of ice and dust. As it nears the Sun it grows a tail, and the tail points away from the Sun.",
+  triangle:"A triangle keeps its shape when you push it, because its sides would have to change length to move. A square can lean over into a diamond.",
+  truss:"A zig-zag row of triangles is called a truss. Many real bridges, towers and roofs are held up by trusses.",
+  beaver:"Beavers build dams out of sticks and mud. The ponds behind their dams become homes for fish, frogs and birds.",
+  deer:"Deer walk on two toes on each foot, so a deer track looks like a heart split down the middle. The pointy tips face the way the deer walked.",
+  duck:"Ducks have webbed feet. The skin between their toes works like a paddle in the water.",
+  fox:"A fox track shows four toes and one pad. Foxes often step their back feet right into their front footprints.",
+  compass:"On most maps, north is at the top. East is to the right, west is to the left, and south is at the bottom.",
+  frog:"Many frogs can breathe through their skin as well as with their lungs. That's one reason they stay near water.",
+  beacon:"Lighthouses use a bright light and big glass lenses, so sailors can see them from many miles away."
+};
+
+var CAT = [
+  {id:'wall.sky',slot:'wall',name:'Sky Blue',cost:0,css:'linear-gradient(#bfe6ff,#e8f7ff)'},
+  {id:'wall.sunny',slot:'wall',name:'Sunny',cost:0,css:'linear-gradient(#ffe7a0,#fff7d9)'},
+  {id:'wall.stars',slot:'wall',name:'Starry Night',cost:60,css:'radial-gradient(circle at 20% 30%,#fff 1.5px,transparent 2.5px) 0 0/38px 38px, radial-gradient(circle at 70% 60%,#ffe9a8 1.5px,transparent 2.5px) 0 0/52px 52px, linear-gradient(#26215e,#43358f)'},
+  {id:'wall.leaves',slot:'wall',name:'Jungle Leaves',cost:60,css:'radial-gradient(ellipse 11px 5px at 30% 40%,#46a463 90%,transparent) 0 0/34px 30px, radial-gradient(ellipse 5px 10px at 75% 75%,#66bf7c 90%,transparent) 0 0/34px 30px, linear-gradient(#c6f0cd,#e9fbec)'},
+  {id:'wall.waves',slot:'wall',name:'Ocean Waves',cost:60,css:'radial-gradient(circle at 50% 100%,transparent 9px,#8fd8ea 10px,#8fd8ea 13px,transparent 14px) 0 0/30px 16px, linear-gradient(#d7f5fb,#f0fcff)'},
+  {id:'floor.wood',slot:'floor',name:'Wood',cost:0,css:'repeating-linear-gradient(90deg,#c8915a 0 36px,#b47b4a 36px 39px)'},
+  {id:'floor.check',slot:'floor',name:'Checkers',cost:40,css:'repeating-conic-gradient(#fff 0 25%,#ffa9c0 0 50%) 0 0/34px 34px'},
+  {id:'floor.grass',slot:'floor',name:'Soft Grass',cost:40,css:'radial-gradient(circle,#6cc35e 2px,transparent 3px) 0 0/12px 10px, linear-gradient(#86d877,#5fb455)'},
+  {id:'art.planets',slot:'art',name:'Planet Poster',cost:50,em:'🪐'},
+  {id:'art.map',slot:'art',name:'Treasure Map',cost:50,em:'🗺️'},
+  {id:'art.rainbow',slot:'art',name:'Rainbow Art',cost:50,em:'🌈'},
+  {id:'shelf.beacon',slot:'shelf',name:'Beacon Lantern',cost:null,em:'🏮',reward:true},
+  {id:'shelf.telescope',slot:'shelf',name:'Telescope',cost:75,em:'🔭'},
+  {id:'shelf.globe',slot:'shelf',name:'Globe',cost:75,em:'🌍'},
+  {id:'shelf.shell',slot:'shelf',name:'Seashell',cost:50,em:'🐚'},
+  {id:'corner.rocket',slot:'corner',name:'Rocket Lamp',cost:100,em:'🚀'},
+  {id:'corner.plant',slot:'corner',name:'Big Plant',cost:60,em:'🪴'},
+  {id:'corner.robot',slot:'corner',name:'Toy Robot',cost:100,em:'🤖'},
+  {id:'pet.none',slot:'pet',name:'No pet',cost:0,em:''},
+  {id:'pet.fox',slot:'pet',name:'Fox Pal',cost:75,em:'🦊'},
+  {id:'pet.owl',slot:'pet',name:'Owl Pal',cost:75,em:'🦉'},
+  {id:'pet.turtle',slot:'pet',name:'Turtle Pal',cost:75,em:'🐢'},
+  {id:'hat.none',slot:'hat',name:'No hat',cost:0,em:''},
+  {id:'hat.cap',slot:'hat',name:'Cap',cost:0,em:'🧢'},
+  {id:'hat.sun',slot:'hat',name:'Sun Hat',cost:50,em:'👒'},
+  {id:'hat.top',slot:'hat',name:'Top Hat',cost:50,em:'🎩'},
+  {id:'hat.crown',slot:'hat',name:'Crown',cost:75,em:'👑'}
+];
+function item(id){ for (var i=0;i<CAT.length;i++) if (CAT[i].id===id) return CAT[i]; return null; }
+var COLORS = ['#ff8a3d','#ff5d8f','#9b6bff','#3d8bff','#19b7a6','#4cc35a','#ffc23d','#8a6a52'];
+var WORLDS = [
+  {id:'starlight',name:'Starlight',em:'🌙',bg:'linear-gradient(160deg,#1b1846,#3d2c8c)',fg:'#fff7e0'},
+  {id:'jungle',name:'Jungle',em:'🌿',bg:'linear-gradient(160deg,#0d4d34,#1f8a55)',fg:'#fffbe6'},
+  {id:'reef',name:'Coral Reef',em:'🐠',bg:'linear-gradient(160deg,#0a5d7a,#17a3b4)',fg:'#f2fffd'},
+  {id:'clouds',name:'Cloud Castle',em:'☁️',bg:'linear-gradient(160deg,#9fc2ff,#ffd3ee)',fg:'#33275a'}
+];
+var ADJ = ['Brave','Clever','Swift','Sunny','Starry','Mighty','Gentle','Lucky','Curious','Bold','Jolly','Bright'];
+var ANI = ['Otter','Comet','Falcon','Panda','Gecko','Lynx','Koala','Robin','Narwhal','Badger','Puffin','Llama'];
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function rnd(a){ return a[Math.floor(Math.random()*a.length)]; }
+function makeNames(){ var out=[]; while(out.length<3){ var n=rnd(ADJ)+' '+rnd(ANI); if(out.indexOf(n)<0) out.push(n);} return out; }
+function addFact(id){ if (S.facts.indexOf(id)<0) S.facts.push(id); }
+function earn(id, amt){ if (S.earned[id]) return 0; S.earned[id]=true; S.sparks+=amt; S.ledger.push({id:id,amt:amt,t:Date.now()}); return amt; }
+
+/* ---------- speech (on-device voices only) & sound ---------- */
+var voice = null;
+function pickVoice(){
+  try {
+    if (!('speechSynthesis' in window)) return;
+    var vs = speechSynthesis.getVoices().filter(function(v){ return v.localService && /^en/i.test(v.lang); });
+    voice = vs.filter(function(v){ return /Samantha|Karen|Moira|Tessa|Daniel|Serena|Aaron|Nicky/.test(v.name); })[0] || vs[0] || null;
+  } catch(e){ voice = null; }
+}
+pickVoice();
+try { if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = pickVoice; } catch(e){}
+function say(t){
+  if (!S.set.read || !voice) return;
+  try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(String(t).replace(/[^\w\s.,!?'":;-]/g,' ')); u.voice=voice; u.lang=voice.lang; u.rate=.95; u.pitch=1.1; speechSynthesis.speak(u); } catch(e){}
+}
+var ac = null;
+var SND = { tap:[[660,.07,0]], good:[[523,.12,0],[659,.12,.1],[784,.22,.2]], oops:[[330,.14,0],[262,.2,.12]],
+  win:[[523,.14,0],[659,.14,.12],[784,.14,.24],[1047,.45,.36]], coin:[[988,.08,0],[1319,.2,.07]] };
+function sfx(name){
+  if (!S.set.sound) return;
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === 'suspended') ac.resume();
+    var t0 = ac.currentTime + .01;
+    SND[name].forEach(function(n){
+      var o=ac.createOscillator(), g=ac.createGain(); o.type='triangle'; o.frequency.value=n[0];
+      g.gain.setValueAtTime(.0001,t0+n[2]); g.gain.exponentialRampToValueAtTime(.16,t0+n[2]+.02); g.gain.exponentialRampToValueAtTime(.0001,t0+n[2]+n[1]);
+      o.connect(g); g.connect(ac.destination); o.start(t0+n[2]); o.stop(t0+n[2]+n[1]+.05);
+    });
+  } catch(e){}
+}
+function confetti(){
+  if (S.set.calm || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  var fx = document.getElementById('fx'), cols=['#ffc23d','#ff7aa8','#7ad3ff','#7be08f','#b18cff','#ff8a3d'];
+  for (var i=0;i<40;i++){ var el=document.createElement('i'); el.style.left=(Math.random()*100)+'%'; el.style.background=rnd(cols);
+    el.style.setProperty('--dx',(Math.random()*120-60)+'px'); el.style.animationDelay=(Math.random()*.4)+'s'; fx.appendChild(el); }
+  setTimeout(function(){ fx.innerHTML=''; }, 2600);
+}
+
+/* ---------- art ---------- */
+var PIP = '<svg viewBox="0 0 80 92" role="img" aria-label="Pip the lantern-bot">'+
+  '<rect x="34" y="1" width="12" height="9" rx="4" fill="none" stroke="#5b4b8a" stroke-width="4"/>'+
+  '<path d="M20 13h40l-5 9H25z" fill="#5b4b8a"/>'+
+  '<rect x="16" y="21" width="48" height="48" rx="15" fill="#fff1c2" stroke="#5b4b8a" stroke-width="4"/>'+
+  '<circle cx="40" cy="45" r="18" fill="url(#g-glow)"/>'+
+  '<g class="eyes"><ellipse cx="33" cy="43" rx="3.6" ry="4.4" fill="#2a2346"/><ellipse cx="47" cy="43" rx="3.6" ry="4.4" fill="#2a2346"/><circle cx="34.2" cy="41.6" r="1.2" fill="#fff"/><circle cx="48.2" cy="41.6" r="1.2" fill="#fff"/></g>'+
+  '<path d="M34 52q6 5 12 0" stroke="#2a2346" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+  '<circle cx="27" cy="50" r="3" fill="#ff9fb4" opacity=".8"/><circle cx="53" cy="50" r="3" fill="#ff9fb4" opacity=".8"/>'+
+  '<rect x="22" y="68" width="36" height="9" rx="4.5" fill="#5b4b8a"/>'+
+  '<circle cx="29" cy="84" r="6" fill="#5b4b8a"/><circle cx="51" cy="84" r="6" fill="#5b4b8a"/><circle cx="29" cy="84" r="2" fill="#fff1c2"/><circle cx="51" cy="84" r="2" fill="#fff1c2"/></svg>';
+
+function planetSVG(p){
+  var r=p.r, extra='', back='', front='';
+  if (p.id==='saturn'){ var a=r*1.55, b=r*.45;
+    back='<path transform="rotate(-18)" d="M'+(-a)+',0 A'+a+','+b+' 0 0 1 '+a+',0" fill="none" stroke="#e2c88e" stroke-width="3.2"/>';
+    front='<path transform="rotate(-18)" d="M'+(-a)+',0 A'+a+','+b+' 0 0 0 '+a+',0" fill="none" stroke="#e2c88e" stroke-width="3.2"/>'; }
+  if (p.id==='uranus'){ front='<ellipse rx="'+(r*.35)+'" ry="'+(r*1.45)+'" transform="rotate(8)" fill="none" stroke="#bff1f2" stroke-width="1.4" opacity=".9"/>'; }
+  if (p.id==='jupiter'){ extra='<ellipse cy="-8" rx="21" ry="2.4" fill="#a8693e" opacity=".55"/><ellipse cy="2" rx="24" ry="2.8" fill="#a8693e" opacity=".5"/><ellipse cy="11" rx="19" ry="2.2" fill="#a8693e" opacity=".45"/><ellipse cx="8" cy="7" rx="4.5" ry="2.6" fill="#c8553a" opacity=".8"/>'; }
+  if (p.id==='earth'){ extra='<path d="M-6 -9 q5 -3 8 2 q-2 5 -7 4z M2 3 q6 -1 7 5 q-4 4 -8 0z" fill="#4fbf5a" opacity=".9"/>'; }
+  if (p.id==='mars'){ extra='<circle cx="3" cy="2" r="3" fill="#8f2e1a" opacity=".5"/>'; }
+  return '<svg viewBox="-26 -26 52 52" overflow="visible" aria-hidden="true">'+back+'<circle r="'+r+'" fill="url(#g-'+p.id+')"/>'+extra+front+'</svg>';
+}
+function starPts(cx,cy,R,r){ var s=''; for (var i=0;i<10;i++){ var a=Math.PI/5*i-Math.PI/2, d=i%2?r:R; s+=(cx+d*Math.cos(a)).toFixed(1)+','+(cy+d*Math.sin(a)).toFixed(1)+' '; } return s; }
+var SYMS = {
+  star:    {name:'Star',     svg:'<polygon points="'+starPts(50,52,42,18)+'" fill="#ffd23f" stroke="#c98a00" stroke-width="4" stroke-linejoin="round"/>'},
+  triangle:{name:'Triangle', svg:'<polygon points="50,12 90,84 10,84" fill="#ff9f43" stroke="#a5520f" stroke-width="5" stroke-linejoin="round"/>'},
+  hoof:    {name:'Hoofprint',svg:'<path d="M45 14 C26 26 24 62 32 82 C38 90 46 86 46 74 Z M55 14 C74 26 76 62 68 82 C62 90 54 86 54 74 Z" fill="#8b5a3c" stroke="#5a3520" stroke-width="3"/>'},
+  moon:    {name:'Moon',     svg:'<path d="M64 12 A40 40 0 1 0 64 88 A32 32 0 1 1 64 12Z" fill="#cfd6ff" stroke="#6d78c9" stroke-width="4"/>'},
+  wave:    {name:'Wave',     svg:'<path d="M8 58 q14 -22 28 0 t28 0 t28 0" fill="none" stroke="#3fb6e8" stroke-width="10" stroke-linecap="round"/><path d="M8 78 q14 -22 28 0 t28 0 t28 0" fill="none" stroke="#86d7f5" stroke-width="7" stroke-linecap="round"/>'},
+  square:  {name:'Square',   svg:'<rect x="16" y="16" width="68" height="68" rx="6" fill="#7ad3ff" stroke="#2c7fae" stroke-width="5"/>'}
+};
+var DIAL = ['star','triangle','hoof','moon','wave','square'];
+function sym(k){ return '<svg viewBox="0 0 100 100" aria-hidden="true">'+SYMS[k].svg+'</svg>'; }
+var SYMINFO = { obs:{k:'star',n:8,why:'8 planets circle our Sun'}, bridge:{k:'triangle',n:3,why:'a triangle has 3 sides'}, trail:{k:'hoof',n:2,why:'a deer walks on 2 toes per foot'} };
+
+var PRINT = {
+  duck:'<path d="M50 88 L18 34 Q34 44 50 16 Q66 44 82 34 Z" fill="#a98a62" opacity=".85"/><path d="M50 84 L22 36 M50 84 L50 20 M50 84 L78 36" stroke="#6e5434" stroke-width="5" stroke-linecap="round"/>',
+  deer:'<path d="M45 14 C26 26 24 62 32 82 C38 90 46 86 46 74 Z M55 14 C74 26 76 62 68 82 C62 90 54 86 54 74 Z" fill="#6e5434"/>',
+  fox:'<ellipse cx="50" cy="66" rx="17" ry="14" fill="#6e5434"/><ellipse cx="31" cy="40" rx="7" ry="9" fill="#6e5434"/><ellipse cx="43" cy="27" rx="7" ry="9" fill="#6e5434"/><ellipse cx="57" cy="27" rx="7" ry="9" fill="#6e5434"/><ellipse cx="69" cy="40" rx="7" ry="9" fill="#6e5434"/><path d="M43 15 l2 -6 2 6 M57 15 l2 -6 2 6" stroke="#6e5434" stroke-width="2.5" fill="none"/>'
+};
+function printSVG(k, rot){ return '<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate('+(rot||0)+' 50 50)">'+PRINT[k]+'</g></svg>'; }
+
+function avatarSVG(color, hatId){
+  var h = item(hatId), em = h && h.em ? h.em : '';
+  return '<svg viewBox="0 0 100 124" aria-hidden="true">'+
+    '<ellipse cx="50" cy="118" rx="30" ry="5" fill="rgba(0,0,0,.15)"/>'+
+    '<path d="M20 116 C18 78 82 78 80 116 Z" fill="'+color+'"/>'+
+    '<path d="M36 84 L42 116 M64 84 L58 116" stroke="rgba(0,0,0,.18)" stroke-width="5"/>'+
+    '<circle cx="50" cy="58" r="27" fill="'+color+'"/>'+
+    '<ellipse cx="50" cy="62" rx="19" ry="16" fill="#fff8ef"/>'+
+    '<circle cx="43" cy="59" r="3.6" fill="#2a2346"/><circle cx="57" cy="59" r="3.6" fill="#2a2346"/>'+
+    '<path d="M44 68 q6 5 12 0" stroke="#2a2346" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+    '<circle cx="36" cy="66" r="3" fill="#ff9fb4" opacity=".7"/><circle cx="64" cy="66" r="3" fill="#ff9fb4" opacity=".7"/>'+
+    (em ? '<text x="50" y="40" font-size="34" text-anchor="middle">'+em+'</text>' : '')+
+    '</svg>';
+}
+
+function locked(st){ return S.done[st] && !ui.replay[st]; }
+function replayBar(st){ return locked(st) ? '<div class="msg good" role="status">Solved! You found this Light Symbol.</div><button class="btn" data-act="stage-replay" data-s="'+st+'">🔁 Play this puzzle again</button>' : ''; }
+function resetStage(st){
+  if (st==='obs') S.obs={slots:[null,null,null,null,null,null,null,null],lock:[0,0,0,0,0,0,0,0]};
+  if (st==='bridge') S.br={slots:[null,null,null,null,null,null]};
+  if (st==='trail') S.tr={found:false,step:0};
+  ui.replay[st]=true; ui.hint[st]=0; ui.msg=null; ui.hintMsg=null; ui.brBad=-1; ui.brBadKind=''; ui.picked=null; ui.wrong=[]; ui.lab={};
+  ui.sel = st==='bridge' ? 'up' : null; save();
+  setGuide(['Let\'s play it again! (Sparks are only earned the first time.)'].concat(INTRO[st]));
+}
+/* ---------- guide ---------- */
+function setGuide(lines){ ui.lines = Array.isArray(lines) ? lines : [lines]; ui.li = 0; say(ui.lines[0]); }
+function guideHTML(){
+  var t = ui.lines[ui.li] || '', more = ui.li < ui.lines.length-1;
+  return '<div class="guide"><div class="pip">'+PIP+'</div><div class="bubble" aria-live="polite"><p>'+esc(t)+'</p><div class="brow">'+
+    (S.set.read && voice ? '<button class="mini" data-act="replay" aria-label="Read again">🔊 Again</button>' : '')+
+    (more ? '<button class="mini go" data-act="next-line">Next ▶</button>' : '')+'</div></div></div>';
+}
+function topHTML(title, back){
+  return '<div class="top">'+
+    (back ? '<button class="ib" data-act="go" data-to="hub" aria-label="Back to the map">🗺️</button>' : '')+
+    '<div class="ttl">'+esc(title)+'</div>'+
+    '<button class="sparks" id="sparks" data-act="journal" aria-label="'+S.sparks+' sparks. Open backpack"><b>✦</b>'+S.sparks+'<span aria-hidden="true">🎒</span></button>'+
+    
+    '<button class="ib" data-act="go" data-to="room" aria-label="My room">🏠</button>'+
+    '<button class="ib" data-act="settings" aria-label="Settings">⚙️</button></div>';
+}
+function hintHTML(stage){
+  return '<div class="hintbar"><button class="hintbtn" data-act="hint" data-s="'+stage+'">💡 '+(ui.hintMsg?'Another hint':'Hint')+'</button><span class="free">Hints are free. Use as many as you like!</span></div>'+
+    (ui.hintMsg ? '<div class="hintbox" id="hintbox" role="status"><span aria-hidden="true">💡</span><p>'+esc(ui.hintMsg)+'</p></div>' : '');
+}
+function msgHTML(){ return ui.msg ? '<div class="msg '+(ui.msg.k||'')+'" role="status">'+esc(ui.msg.t)+'</div>' : ''; }
+
+/* ---------- screens ---------- */
+function welcomeHTML(){
+  var h = '';
+  if (ui.ob===0){
+    h += '<div class="top"><div class="ttl">The Vault: Explorers</div></div>'+guideHTML()+
+      '<div class="beacon-card">'+beaconSVG(false)+'</div>'+
+      '<div class="board"><h2>The Missing Beacon</h2><p class="sub">A short adventure for explorers. Solve three puzzles, find three Light Symbols, and wake up the Beacon.</p>'+
+      '<button class="btn" data-act="ob-next">Let\'s go!</button></div>';
+  } else if (ui.ob===1){
+    h += guideHTML()+'<div class="board"><h2>Pick your explorer name</h2><p class="sub">Explorers use fun made-up names, never their real names.</p><div class="names">'+
+      ui.names.map(function(n){ return '<button class="namebtn'+(S.name===n?' on':'')+'" data-act="name" data-n="'+esc(n)+'">'+esc(n)+'</button>'; }).join('')+
+      '</div><div class="row"><button class="btn alt" data-act="reroll">🎲 New names</button><button class="btn" data-act="ob-next" '+(S.name?'':'disabled')+'>Next</button></div></div>';
+  } else if (ui.ob===2){
+    h += guideHTML()+'<div class="board"><h2>Choose your color</h2><div style="width:140px;margin:0 auto">'+avatarSVG(S.color,S.hat)+'</div><div class="row" style="justify-content:center">'+
+      COLORS.map(function(c){ return '<button class="swatch" style="background:'+c+';'+(S.color===c?'box-shadow:0 0 0 4px var(--accent2)':'')+'" data-act="color" data-c="'+c+'" aria-label="Color '+c+'"></button>'; }).join('')+
+      '</div><button class="btn" data-act="ob-next">Next</button></div>';
+  } else {
+    h += guideHTML()+'<div class="board"><h2>Choose a world</h2><p class="sub">Every world has the very same puzzles. You can switch any time.</p>'+worldsHTML()+
+      '<button class="btn" data-act="ob-next">Start the adventure</button></div>';
+  }
+  return h;
+}
+function worldsHTML(){
+  return '<div class="worlds">'+WORLDS.map(function(w){
+    return '<button class="wcard'+(S.world===w.id?' on':'')+'" style="background:'+w.bg+';color:'+w.fg+'" data-act="world" data-w="'+w.id+'"><span style="font-size:1.6rem">'+w.em+'</span>'+esc(w.name)+'</button>';
+  }).join('')+'</div>';
+}
+function beaconSVG(lit){
+  var c = [S.done.obs, S.done.bridge, S.done.trail];
+  var lamp = function(on, x, col){ return '<circle cx="'+x+'" cy="104" r="7" fill="'+(on?col:'#4c4675')+'" stroke="#2a2552" stroke-width="2"/>'; };
+  return '<svg viewBox="0 0 400 170" role="img" aria-label="Lantern Hill and the Beacon">'+
+    '<rect width="400" height="170" fill="#232052"/>'+
+    '<g fill="#fff" opacity=".8"><circle cx="40" cy="30" r="1.6"/><circle cx="90" cy="60" r="1.2"/><circle cx="330" cy="26" r="1.8"/><circle cx="360" cy="80" r="1.2"/><circle cx="280" cy="50" r="1.2"/><circle cx="130" cy="20" r="1.4"/></g>'+
+    (lit ? '<g class="beam"><path d="M200 64 L0 10 L0 70Z" fill="#ffe58a" opacity=".35"/><path d="M200 64 L400 10 L400 70Z" fill="#ffe58a" opacity=".35"/><circle cx="200" cy="64" r="34" fill="#ffe58a" opacity=".35"/></g>' : '')+
+    '<path d="M0 170 Q120 110 200 118 Q290 110 400 170Z" fill="#3b7d4f"/>'+
+    '<path d="M0 170 Q90 140 160 150 Q260 132 400 170Z" fill="#2f6a42"/>'+
+    '<path d="M182 120 L188 70 H212 L218 120Z" fill="#f2e6d0" stroke="#2a2552" stroke-width="3"/>'+
+    '<rect x="180" y="52" width="40" height="20" rx="4" fill="'+(lit?'#ffe58a':'#4c4675')+'" stroke="#2a2552" stroke-width="3"/>'+
+    '<path d="M176 52 L200 36 L224 52Z" fill="#ff7aa8" stroke="#2a2552" stroke-width="3"/>'+
+    lamp(c[0],186,'#ffd23f')+lamp(c[1],200,'#ff9f43')+lamp(c[2],214,'#b07a52')+
+    '<path d="M70 150 l10 -24 10 24z M300 146 l9 -22 9 22z" fill="#245a35"/>'+
+    '</svg>';
+}
+function hubHTML(){
+  var all3 = S.done.obs && S.done.bridge && S.done.trail;
+  var w = WORLDS.filter(function(x){return x.id===S.world;})[0];
+  var stops = [
+    {k:'obs', name:'Star Observatory', sub:'Put the planets back in order', ic:planetSVG(PLANETS[5])},
+    {k:'bridge', name:'Wobbly Bridge', sub:'Build supports that stay strong', ic:sym('triangle')},
+    {k:'trail', name:'Whispering Trail', sub:'Follow the mystery footprints', ic:printSVG('deer',0)},
+    {k:'vault', name:'Beacon Vault', sub: all3 ? 'Use your three Light Symbols' : 'Find all three symbols to open', ic:sym('star'), locked:!all3}
+  ];
+  var h = topHTML('Lantern Hill', false)+guideHTML()+
+    '<div class="beacon-card">'+beaconSVG(S.done.vault)+'</div><div class="stops">';
+  stops.forEach(function(s,i){
+    if (i) h += '<div class="link"></div>';
+    var st = S.done[s.k] ? '✅' : (s.locked ? '🔒' : '▶️');
+    h += '<button class="stop'+(S.done[s.k]?' done':'')+(s.locked?' locked':'')+'" data-act="go" data-to="'+s.k+'"><span class="ic">'+s.ic+'</span><span class="tx"><h3>'+s.name+'</h3><p>'+s.sub+'</p></span><span class="st" aria-hidden="true">'+st+'</span></button>';
+  });
+  h += '</div><div class="row"><button class="worldtag" data-act="worlds">'+w.em+' World: '+esc(w.name)+'</button>'+
+    (S.done.vault ? '<button class="worldtag" data-act="replay-adv">🔁 Play again</button>' : '')+'</div>';
+  return h;
+}
+function hubLines(){
+  if (S.done.vault) return ['The Beacon is shining again, thanks to you, '+S.name+'!', 'You can decorate your room, switch worlds, or play again to look for secret finds.'];
+  var n = (S.done.obs?1:0)+(S.done.bridge?1:0)+(S.done.trail?1:0);
+  if (n===3) return ['You found all three Light Symbols! The Beacon Vault is ready. Let\'s wake up the Beacon!'];
+  if (n>0) return ['Great work! '+n+' of 3 Light Symbols found. Pick another place to explore.'];
+  return ['This is Lantern Hill. The Beacon is dark, and its three Light Symbols are hiding.', 'Visit the Observatory, the Bridge and the Trail in any order. Tap one to start!'];
+}
+
+/* Observatory */
+function obsHTML(){
+  var placed = S.obs.slots, h = topHTML('Star Observatory', true)+guideHTML()+'<div class="board">'+replayBar('obs')+'<div><h2>Light up the star map</h2><p class="sub">Tap a planet to hear its clue, then tap a space. Space 1 is closest to the Sun.</p></div>'+
+    '<div class="sunbar"><span class="sun"></span>Sun<span class="arrow"></span>farthest'+(S.secrets.obs?'':'<button class="comet" data-act="secret" data-k="obs" aria-label="A comet!">☄️</button>')+'</div><div class="orbits">';
+  for (var i=0;i<8;i++){
+    if (i===4) h += '<div class="belt">asteroid belt</div>';
+    var p = placed[i] ? PLANETS.filter(function(x){return x.id===placed[i];})[0] : null;
+    h += '<button class="oslot'+(S.obs.lock[i]?' lock':'')+(ui.sel&&!p?' target':'')+'" data-act="obs-slot" data-i="'+i+'" aria-label="Space '+(i+1)+(p?', '+p.name:'')+'"><span class="n">'+ORD[i]+'</span>'+(p?planetSVG(p)+'<span class="pn">'+p.name+'</span>':'')+'</button>';
+  }
+  h += '</div><div class="tray">';
+  PLANETS.forEach(function(p){
+    var used = placed.indexOf(p.id)>=0;
+    h += '<button class="pchip'+(used?' gone':'')+(ui.sel===p.id?' sel':'')+(ui.wrong.indexOf(p.id)>=0?' wiggle':'')+'" data-act="obs-pick" data-id="'+p.id+'" '+(used?'tabindex="-1" aria-hidden="true"':'')+'>'+planetSVG(p)+p.name+'</button>';
+  });
+  h += '</div>'+msgHTML()+hintHTML('obs')+'<p class="note">Planet sizes and distances here are not to scale.</p></div>';
+  return h;
+}
+function obsCheck(){
+  var wrong=[], right=0;
+  for (var i=0;i<8;i++){ if (S.obs.slots[i]===PLANETS[i].id){ S.obs.lock[i]=1; right++; } else { wrong.push(S.obs.slots[i]); S.obs.slots[i]=null; } }
+  ui.wrong = wrong;
+  if (!wrong.length){ completeStage('obs'); return; }
+  sfx('oops');
+  ui.msg = {k:'oops', t: right+' planets are glowing in the right place. The wiggly ones went back. Tap them to read their clues again.'};
+  setGuide(['Almost! '+right+' of 8 are right. Read the clues again for the wiggly ones.']);
+  setTimeout(function(){ ui.wrong=[]; }, 1100);
+}
+
+/* Bridge */
+var BR = {u:50, L:30, t:34, b:84};
+function brOri(i){ var s=S.br.slots[i]; return s==='up'||s==='down' ? s : null; }
+function upFirst(){ var s0=S.br.slots[0]; return s0==='down' ? false : true; }
+function shapeSVG(k){
+  if (k==='up') return '<svg viewBox="0 0 40 40"><polygon points="20,4 37,35 3,35" fill="#ff9f43" stroke="#8a4b12" stroke-width="3" stroke-linejoin="round"/></svg>';
+  if (k==='down') return '<svg viewBox="0 0 40 40"><polygon points="3,5 37,5 20,36" fill="#ff9f43" stroke="#8a4b12" stroke-width="3" stroke-linejoin="round"/></svg>';
+  if (k==='sq') return '<svg viewBox="0 0 40 40"><rect x="6" y="6" width="28" height="28" fill="#7ad3ff" stroke="#2c7fae" stroke-width="3"/></svg>';
+  return '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" fill="#c79bff" stroke="#6b3fb3" stroke-width="3"/></svg>';
+}
+var BRMAX = {up:4, down:4, sq:2, ci:1};
+function brLeft(k){ return BRMAX[k] - S.br.slots.filter(function(x){return x===k;}).length; }
+function bridgeSVG(opt){
+  opt = opt || {};
+  var u=BR.u, L=BR.L, t=BR.t, b=BR.b, W=L*2+7*u, s='<svg class="bridge-svg" viewBox="0 0 '+W+' 160" role="img" aria-label="A bridge with six support spaces">';
+  s += '<rect x="0" y="108" width="'+W+'" height="52" fill="#58bdf0"/><path d="M0 120 q15 -6 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" fill="none" stroke="#bde9ff" stroke-width="3"/>';
+  s += '<path d="M0 '+t+' H'+L+' L'+(L+6)+' 160 H0Z" fill="#a8774f"/><path d="M0 '+(t-2)+' H'+(L+2)+' V'+(t+8)+' H0Z" fill="#6fc35a"/>';
+  s += '<path d="M'+W+' '+t+' H'+(W-L)+' L'+(W-L-6)+' 160 H'+W+'Z" fill="#a8774f"/><path d="M'+W+' '+(t-2)+' H'+(W-L-2)+' V'+(t+8)+' H'+W+'Z" fill="#6fc35a"/>';
+  if (!S.secrets.bridge) s += '<text x="'+(W-80)+'" y="150" font-size="26" text-anchor="middle">🦫</text>';
+  if (opt.ghost){ var uf=upFirst(); for (var g=0; g<6; g++){ var gx=L+g*u, up=(g%2===0)===uf;
+    s += '<polygon points="'+(up? gx+','+b+' '+(gx+2*u)+','+b+' '+(gx+u)+','+t : gx+','+t+' '+(gx+2*u)+','+t+' '+(gx+u)+','+b)+'" fill="none" stroke="#7d6bd6" stroke-width="2" stroke-dasharray="5 4"/>'; } }
+  s += '<rect x="'+L+'" y="'+(b-2)+'" width="'+(7*u)+'" height="6" rx="3" fill="#7a5537"/>';
+  for (var i=0;i<6;i++){
+    var k=S.br.slots[i], x=L+i*u, cls = (i===ui.brBad || (ui.brBadKind==='gap' && i===ui.brBad-1)) ? ' stroke="#e8544e" stroke-width="5"' : ' stroke="#8a4b12" stroke-width="3"';
+    var anim = (i===ui.brBad && ui.anim) ? (k==='sq'?' class="squish"':(k==='ci'?' class="rollaway"':'')) : '';
+    if (k==='up') s += '<polygon'+anim+' points="'+x+','+b+' '+(x+2*u)+','+b+' '+(x+u)+','+t+'" fill="#ff9f43" fill-opacity=".9"'+cls+' stroke-linejoin="round"/>';
+    else if (k==='down') s += '<polygon'+anim+' points="'+x+','+t+' '+(x+2*u)+','+t+' '+(x+u)+','+b+'" fill="#ff9f43" fill-opacity=".9"'+cls+' stroke-linejoin="round"/>';
+    else if (k==='sq') s += '<rect'+anim+' x="'+(x+u-22)+'" y="'+(b-44)+'" width="44" height="44" fill="#7ad3ff"'+(i===ui.brBad?' stroke="#e8544e" stroke-width="5"':' stroke="#2c7fae" stroke-width="3"')+'/>';
+    else if (k==='ci') s += '<circle'+anim+' cx="'+(x+u)+'" cy="'+((t+b)/2)+'" r="22" fill="#c79bff"'+(i===ui.brBad?' stroke="#e8544e" stroke-width="5"':' stroke="#6b3fb3" stroke-width="3"')+'/>';
+    else s += '<circle cx="'+(x+u)+'" cy="'+((t+b)/2)+'" r="13" fill="#fff" fill-opacity=".7" stroke="#9a8fd0" stroke-width="2" stroke-dasharray="3 3"/><text x="'+(x+u)+'" y="'+((t+b)/2+5)+'" font-size="14" font-weight="800" text-anchor="middle" fill="#6d6690">'+(i+1)+'</text>';
+  }
+  s += '<rect x="0" y="'+(t-10)+'" width="'+W+'" height="10" rx="3" fill="#7a5537"/>';
+  var cx = opt.cartX==null ? 14 : opt.cartX;
+  s += '<g id="cart" transform="translate('+cx+','+(t-10)+')"><rect x="-17" y="-22" width="34" height="16" rx="5" fill="#ff5d73" stroke="#a3253a" stroke-width="2"/><rect x="-9" y="-31" width="18" height="10" rx="3" fill="#ffd23f" stroke="#b78a00" stroke-width="2"/><circle cx="-9" cy="-5" r="5" fill="#333"/><circle cx="9" cy="-5" r="5" fill="#333"/></g>';
+  return s+'</svg>';
+}
+function bridgeTaps(){
+  var u=BR.u, L=BR.L, t=BR.t, b=BR.b, W=L*2+7*u, H=160, h='';
+  var pc=function(v,of){ return (v/of*100).toFixed(2)+'%'; };
+  for (var z=0; z<6; z++) h += '<button class="btap" data-act="br-slot" data-i="'+z+'" style="left:'+pc(L+z*u+u/2,W)+';width:'+pc(u,W)+';top:'+pc(t-14,H)+';height:'+pc(b-t+24,H)+'" aria-label="Support space '+(z+1)+(S.br.slots[z]?', filled':', empty')+'"></button>';
+  if (!S.secrets.bridge) h += '<button class="btap" data-act="secret" data-k="bridge" style="left:'+pc(W-112,W)+';width:'+pc(64,W)+';top:'+pc(116,H)+';height:'+pc(44,H)+'" aria-label="Something in the river"></button>';
+  return h;
+}
+function bridgeHTML(){
+  var h = topHTML('Wobbly Bridge', true)+guideHTML()+
+    '<div class="board"><div><h2>Shape Lab</h2><p class="sub">Push each shape. Which one stays strong?</p></div><div class="lab">'+
+    '<button class="labbtn'+(ui.lab.sq?' pushed':'')+'" data-act="lab" data-k="sq"><svg viewBox="0 0 70 70"><rect class="shape sq" x="12" y="12" width="46" height="46" fill="none" stroke="#2c7fae" stroke-width="6"/></svg>Push the square</button>'+
+    '<button class="labbtn'+(ui.lab.tri?' pushed':'')+'" data-act="lab" data-k="tri"><svg viewBox="0 0 70 70"><polygon class="shape tri" points="35,10 62,58 8,58" fill="none" stroke="#a5520f" stroke-width="6" stroke-linejoin="round"/></svg>Push the triangle</button></div>'+
+    '<div class="labres">'+(ui.lab.sq&&ui.lab.tri?'The square leaned over, but the triangle held its shape!':(ui.lab.sq?'Whoa, the square leaned over into a diamond!':(ui.lab.tri?'The triangle didn\'t budge!':'')))+'</div></div>'+
+    '<div class="board">'+replayBar('bridge')+'<div><h2>Fix the bridge</h2><p class="sub">Pick a shape, then tap a space under the road. Tap a placed shape to take it back.</p></div>'+
+    '<div class="bridge-wrap" id="bwrap">'+bridgeSVG({ghost: ui.hint.bridge>=2})+bridgeTaps()+'</div><div class="shapes">';
+  [['up','Point up'],['down','Point down'],['sq','Square'],['ci','Circle']].forEach(function(o){
+    var left = brLeft(o[0]);
+    h += '<button class="schip'+(ui.sel===o[0]?' sel':'')+'" data-act="br-pick" data-k="'+o[0]+'" '+(left<=0?'disabled':'')+'>'+shapeSVG(o[0])+o[1]+' ×'+left+'</button>';
+  });
+  h += '</div>'+msgHTML()+'<div class="row"><button class="btn" data-act="br-test" style="flex:1">🚃 Test the bridge</button><button class="btn alt" data-act="br-clear">Clear</button></div>'+hintHTML('bridge')+'</div>';
+  return h;
+}
+function brEvaluate(){
+  for (var i=0;i<6;i++){
+    var k=S.br.slots[i];
+    if (!k) return {i:i,kind:'empty'};
+    if (k==='sq') return {i:i,kind:'square'};
+    if (k==='ci') return {i:i,kind:'circle'};
+    if (i>0 && S.br.slots[i-1]===k) return {i:i,kind:'gap'};
+  }
+  return null;
+}
+function brTest(){
+  if (ui.busy) return;
+  var res = brEvaluate();
+  if (res && res.kind==='empty'){ ui.msg={k:'oops',t:'Fill all six spaces before the test. Space '+(res.i+1)+' is empty.'}; sfx('oops'); render(); return; }
+  ui.busy = true; ui.msg = null; ui.brBad=-1; ui.brBadKind=''; render();
+  var u=BR.u, L=BR.L, W=L*2+7*u, start=14, end = res ? (L+res.i*u+u*.6) : W-14, cart=document.getElementById('cart'), t0=null, dur=res? 900+res.i*250 : 2400;
+  var calm = S.set.calm || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  function step(ts){
+    if (!t0) t0=ts; var p=Math.min(1,(ts-t0)/dur), e = p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2, x=start+(end-start)*e;
+    if (cart) cart.setAttribute('transform','translate('+x.toFixed(1)+','+(BR.t-10)+')');
+    if (p<1 && !calm) requestAnimationFrame(step); else finish();
+  }
+  function finish(){
+    ui.busy = false;
+    if (!res){ completeStage('bridge'); return; }
+    ui.brBad = res.i; ui.brBadKind = res.kind; ui.anim = true; sfx('oops');
+    var t = res.kind==='square' ? 'The square in space '+(res.i+1)+' squashed flat! Squares can lean over when they\'re pushed, like in the Shape Lab.'
+      : res.kind==='circle' ? 'The circle in space '+(res.i+1)+' rolled away! Round shapes can\'t hold a road still.'
+      : 'Spaces '+res.i+' and '+(res.i+1)+' bump into each other. Two triangles side by side need to take turns: one points up, the next points down.';
+    ui.msg = {k:'oops', t:t}; setGuide(['Wobble! Good test. Let\'s fix it and try again.']);
+    render(); ui.anim = false;
+  }
+  if (calm){ finish(); } else requestAnimationFrame(step);
+}
+
+/* Trail */
+var PATH = ['N','N','E','N','E','N'], START=[2,4];
+var DIRS = {N:[0,-1,0,'north'],E:[1,0,90,'east'],S:[0,1,180,'south'],W:[-1,0,270,'west']};
+function trPos(step){ var x=START[0], y=START[1]; for (var i=0;i<step;i++){ x+=DIRS[PATH[i]][0]; y+=DIRS[PATH[i]][1]; } return [x,y]; }
+var TILES = {
+  '0,0':['meadow','🪨'],'1,0':['forest','🌲'],'2,0':['forest','🌲'],'3,0':['forest','🌳'],'4,0':['forest',''],
+  '0,1':['meadow','🌼'],'1,1':['meadow',''],'2,1':['','🍄'],'3,1':['forest',''],'4,1':['forest',''],
+  '0,2':['water',''],'1,2':['meadow','🌼'],'2,2':['',''],'3,2':['',''],'4,2':['','🪨'],
+  '0,3':['water',''],'1,3':['water',''],'2,3':['',''],'3,3':['meadow','🌷'],'4,3':['','🌾'],
+  '0,4':['meadow','🌾'],'1,4':['','🪨'],'2,4':['','⛺'],'3,4':['meadow','🌼'],'4,4':['','🌲']
+};
+function trailHTML(){
+  var h = topHTML('Whispering Trail', true)+guideHTML();
+  if (!S.tr.found){
+    h += '<div class="board"><div><h2>Whose footprints?</h2><p class="sub">Three sets of tracks start at camp. Olive the owl 🦉 saw the one who carried off the Light Symbol.</p></div><div class="prints">';
+    [['duck','Tracks A'],['deer','Tracks B'],['fox','Tracks C']].forEach(function(p){
+      var picked = ui.picked && ui.picked.indexOf(p[0])>=0;
+      h += '<button class="print'+(picked?' no':'')+'" data-act="tr-print" data-k="'+p[0]+'">'+printSVG(p[0],0)+p[1]+(picked?'<span>'+(p[0]==='duck'?'Duck':'Fox')+'</span>':'')+'</button>';
+    });
+    h += '</div>'+msgHTML()+hintHTML('trail')+'</div>';
+    return h;
+  }
+  var pos = trPos(S.tr.step), done = S.tr.step>=PATH.length;
+  h += '<div class="board">'+replayBar('trail')+'<div><h2>Follow the deer</h2><p class="sub">The pointy tips of each hoofprint face the way the deer walked. Use the compass to follow.</p></div><div class="map" role="grid" aria-label="Trail map, north is up">';
+  for (var y=0;y<5;y++) for (var x=0;x<5;x++){
+    var key=x+','+y, tl=TILES[key], here=(x===pos[0]&&y===pos[1]), inner='';
+    var seenIdx=-1; for (var s=0;s<S.tr.step;s++){ var p=trPos(s); if (p[0]===x&&p[1]===y) seenIdx=s; }
+    if (tl[1]) inner += '<span class="deco">'+tl[1]+'</span>';
+    if (here && !done) inner += '<span class="tp">'+printSVG('deer', DIRS[PATH[S.tr.step]][2])+'</span>';
+    else if (seenIdx>=0) inner += '<span class="tp">'+printSVG('deer', DIRS[PATH[seenIdx]][2])+'</span>';
+    if (x===4&&y===0) inner += done ? '<span class="deco" style="font-size:1.5rem">🦌</span>' : '';
+    if (key==='0,3' && !S.secrets.trail) inner += '<button class="secretbtn" data-act="secret" data-k="trail" aria-label="Something by the pond">🐸</button>';
+    if (here) inner += '<span class="me" style="background:'+S.color+'"></span>';
+    h += '<div class="tile '+tl[0]+(here?' here':'')+(seenIdx>=0&&!here?' seen':'')+'" role="gridcell">'+inner+'</div>';
+  }
+  h += '</div>'+msgHTML()+'<div class="compass">'+
+    '<span></span><button class="cbtn" data-act="tr-move" data-d="N" aria-label="North">N<small>north</small></button><span></span>'+
+    '<button class="cbtn" data-act="tr-move" data-d="W" aria-label="West">W<small>west</small></button><span class="crose" aria-hidden="true">🧭</span><button class="cbtn" data-act="tr-move" data-d="E" aria-label="East">E<small>east</small></button>'+
+    '<span></span><button class="cbtn" data-act="tr-move" data-d="S" aria-label="South">S<small>south</small></button><span></span></div>'+hintHTML('trail')+'</div>';
+  return h;
+}
+
+/* Vault */
+function vaultHTML(){
+  var h = topHTML('Beacon Vault', true)+guideHTML()+'<div class="board"><div class="vault">'+
+    '<div class="engrave">“Wake me with the Light Symbols, from the fewest to the most.”</div><div class="dials">';
+  for (var i=0;i<3;i++){ var k=DIAL[S.vault.dials[i]];
+    h += '<div><button class="dial" data-act="dial" data-i="'+i+'" aria-label="Dial '+(i+1)+': '+SYMS[k].name+'. Tap to turn">'+sym(k)+'</button><div class="dlabel">'+SYMS[k].name+'</div></div>'; }
+  h += '</div><button class="btn" data-act="vault-try">✨ Wake the Beacon</button></div>'+msgHTML()+
+    '<div><h2 style="font-size:1.05rem">Your Light Symbols</h2><p class="sub">Each symbol has a number you discovered.</p></div><div class="mysyms">'+
+    ['obs','bridge','trail'].map(function(st){ var si=SYMINFO[st];
+      return '<div class="symcard">'+sym(si.k)+'<div>'+SYMS[si.k].name+'</div><span class="num">'+si.n+'</span><div style="font-weight:600;font-size:.7rem;margin-top:3px">'+esc(si.why)+'</div></div>'; }).join('')+
+    '</div>'+hintHTML('vault')+'</div>';
+  return h;
+}
+function finaleHTML(){
+  return topHTML('The Beacon shines!', true)+guideHTML()+'<div class="beacon-card">'+beaconSVG(true)+'</div>'+
+    '<div class="board" style="text-align:center;align-items:center"><h2>You restored the Beacon!</h2>'+
+    '<p class="sub">The night-flyers can find their way home again. You earned the Beacon Lantern for your Explorer Room.</p>'+
+    '<div style="font-size:3rem">🏮</div><div class="fact"><b>Did you know?</b>'+esc(FACTS.beacon)+'</div>'+
+    '<div class="row" style="justify-content:center"><button class="btn" data-act="go" data-to="room">🏠 Decorate my room</button><button class="btn alt" data-act="go" data-to="hub">Back to the map</button></div></div>';
+}
+
+/* Room */
+var TABS = [['wall','Walls'],['floor','Floors'],['art','Wall art'],['shelf','Shelf'],['corner','Corner'],['pet','Pets'],['hat','Hats'],['color','Colors']];
+function roomHTML(){
+  var wall=item(S.room.wall), floor=item(S.room.floor), art=item(S.room.art), shelf=item(S.room.shelf), corner=item(S.room.corner), pet=item(S.pet);
+  var h = topHTML('My Explorer Room', true)+guideHTML()+
+    '<div class="room" aria-label="Your explorer room"><div class="wall" style="background:'+wall.css+'"></div><div class="floor" style="background:'+floor.css+'"></div>'+
+    '<div class="win"></div><div class="art'+(art?'':' empty')+'">'+(art?art.em:'')+'</div><div class="shelf">'+(shelf?'<span>'+shelf.em+'</span>':'')+'</div>'+
+    (corner?'<div class="corner">'+corner.em+'</div>':'')+'<div class="ava">'+avatarSVG(S.color,S.hat)+'</div>'+(pet&&pet.em?'<div class="pet">'+pet.em+'</div>':'')+
+    '<div class="rname">'+esc(S.name)+'</div></div>'+
+    '<div class="board"><div class="tabs" role="tablist">'+TABS.map(function(t){ return '<button class="tab'+(ui.tab===t[0]?' on':'')+'" data-act="tab" data-t="'+t[0]+'" role="tab" aria-selected="'+(ui.tab===t[0])+'">'+t[1]+'</button>'; }).join('')+'</div>';
+  if (ui.tab==='color'){
+    h += '<div class="row">'+COLORS.map(function(c){ return '<button class="swatch" style="background:'+c+';'+(S.color===c?'box-shadow:0 0 0 4px var(--accent2)':'')+'" data-act="color" data-c="'+c+'" aria-label="Color"></button>'; }).join('')+'</div>';
+  } else {
+    h += '<div class="items">';
+    CAT.filter(function(c){ return c.slot===ui.tab; }).forEach(function(c){
+      var owned = S.owned.indexOf(c.id)>=0, using = current(c.slot)===c.id;
+      if (c.reward && !owned){ h += '<div class="item cant"><span class="pv">🔒</span>'+esc(c.name)+'<span class="cost">Adventure prize</span></div>'; return; }
+      var pv = c.css ? '<span class="pv" style="background:'+c.css+'"></span>' : '<span class="pv">'+(c.em||'∅')+'</span>';
+      var label = using ? 'Using ✓' : owned ? (c.slot==='art'||c.slot==='shelf'||c.slot==='corner' ? 'Place' : 'Use') : ('✦ '+c.cost);
+      h += '<button class="item'+(using?' using':'')+(!owned&&S.sparks<c.cost?' cant':'')+'" data-act="item" data-id="'+c.id+'">'+pv+esc(c.name)+'<span class="cost">'+label+'</span></button>';
+    });
+    h += '</div>';
+  }
+  h += '<p class="note">Sparks are earned by exploring. They can\'t be bought, and they are only for decorating.</p></div>';
+  return h;
+}
+function current(slot){ if (slot==='pet') return S.pet; if (slot==='hat') return S.hat; return S.room[slot]; }
+function setCurrent(slot,id){ if (slot==='pet') S.pet=id; else if (slot==='hat') S.hat=id; else S.room[slot]=id; }
+
+/* ---------- stage completion ---------- */
+function completeStage(st){
+  S.done[st] = true; ui.replay[st] = false;
+  var amt = earn('stage.'+st, 50), si = SYMINFO[st], facts = {obs:['planets','venus','belt'], bridge:['triangle','truss'], trail:['deer','compass']}[st];
+  facts.forEach(addFact); save();
+  sfx('win'); confetti();
+  ui.msg = null; ui.sel = null;
+  ui.modal = {type:'reward', st:st, amt:amt};
+  setGuide(st==='obs' ? ['The star map is glowing! You found the Star Symbol.'] : st==='bridge' ? ['The cart made it across! You found the Triangle Symbol.'] : ['The deer led us to its den, and there\'s the Hoofprint Symbol!']);
+  render(); bumpSparks();
+}
+function finishVault(){
+  S.done.vault = true;
+  var amt = earn('chapter.beacon', 100);
+  if (S.owned.indexOf('shelf.beacon')<0){ S.owned.push('shelf.beacon'); if (!S.room.shelf) S.room.shelf='shelf.beacon'; }
+  addFact('beacon'); save(); sfx('win'); confetti(); setTimeout(confetti, 700);
+  ui.screen = 'finale';
+  setGuide(['Look! The Beacon is shining again! You did it, '+S.name+'!', 'You earned '+(amt?amt+' sparks and ':'')+'the Beacon Lantern. Let\'s put it in your Explorer Room!']);
+  render(); bumpSparks(); window.scrollTo(0,0);
+}
+function bumpSparks(){ var el=document.getElementById('sparks'); if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
+
+/* ---------- modals ---------- */
+function modalHTML(){
+  var m = ui.modal; if (!m) return '';
+  if (m.type==='reward'){
+    var si=SYMINFO[m.st], fact={obs:'venus',bridge:'truss',trail:'deer'}[m.st];
+    return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Light Symbol found"><div class="big">'+sym(si.k)+'</div><h2>'+SYMS[si.k].name+' Symbol found!</h2>'+
+      '<p>Its number is <b>'+si.n+'</b>, because '+esc(si.why)+'. It\'s saved in your backpack.</p>'+(m.amt?'<div class="plus">+'+m.amt+' ✦ sparks</div>':'<p class="note">You already earned sparks for this one.</p>')+
+      '<div class="fact"><b>Did you know?</b>'+esc(FACTS[fact])+'</div><button class="btn" data-act="close-reward" style="width:100%">Back to the map</button></div>';
+  }
+  if (m.type==='secret'){
+    return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Secret find"><div class="big" style="font-size:3.4rem">'+m.em+'</div><h2>Secret find!</h2>'+
+      (m.amt?'<div class="plus">+'+m.amt+' ✦ sparks</div>':'')+'<div class="fact"><b>Did you know?</b>'+esc(FACTS[m.fact])+'</div><button class="btn" data-act="close" style="width:100%">Keep exploring</button></div>';
+  }
+  if (m.type==='buy'){
+    var c=item(m.id);
+    return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Get item"><div class="big">'+(c.css?'<span style="width:70px;height:70px;border-radius:14px;background:'+c.css+'"></span>':'<span style="font-size:3.2rem">'+c.em+'</span>')+'</div>'+
+      '<h2>Get the '+esc(c.name)+'?</h2><p>It costs <b>✦ '+c.cost+'</b> sparks. You have <b>✦ '+S.sparks+'</b>.</p>'+
+      '<div class="row" style="width:100%"><button class="btn alt" data-act="close" style="flex:1">Not now</button><button class="btn" data-act="buy-yes" data-id="'+c.id+'" style="flex:1">Yes, get it!</button></div></div>';
+  }
+  if (m.type==='need'){
+    var c2=item(m.id);
+    return '<div class="sheet reward" role="dialog" aria-modal="true"><div class="big" style="font-size:3.2rem">'+(c2.em||'🎨')+'</div><h2>Almost!</h2><p>The '+esc(c2.name)+' needs <b>✦ '+(c2.cost-S.sparks)+'</b> more sparks. Solve puzzles and look for secret finds to earn more!</p><button class="btn" data-act="close" style="width:100%">OK</button></div>';
+  }
+  if (m.type==='journal'){
+    var h='<div class="sheet" role="dialog" aria-modal="true" aria-label="Backpack"><h2>🎒 '+esc(S.name)+'\'s backpack</h2><div class="mysyms">';
+    ['obs','bridge','trail'].forEach(function(st){ var si=SYMINFO[st], got=S.done[st];
+      h += '<div class="symcard'+(got?'':' empty')+'">'+(got?sym(si.k):'<div style="font-size:2rem;line-height:44px">❔</div>')+'<div>'+(got?SYMS[si.k].name:'Not found yet')+'</div>'+(got?'<span class="num">'+si.n+'</span><div style="font-weight:600;font-size:.7rem;margin-top:3px">'+esc(si.why)+'</div>':'')+'</div>'; });
+    var sc=(S.secrets.obs?1:0)+(S.secrets.bridge?1:0)+(S.secrets.trail?1:0);
+    h += '</div><p><b>✦ '+S.sparks+'</b> sparks · <b>'+sc+' of 3</b> secret finds</p><h3 style="font-size:1rem">Things you discovered</h3>';
+    if (!S.facts.length) h += '<p class="note">Solve puzzles to fill your explorer notes.</p>';
+    S.facts.forEach(function(f){ h += '<div class="fact">'+esc(FACTS[f])+'</div>'; });
+    return h+'<button class="btn" data-act="close">Close</button></div>';
+  }
+  if (m.type==='reset'){
+    return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Start over"><div class="big" style="font-size:3rem">🔄</div><h2>Start over?</h2><p>This erases your explorer, sparks, room and progress on this device.</p>'+
+      '<div class="row" style="width:100%"><button class="btn alt" data-act="settings" style="flex:1">No, keep it</button><button class="btn" data-act="reset-yes" style="flex:1;background:#e8544e;color:#fff">Yes, start over</button></div></div>';
+  }
+  if (m.type==='worlds'){
+    return '<div class="sheet" role="dialog" aria-modal="true" aria-label="Choose a world"><h2>Choose a world</h2><p class="sub">Every world has the same puzzles and the same answers. Only the look changes.</p>'+worldsHTML()+'<button class="btn" data-act="close">Done</button></div>';
+  }
+  if (m.type==='settings'){
+    var tg=function(k,label,sub){ return '<button class="toggle'+(S.set[k]?' on':'')+'" data-act="toggle" data-k="'+k+'" role="switch" aria-checked="'+!!S.set[k]+'"><span>'+label+(sub?'<small>'+sub+'</small>':'')+'</span><span class="sw"></span></button>'; };
+    return '<div class="sheet" role="dialog" aria-modal="true" aria-label="Settings"><h2>⚙️ Settings</h2>'+
+      tg('read','Read aloud', voice ? 'Pip reads the words out loud using this device\'s own voice.' : 'This device has no built-in voice we can use.')+
+      tg('sound','Sound effects')+tg('big','Bigger text')+tg('easy','Easy-read spacing','More space between letters and lines.')+tg('calm','Calm mode','Turns off moving effects.')+
+      '<button class="toggle" data-act="worlds"><span>World<small>'+esc(WORLDS.filter(function(w){return w.id===S.world;})[0].name)+'</small></span><span>🌍</span></button>'+
+      '<div class="grown"><b>For grown-ups:</b> This prototype runs entirely on this device. It has no accounts, chat, links, ads, purchases or tracking, and it sends nothing over the internet. Progress is saved only in this browser. Sparks are earned in play and have no money value.</div>'+
+      '<button class="hold" data-act="reset-ask"><span>Start over from the beginning</span></button>'+
+      '<button class="btn" data-act="close">Done</button></div>';
+  }
+  return '';
+}
+
+/* ---------- render ---------- */
+function applyPrefs(){
+  document.documentElement.setAttribute('data-world', S.world);
+  var r=document.documentElement;
+  r.classList.toggle('big', !!S.set.big); r.classList.toggle('easy', !!S.set.easy); r.classList.toggle('calm', !!S.set.calm);
+}
+function render(){
+  applyPrefs();
+  var app=document.getElementById('app'), h='';
+  switch(ui.screen){
+    case 'welcome': h=welcomeHTML(); break;
+    case 'obs': h=obsHTML(); break;
+    case 'bridge': h=bridgeHTML(); break;
+    case 'trail': h=trailHTML(); break;
+    case 'vault': h=vaultHTML(); break;
+    case 'finale': h=finaleHTML(); break;
+    case 'room': h=roomHTML(); break;
+    default: h=hubHTML();
+  }
+  app.innerHTML = h;
+  var md=document.getElementById('modal');
+  if (ui.modal){ md.innerHTML = modalHTML(); md.hidden=false; } else { md.hidden=true; md.innerHTML=''; }
+}
+
+var INTRO = {
+  obs:['Welcome to the Star Observatory! Our star map shows the Sun and its planets, but the planets got all mixed up.','Tap a planet to hear its clue. Then tap a space to put it there. Space 1 is closest to the Sun.'],
+  bridge:['Oh no! The Wobbly Bridge lost its supports. We need to fill the six spaces under the road.','First, try the Shape Lab. Push each shape and see which one stays strong.','Then pick a shape, tap a space, and test the bridge with the cart!'],
+  trail:['This is the Whispering Trail. Olive the owl saw who carried off the last Light Symbol.','Olive says: "Its footprints look like a heart split in two, with two pointy toes. It nibbles leaves and twigs in the forest."','Which tracks match? Tap one.'],
+  vault:['This is the Beacon Vault! The words on the door say: "Wake me with the Light Symbols, from the fewest to the most."','Each Light Symbol has a number. Turn the dials to put them in order, then wake the Beacon!'],
+  room:['Welcome to your Explorer Room! Spend your sparks on things you like, and change them any time.']
+};
+function go(to){
+  if (to==='vault' && !(S.done.obs&&S.done.bridge&&S.done.trail)){ setGuide(['The Vault is locked. Find all three Light Symbols first!']); sfx('oops'); render(); return; }
+  ui.hintMsg=null; ui.screen=to; ui.sel = (to==='bridge' && !locked('bridge')) ? 'up' : null; ui.msg=null; ui.brBad=-1; ui.brBadKind=''; ui.picked=null; ui.wrong=[];
+  if (to==='hub') setGuide(hubLines());
+  else if (to==='trail' && S.tr.found && !locked('trail')) setGuide(['Keep following the deer tracks! The pointy tips show which way it went.']);
+  else if (S.done[to] && to!=='room' && to!=='vault' && !ui.replay[to]) setGuide(['You already solved this one! Tap "Play this puzzle again" to try it again.']);
+  else if (INTRO[to]) setGuide(INTRO[to]);
+  if (to==='room' && !S.seen.room){ S.seen.room=1; save(); }
+  render(); window.scrollTo(0,0);
+}
+
+/* ---------- hints ---------- */
+function hint(st){
+  var n = ++ui.hint[st];
+  if (st==='obs'){
+    if (n===1) setGuide(['Start with the easy ones: the closest planet and the farthest planet.']);
+    else if (n===2) setGuide(['Here\'s a memory trick: "My Very Excited Mother Just Served Us Noodles." Each first letter is a planet, in order!']);
+    else { // place one correct planet
+      for (var i=0;i<8;i++){ if (!S.obs.lock[i]){ var cur=S.obs.slots[i]; S.obs.slots[i]=PLANETS[i].id; S.obs.lock[i]=1;
+        for (var j=0;j<8;j++) if (j!==i && S.obs.slots[j]===PLANETS[i].id && !S.obs.lock[j]) S.obs.slots[j]=null;
+        setGuide(['I lit up '+PLANETS[i].name+' for you. It goes in space '+(i+1)+'.']); save();
+        if (S.obs.lock.every(function(x){return x;})) { completeStage('obs'); return; }
+        break; } }
+    }
+  } else if (st==='bridge'){
+    if (n===1) setGuide(['Which shape stayed strong in the Shape Lab? Use only that shape.']);
+    else if (n===2) setGuide(['Triangles fit together when they take turns: point up, then point down. I drew dotted guides for you.']);
+    else { var uf=upFirst();
+      for (var k=0;k<6;k++){ var want=((k%2===0)===uf)?'up':'down'; if (S.br.slots[k]!==want){ S.br.slots[k]=want; setGuide(['I put a "point '+want+'" triangle in space '+(k+1)+'.']); save(); break; } }
+      if (k===6) setGuide(['It looks ready. Tap "Test the bridge"!']);
+    }
+  } else if (st==='trail'){
+    if (!S.tr.found){
+      if (n===1) setGuide(['Olive said the tracks have two pointy toes, like a heart split in two.']);
+      else if (n===2) setGuide(['Count the toes on each set of tracks. Which one has just two parts?']);
+      else setGuide(['It\'s Tracks B, the two-toed hoofprints.']);
+    } else {
+      if (n===1) setGuide(['Look at the hoofprint on your square. The pointy tips show which way the deer went.']);
+      else if (n===2) setGuide(['On the compass, N (north) is up, S (south) is down, E (east) is right and W (west) is left.']);
+      else if (S.tr.step<PATH.length) setGuide(['Next, go '+DIRS[PATH[S.tr.step]][3]+'. Tap '+PATH[S.tr.step]+'.']);
+    }
+  } else if (st==='vault'){
+    if (n===1) setGuide(['"Fewest to most" means start with the smallest number and end with the biggest.']);
+    else if (n===2) setGuide(['The Hoofprint has 2, the Triangle has 3, and the Star has 8.']);
+    else setGuide(['Turn the dials to: Hoofprint, then Triangle, then Star.']);
+  }
+  ui.hintMsg = ui.lines[0] || null;
+  sfx('tap'); render();
+  var hb=document.getElementById('hintbox'); if (hb && hb.scrollIntoView) try { hb.scrollIntoView({block:'nearest', behavior:'smooth'}); } catch(e){ hb.scrollIntoView(false); }
+}
+
+/* ---------- actions ---------- */
+var A = {
+  'next-line': function(){ if (ui.li<ui.lines.length-1){ ui.li++; say(ui.lines[ui.li]); } render(); },
+  'replay': function(){ say(ui.lines[ui.li]); },
+  'go': function(d){ go(d.to); },
+  'ob-next': function(){
+    if (ui.ob===0){ ui.ob=1; ui.names=makeNames(); setGuide(['First, every explorer needs a name. Pick one you like!']); }
+    else if (ui.ob===1){ if(!S.name) return; ui.ob=2; setGuide(['Nice to meet you, '+S.name+'! What color are you?']); }
+    else if (ui.ob===2){ ui.ob=3; setGuide(['Last thing: pick a world. It changes how everything looks.']); }
+    else { S.started=true; save(); go('hub'); return; }
+    render(); window.scrollTo(0,0);
+  },
+  'name': function(d){ S.name=d.n; save(); render(); },
+  'reroll': function(){ ui.names=makeNames(); render(); },
+  'color': function(d){ S.color=d.c; save(); render(); },
+  'world': function(d){ S.world=d.w; save(); render(); },
+  'worlds': function(){ ui.modal={type:'worlds'}; render(); },
+  'journal': function(){ ui.modal={type:'journal'}; render(); },
+  'settings': function(){ ui.modal={type:'settings'}; render(); },
+  'close': function(){ ui.modal=null; render(); },
+  'close-reward': function(){ ui.modal=null; go('hub'); },
+  'toggle': function(d){ S.set[d.k]=!S.set[d.k]; save(); if (d.k==='read' && S.set.read) say('Read aloud is on.'); if (d.k==='read' && !S.set.read){ try{speechSynthesis.cancel();}catch(e){} } render(); },
+  'hint': function(d){ hint(d.s); },
+  'secret': function(d){
+    if (S.secrets[d.k]) return;
+    S.secrets[d.k]=true; var info={obs:['☄️','comet'],bridge:['🦫','beaver'],trail:['🐸','frog']}[d.k];
+    var amt=earn('secret.'+d.k,20); addFact(info[1]); save(); sfx('coin');
+    ui.modal={type:'secret', em:info[0], fact:info[1], amt:amt}; render(); bumpSparks();
+  },
+  'obs-pick': function(d){
+    if (locked('obs')) return;
+    ui.sel = ui.sel===d.id ? null : d.id; ui.msg=null;
+    if (ui.sel){ var p=PLANETS.filter(function(x){return x.id===d.id;})[0]; setGuide([p.name+' says: "'+p.clue+'"']); }
+    sfx('tap'); render();
+  },
+  'obs-slot': function(d){
+    if (locked('obs')) return;
+    var i=+d.i; if (S.obs.lock[i]){ setGuide(['That planet is already glowing in the right place!']); render(); return; }
+    if (!ui.sel){ if (S.obs.slots[i]){ S.obs.slots[i]=null; save(); sfx('tap'); render(); } else { setGuide(['Tap a planet first, then tap this space.']); render(); } return; }
+    S.obs.slots[i]=ui.sel; ui.sel=null; sfx('tap');
+    if (S.obs.slots.every(function(x){return x;})) obsCheck();
+    save(); if (!S.done.obs || ui.modal) render();
+  },
+  'lab': function(d){ ui.lab[d.k]=1; sfx('tap'); if (ui.lab.sq&&ui.lab.tri){ addFact('triangle'); save(); } render(); },
+  'br-pick': function(d){ if (ui.busy||locked('bridge')) return; ui.sel = ui.sel===d.k ? null : d.k; sfx('tap'); render(); },
+  'br-slot': function(d){
+    if (ui.busy||locked('bridge')) return; var i=+d.i; ui.brBad=-1; ui.brBadKind=''; ui.msg=null;
+    if (ui.sel && S.br.slots[i]===ui.sel){ S.br.slots[i]=null; }
+    else if (ui.sel){ if (brLeft(ui.sel)<=0){ ui.msg={k:'',t:'You used up those shapes. Pick another shape, or tap a placed shape to take it back.'}; ui.sel=null; render(); return; } S.br.slots[i]=ui.sel; if (brLeft(ui.sel)<=0) ui.sel=null; }
+    else if (S.br.slots[i]) S.br.slots[i]=null;
+    else { ui.msg={k:'',t:'First tap a shape below the bridge, then tap a space.'}; }
+    save(); sfx('tap'); render();
+  },
+  'br-clear': function(){ if (ui.busy) return; if (locked('bridge')){ resetStage('bridge'); render(); return; } S.br.slots=[null,null,null,null,null,null]; ui.brBad=-1; ui.msg=null; save(); render(); },
+  'br-test': function(){ if (locked('bridge')){ setGuide(['The bridge is already fixed!']); render(); return; } brTest(); },
+  'tr-print': function(d){
+    if (d.k==='deer'){ S.tr.found=true; addFact('deer'); save(); sfx('good'); ui.msg={k:'good',t:'Yes! Two-toed hoofprints were made by a deer.'}; ui.hint.trail=0; ui.hintMsg=null;
+      setGuide(['Yes! A deer made those tracks. Deer walk on two toes on each foot.','Now follow the deer! The pointy tips of each hoofprint show which way it walked. Use the compass.']); render(); return; }
+    ui.picked = ui.picked||[]; if (ui.picked.indexOf(d.k)<0) ui.picked.push(d.k); addFact(d.k); save(); sfx('oops');
+    ui.msg={k:'oops', t: d.k==='duck' ? 'Those are webbed feet with three toes. A duck made them on its way to the pond. Not our thief!' : 'Four toes and a pad: that\'s a fox. Olive said two pointy toes. Try again!'};
+    render();
+  },
+  'tr-move': function(d){
+    if (S.tr.step>=PATH.length) return;
+    if (d.d===PATH[S.tr.step]){ S.tr.step++; ui.msg=null; ui.hintMsg=null; sfx('good'); save();
+      if (S.tr.step>=PATH.length){ completeStage('trail'); return; }
+      setGuide([rnd(['Good tracking!','You found more hoofprints!','That\'s the way!','Keep going!'])+' '+(PATH.length-S.tr.step)+' more to go.']);
+    } else { sfx('oops'); ui.msg={k:'oops',t:'No hoofprints to the '+DIRS[d.d][3]+'. Look at which way the pointy tips face.'}; }
+    render();
+  },
+  'dial': function(d){ var i=+d.i; S.vault.dials[i]=(S.vault.dials[i]+1)%DIAL.length; save(); sfx('tap'); render();
+    var el=document.querySelectorAll('.dial')[i]; if (el){ el.classList.add('spin'); el.focus({preventScroll:true}); } },
+  'vault-try': function(){
+    var pick=S.vault.dials.map(function(x){return DIAL[x];});
+    if (pick.join()==='hoof,triangle,star'){ ui.msg=null; finishVault(); return; }
+    sfx('oops'); ui.msg={k:'oops',t:'The Beacon flickers, but stays dark. Check your Light Symbols: smallest number first.'};
+    setGuide(['So close! Look at the numbers on your symbols and try again.']); render();
+  },
+  'replay-adv': function(){
+    S.done={obs:false,bridge:false,trail:false,vault:false}; S.obs={slots:[null,null,null,null,null,null,null,null],lock:[0,0,0,0,0,0,0,0]};
+    S.br={slots:[null,null,null,null,null,null]}; S.tr={found:false,step:0}; S.vault={dials:[3,4,5]}; ui.hint={obs:0,bridge:0,trail:0,vault:0}; ui.replay={}; save();
+    setGuide(['Let\'s play again! You keep your room and sparks. Sparks are only earned the first time, but any secret finds you missed still count.']); ui.screen='hub'; render();
+  },
+  'stage-replay': function(d){ resetStage(d.s); render(); window.scrollTo(0,0); },
+  'reset-ask': function(){ ui.modal={type:'reset'}; render(); },
+  'reset-yes': function(){ store.clear(); S=fresh(); ui.modal=null; ui.replay={}; ui.screen='welcome'; ui.ob=0; ui.hint={obs:0,bridge:0,trail:0,vault:0}; setGuide(INTRO_W); render(); window.scrollTo(0,0); },
+  'tab': function(d){ ui.tab=d.t; render(); },
+  'item': function(d){
+    var c=item(d.id); if (!c) return;
+    if (S.owned.indexOf(c.id)>=0){
+      var removable = (c.slot==='art'||c.slot==='shelf'||c.slot==='corner') && current(c.slot)===c.id;
+      setCurrent(c.slot, removable ? null : c.id); save(); sfx('tap'); render(); return;
+    }
+    if (c.cost==null) return;
+    ui.modal = S.sparks>=c.cost ? {type:'buy', id:c.id} : {type:'need', id:c.id}; render();
+  },
+  'buy-yes': function(d){
+    var c=item(d.id); if (!c || S.sparks<c.cost || S.owned.indexOf(c.id)>=0){ ui.modal=null; render(); return; }
+    S.sparks-=c.cost; S.ledger.push({id:'spend.'+c.id, amt:-c.cost, t:Date.now()}); S.owned.push(c.id); setCurrent(c.slot,c.id); save();
+    ui.modal=null; sfx('coin'); confetti(); setGuide(['Wow, the '+c.name+' looks great in here!']); render(); bumpSparks();
+  }
+};
+
+document.addEventListener('click', function(e){
+  var el = e.target.closest ? e.target.closest('[data-act]') : null;
+  if (!el) { if (e.target.id==='modal' && ui.modal && ui.modal.type!=='reward'){ ui.modal=null; render(); } return; }
+  var fn = A[el.getAttribute('data-act')]; if (!fn) return;
+  var d = {}; for (var i=0;i<el.attributes.length;i++){ var a=el.attributes[i]; if (a.name.indexOf('data-')===0) d[a.name.slice(5)]=a.value; }
+  fn(d);
+});
+
+document.addEventListener('keydown', function(e){ if (e.key==='Escape' && ui.modal && ui.modal.type!=='reward'){ ui.modal=null; render(); } });
+
+var INTRO_W = ['Hi there! I\'m Pip, a lantern-bot. I help keep the Beacon on Lantern Hill shining.', 'But last night the Beacon went dark! Its three Light Symbols flew off to hide.', 'Without the Beacon, the night-flyers can\'t find their way home. Will you help me find the symbols?'];
+if (ui.screen==='welcome') setGuide(INTRO_W); else setGuide(hubLines());
+render();
+})();
+</script>
+</body>
+</html>
