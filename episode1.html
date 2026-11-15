@@ -336,7 +336,7 @@ body[data-world="neon"] .sheetmusic{background:#e4eaff}
     <div class="kicker">Season 1</div>
     <div class="tmain">THE VAULT</div>
     <div class="tsub">The Halloway Inheritance</div>
-    <div class="tep">Twelve rooms · twelve Fridays · <b>3 rooms open in this preview</b></div>
+    <div class="tep">Twelve rooms · twelve Fridays · <b>3 rooms open to play now</b></div>
     <button class="btn pri block" id="startBtn" style="height:56px;font-size:17px">Enter the house</button>
     <div class="tfine">Free to play. Nothing you can buy ever changes a clue. Sound on for the full effect.</div>
   </div>
@@ -1419,7 +1419,7 @@ const ROOMS={
 };
 const ORDER=["study","conservatory","music"];
 const SEALED_NAMES=["","","","Room 4","Room 5","Room 6","Room 7","Room 8","Room 9","Room 10","Room 11","The Vault"];
-const releaseDate=w=>{const d=new Date(2026,10,13+7*(w-1));return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})};
+const releaseDate=w=>{const d=new Date(2026,9,30+7*(w-1));return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})};
 let R=ROOMS.study;
 
 /* =====================================================================
@@ -1495,14 +1495,10 @@ function showHub(){
     <div class="hmeta"><span class="chip"><i></i>${S.coins} Vault Coin${S.coins===1?"":"s"}</span><span class="chip">Week ${S.week} of 12</span><span class="chip">${WORLDS.find(w=>w.id===S.world).n}</span></div>
     <div class="eps">${rows.join("")}</div>
     <div class="vaultbox"><h3>Words for the vault</h3><p>Each room hides one word. The ones you've sealed collect here. Nobody tells you whether they're right until you stand at the vault in week 12.</p><div class="slots">${slots}</div></div>
-    <div class="demo"><p><b>Preview controls.</b> In the real game you wait for Friday. Testers can jump ahead to see how a new week arrives.</p>
-      <div class="row"><button class="btn pri" id="skipFri">Skip to next Friday</button>${S.week>1?`<button class="btn" id="backW1">Back to week 1</button>`:""}<button class="btn" id="hubMenu">Worlds and sound</button></div></div>`;
+    <div class="demo"><p><b>Preview build.</b> Weeks 1 to 3 are already unsealed for testing. Week 4 isn't written yet; in the real game it would unseal on Friday.</p>
+      <div class="row"><button class="btn" id="hubMenu">Worlds and sound</button></div></div>`;
   const hub=$("#hub");hub.hidden=false;hub.scrollTop=0;
   hub.querySelectorAll("[data-room]").forEach(b=>b.onclick=()=>enterRoom(b.dataset.room));
-  $("#skipFri").onclick=()=>{if(S.week>=3){toast("Rooms 4 to 12 aren't written yet. Three rooms are open in this preview.",3600);return}
-    S.week++;save();AU.sfx("seal");const r=ROOMS[ORDER[S.week-1]];
-    veilTo([`Friday, ${releaseDate(S.week)} · 6 pm`,"A new room unseals",`Week ${S.week}: ${r.title}`],()=>showHub())};
-  const b1=$("#backW1");if(b1)b1.onclick=()=>{S.week=1;save();showHub();toast("Back to week 1. Your notebook and theories are kept.")};
   $("#hubMenu").onclick=openMenu;
 }
 const R_seen=id=>ROOMS[id].searchable.filter(k=>S.eps[id].seen[k]).length;
@@ -1614,6 +1610,7 @@ $("#narrSkip").onclick=endIntro;
 /* =====================================================================
    BOOT
    ===================================================================== */
+S.week=Math.max(S.week||1,3);save(); // preview: weeks 2 and 3 back-dated so testers can play all three
 document.body.dataset.world=S.world;paintSnd();loadRoom("study");
 $("#startBtn").onclick=()=>{
   AU.init();AU.resume();AU.sfx("open");
