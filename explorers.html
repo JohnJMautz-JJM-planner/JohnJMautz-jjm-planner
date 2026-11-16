@@ -308,6 +308,8 @@ html[data-world="clouds"] .worldtag{background:rgba(255,255,255,.6)}
 .choice{border:3px solid transparent;background:#f6f3ff;border-radius:18px;padding:10px;display:flex;flex-direction:column;gap:8px;text-align:left;color:#3b2d5c}
 .choice.no{border-color:#e8544e;background:#ffeceb}
 .choice.yes{border-color:#2fae66;background:#e3f8eb}
+.cpic{display:block;border-radius:12px;overflow:hidden;max-width:190px;margin:0 auto;width:100%}
+.cpic svg{display:block;width:100%;height:auto}
 .pots{display:flex;align-items:center;justify-content:center;gap:12px}
 .pot{display:flex;flex-direction:column;align-items:center;font-size:1.6rem;line-height:1.1;background:#fff;border-radius:14px;padding:6px 14px}
 .vs{font-weight:900;color:#8b83b8}
@@ -1358,7 +1360,7 @@ var ADV = {
      items:{ f1:{em:'📜',note:true,name:'Note 1',text:'Note: “I want to find out: do plants need light to grow?”'},
        f2:{em:'📜',note:true,name:'Note 2',text:'Note: “In a fair test, change only ONE thing.”'},
        f3:{em:'📜',note:true,name:'Note 3',text:'Note: “Keep everything else the same: same water, same soil, same pots.”'} },
-     puzzle:{ type:'choose', title:'Pick the fair test', sub:'Each test uses two pots. Which one is fair?',
+     puzzle:{ type:'choose', fair:true, title:'Pick the fair test', sub:'Each test uses two pots. Which one is fair?',
        options:[
         {a:['🪴','☀️','💧'], b:['🪴','🌑',''], label:'Pot 1: sunny and watered. Pot 2: dark and not watered.', ok:false, why:'Two things changed, light AND water, so we can\'t tell which one made the difference.'},
         {a:['🪴','☀️','💧'], b:['🪴','🌑','💧'], label:'Pot 1: sunny and watered. Pot 2: dark and watered.', ok:true},
@@ -1381,6 +1383,205 @@ var ADV = {
      hints:{ search:['Notes hide under leaves and clovers.','One note is near the bottom of the beds.'], puzzle:['Start with the clue that tells you exactly where one bee goes.','Bix gets yellow. Bella can\'t have purple, so what is left for her?'] } }
   ] }
 };
+/* ---- Adventures 5-7 ---- */
+function bottleSVG(level, cap){
+  var h=70*level;
+  return '<svg viewBox="0 0 60 100" aria-hidden="true"><rect x="14" y="22" width="32" height="72" rx="8" fill="#fff" stroke="#3b2d5c" stroke-width="3"/><rect x="16.5" y="'+(91.5-h).toFixed(1)+'" width="27" height="'+h.toFixed(1)+'" rx="6" fill="#7cc8ff"/><rect x="21" y="6" width="18" height="17" rx="4" fill="'+cap+'" stroke="#3b2d5c" stroke-width="3"/></svg>';
+}
+function skySVG(sx, sy){
+  return '<svg viewBox="0 0 120 80" aria-hidden="true"><rect width="120" height="80" rx="10" fill="#bfe6ff"/><rect y="60" width="120" height="20" fill="#8fd16f"/><circle cx="'+sx+'" cy="'+sy+'" r="10" fill="#ffd23f" stroke="#e0a800" stroke-width="2"/><rect x="57" y="38" width="6" height="23" rx="3" fill="#5b4b8a"/><circle cx="60" cy="34" r="6" fill="#5b4b8a"/></svg>';
+}
+SYMS.drop     = {name:'Raindrop', svg:'<path d="M50 8 C50 8 18 46 18 64 A32 32 0 0 0 82 64 C82 46 50 8 50 8Z" fill="#7cc8ff" stroke="#2c7fae" stroke-width="4"/><ellipse cx="38" cy="62" rx="6" ry="10" fill="#fff" opacity=".7"/>'};
+SYMS.snow     = {name:'Snowflake',svg:'<g stroke="#5aa9e6" stroke-width="7" stroke-linecap="round"><path d="M50 10 V90"/><path d="M15.4 30 L84.6 70"/><path d="M15.4 70 L84.6 30"/></g><g stroke="#5aa9e6" stroke-width="5" stroke-linecap="round" fill="none"><path d="M40 16 L50 26 L60 16"/><path d="M40 84 L50 74 L60 84"/></g>'};
+SYMS.sun      = {name:'Sun',      svg:'<g stroke="#e0a800" stroke-width="6" stroke-linecap="round"><path d="M50 6 V18 M50 82 V94 M6 50 H18 M82 50 H94 M19 19 L27 27 M73 73 L81 81 M81 19 L73 27 M27 73 L19 81"/></g><circle cx="50" cy="50" r="24" fill="#ffd23f" stroke="#e0a800" stroke-width="4"/>'};
+SYMS.fossil   = {name:'Fossil',   svg:'<circle cx="50" cy="50" r="40" fill="#e8d3a9" stroke="#8a6a3c" stroke-width="4"/><path d="M50 50 a4 4 0 0 1 8 0 a8 8 0 0 1 -16 0 a14 14 0 0 1 28 0 a20 20 0 0 1 -40 0 a28 28 0 0 1 56 0" fill="none" stroke="#8a6a3c" stroke-width="3.5"/>'};
+SYMS.tooth    = {name:'Tooth',    svg:'<path d="M22 24 C22 10 40 8 50 16 C60 8 78 10 78 24 C78 44 70 52 68 70 C66 90 58 92 56 80 C54 70 46 70 44 80 C42 92 34 90 32 70 C30 52 22 44 22 24Z" fill="#fffaf0" stroke="#8a7a6c" stroke-width="4"/>'};
+SYMS.bone     = {name:'Bone',     svg:'<g transform="rotate(-35 50 50)" fill="#fff4dc" stroke="#9a8462" stroke-width="4"><circle cx="22" cy="40" r="11"/><circle cx="22" cy="60" r="11"/><circle cx="78" cy="40" r="11"/><circle cx="78" cy="60" r="11"/><rect x="22" y="40" width="56" height="20" stroke="none"/><path d="M24 40 H76 M24 60 H76" fill="none"/></g>'};
+SYMS.note     = {name:'Music Note',svg:'<path d="M40 74 V20 L82 12 V64" fill="none" stroke="#6b3fb3" stroke-width="7" stroke-linejoin="round"/><ellipse cx="29" cy="76" rx="13" ry="10" fill="#9b6bff" stroke="#6b3fb3" stroke-width="3"/><ellipse cx="71" cy="66" rx="13" ry="10" fill="#9b6bff" stroke="#6b3fb3" stroke-width="3"/>'};
+SYMS.drum     = {name:'Drum',     svg:'<path d="M16 34 V70 A34 12 0 0 0 84 70 V34" fill="#ff6b6b" stroke="#a5520f" stroke-width="4"/><path d="M18 42 L36 78 M38 46 L56 82 M82 42 L64 78" stroke="#ffd23f" stroke-width="3"/><ellipse cx="50" cy="34" rx="34" ry="12" fill="#ffe7b3" stroke="#a5520f" stroke-width="4"/>'};
+SYMS.bell     = {name:'Bell',     svg:'<path d="M50 12 C30 12 24 30 24 50 C24 64 16 70 14 76 H86 C84 70 76 64 76 50 C76 30 70 12 50 12Z" fill="#ffd23f" stroke="#c98a00" stroke-width="4"/><circle cx="50" cy="84" r="8" fill="#c98a00"/>'};
+
+FACTS.watercycle = "The water cycle never stops: water evaporates, condenses into clouds, falls as rain or snow, and collects in rivers, lakes and oceans.";
+FACTS.rainbow = "A rainbow appears when sunlight shines through raindrops, and the drops split the light into its colors.";
+FACTS.matter = "Matter comes in three main states: solids keep their shape, liquids flow and take the shape of their container, and gases spread out to fill any space.";
+FACTS.lightning = "A lightning bolt is hotter than the surface of the Sun.";
+FACTS.shadows = "Your shadow is shortest around midday, when the Sun is highest in the sky. In the morning and evening the Sun is low, so shadows are long.";
+FACTS.snowflake = "Most snowflakes have six sides or six points.";
+FACTS.layers = "In rock layers that haven't been moved around, the deepest layers are the oldest and the top layers are the newest.";
+FACTS.birds = "Birds are living dinosaurs. They come from small, feathered dinosaurs.";
+FACTS.teeth = "Scientists can tell what a dinosaur ate from its teeth. Sharp, pointed teeth were for meat. Flat or peg-shaped teeth were for plants.";
+FACTS.dinoword = "The word dinosaur means 'terrible lizard'.";
+FACTS.digmap = "Fossil hunters make careful grid maps of a dig, so they know exactly where each bone was found.";
+FACTS.croc = "The ancestors of crocodiles lived alongside the dinosaurs.";
+FACTS.pitch = "When you tap a glass bottle, more water makes a lower note, because the heavier bottle vibrates more slowly.";
+FACTS.cricket = "Crickets chirp by rubbing their wings together.";
+FACTS.families = "Instruments make sound by vibrating. Strings vibrate when plucked or bowed, drums when they are hit, and wind instruments when you blow into them.";
+FACTS.whale = "Humpback whales sing long songs that can travel far underwater.";
+FACTS.band = "Every sound is made by something vibrating, from a guitar string to your own voice.";
+FACTS.bat = "Bats squeak and listen for the echoes to find their way in the dark.";
+
+CAT.push(
+  {id:'corner.kite',slot:'corner',name:'Rainbow Kite',cost:null,em:'🪁',reward:true},
+  {id:'pet.dino',slot:'pet',name:'Dino Pal',cost:null,em:'🦕',reward:true},
+  {id:'corner.piano',slot:'corner',name:'Toy Piano',cost:null,em:'🎹',reward:true},
+  {id:'art.dino',slot:'art',name:'Dino Poster',cost:50,em:'🦖'},
+  {id:'art.music',slot:'art',name:'Music Poster',cost:50,em:'🎶'},
+  {id:'shelf.trophy',slot:'shelf',name:'Explorer Trophy',cost:100,em:'🏆'},
+  {id:'hat.helmet',slot:'hat',name:'Dig Helmet',cost:60,em:'⛑️'}
+);
+
+ADV.weather = { id:'weather', title:'The Weather Station Mystery', hub:'Cloudtop Hill', em:'⛅', sub:'Water cycle, states of matter and shadows',
+  card:'linear-gradient(160deg,#4f8fe8,#7cc8ff 55%,#ffd76a)', fg:'#ffffff',
+  banner:'linear-gradient(#a9d8ff 0 55%,#8fd16f 55%)', bannerEm:['☁️','🌦️','🌡️','🪁'],
+  intro:['Welcome to Cloudtop Hill! The weather station\'s door is stuck, and the weather report is locked inside.','The door needs three Weather Symbols. Search the hill to find each puzzle\'s clues!'],
+  vault:{ name:'Weather Station Door', digits:2, answer:'24', engrave:'“Multiply the Raindrop number by the Snowflake number. Then add the Sun number.”',
+    hints:['Find your three numbers: Raindrop, Snowflake and Sun.','4 × 3 = 12. Now add the Sun number.','4 × 3 + 12 = 24.'] },
+  reward:'corner.kite', finaleFact:'watercycle',
+  finale:['The weather station door pops open! The weather report says: sunny and windy. Perfect for the Rainbow Kite you just won!'],
+  stages:[
+   { id:'cycle', name:'Pond Lookout', sub:'Follow a drop of water', icon:'💧',
+     intro:['A drop of water goes on a big trip around the world. Four picture cards show its journey. Find them all!','Then put the trip in order, starting with water in the pond.'],
+     search:{ title:'Search the Pond Lookout', sub:'Tap the reeds, rocks and lily pads. 4 picture cards are hiding.', bg:'linear-gradient(#bfe6ff 0 34%,#7fc6e8 34% 70%,#8fd16f 70%)',
+       spots:[[12,24,'☁️',null],[40,22,'🌳','evap'],[70,24,'☁️',null],[90,30,'🌳','cond'],[16,56,'🪷',null],[46,58,'🪷','rain'],[78,56,'🪨',null],[24,86,'🌾','collect'],[56,86,'🪨',null,'rainbow','🌈'],[86,86,'🌾',null]] },
+     items:{ evap:{em:'♨️',name:'Evaporation',text:'The Sun warms the water, and some of it rises into the air as an invisible gas called water vapor.'},
+       cond:{em:'☁️',name:'Condensation',text:'High in the sky the water vapor cools into tiny droplets. Lots of droplets together make a cloud.'},
+       rain:{em:'🌧️',name:'Precipitation',text:'When the droplets get big and heavy, they fall as rain, or as snow when it is cold.'},
+       collect:{em:'🌊',name:'Collection',text:'The water runs into rivers, lakes and oceans, ready to go around again.'} },
+     puzzle:{ type:'order', title:'The water cycle', sub:'Tap a card to read it, then tap a space.', lead:'🏞️ Water in the pond', labels:['1','2','3','4'], answer:['evap','cond','rain','collect'] },
+     symbol:{k:'drop',n:4,why:'the water cycle has 4 main steps'}, facts:['watercycle'], rewardFact:'watercycle',
+     hints:{ search:['Picture cards hide behind trees, lily pads and reeds.','Two cards are near the trees at the top.'], puzzle:['First the Sun warms the water so it rises into the air.','Clouds have to form before it can rain.'] } },
+   { id:'matter', name:'Picnic Table', sub:'Solid, liquid or gas?', icon:'🧊',
+     intro:['Somebody left a picnic on the hill! Six things are hidden around the table.','Find them, then sort each one: solid, liquid or gas.'],
+     search:{ title:'Search the picnic', sub:'Tap the basket, plates and grass. 6 things are hiding.', bg:'linear-gradient(#cdeeff 0 30%,#9bd67e 30%)',
+       spots:[[12,34,'🧺','ice'],[36,30,'🍽️',null],[60,34,'🧺','juice'],[86,30,'🍽️','balloon'],[18,64,'🌿',null],[44,62,'🍽️','stone'],[70,64,'🧺','steam'],[30,88,'🌿','milk'],[60,88,'🌿',null,'lightning','⚡'],[88,86,'🌿',null]] },
+     items:{ ice:{em:'🧊',name:'Ice cube',text:'An ice cube keeps its own shape, even on a plate.'},
+       juice:{em:'🧃',name:'Juice',text:'Juice flows and takes the shape of the cup you pour it into.'},
+       balloon:{em:'🎈',name:'Air in a balloon',text:'The air inside spreads out to fill the whole balloon.'},
+       stone:{em:'🪨',name:'Pebble',text:'A pebble is hard and keeps its shape.'},
+       steam:{em:'♨️',name:'Steam from cocoa',text:'Steam rises from hot cocoa and spreads out into the air.'},
+       milk:{em:'🥛',name:'Milk',text:'Milk pours and fills the bottom of the glass.'} },
+     puzzle:{ type:'sort', title:'Sort the states of matter', sub:'Tap a thing, then tap its group.',
+       bins:[{id:'solid',name:'Solid',em:'🧱',desc:'keeps its own shape'},{id:'liquid',name:'Liquid',em:'💧',desc:'flows and fills a container'},{id:'gas',name:'Gas',em:'💨',desc:'spreads out to fill any space'}],
+       answer:{ice:'solid',stone:'solid',juice:'liquid',milk:'liquid',balloon:'gas',steam:'gas'} },
+     symbol:{k:'snow',n:3,why:'matter has 3 main states'}, facts:['matter'], rewardFact:'matter',
+     hints:{ search:['Things hide in baskets and under plates.','There are 6 things and a few empty spots.'], puzzle:['Does it keep its shape, flow, or spread out?','The air in the balloon and the steam both spread out.'] } },
+   { id:'shadow', name:'Sundial Garden', sub:'When is your shadow shortest?', icon:'☀️',
+     intro:['The sundial garden has three clue notes about the Sun. Find them!','Then use them to work out when your shadow is the shortest.'],
+     search:{ title:'Search the Sundial Garden', sub:'Tap the flowers, benches and stones. 3 notes are hiding.', bg:'linear-gradient(#ffe9b0 0 34%,#a6dc85 34%)',
+       spots:[[14,30,'🌻','s1'],[40,28,'🪨',null],[66,30,'🌷',null],[88,28,'🌻','s2'],[22,66,'🪑',null],[50,66,'🪨','s3'],[78,68,'🌷',null],[40,88,'🌼',null,'snowflake','❄️']] },
+     items:{ s1:{em:'📜',note:true,name:'Note 1',text:'Note: “The Sun is low in the sky in the morning and in the evening.”'},
+       s2:{em:'📜',note:true,name:'Note 2',text:'Note: “The Sun is highest in the sky around midday, about 12 o\'clock.”'},
+       s3:{em:'📜',note:true,name:'Note 3',text:'Note: “The higher the Sun is, the shorter your shadow is.”'} },
+     puzzle:{ type:'choose', title:'Find the shortest shadow', sub:'Look at where the Sun is in each picture. When will your shadow be shortest?', note:'Use your three notes. The shadows are not drawn. You have to work them out!',
+       options:[
+        {pic:skySVG(14,50), label:'Morning, about 8 AM. The Sun is low.', ok:false, why:'When the Sun is low, shadows are long, not short.'},
+        {pic:skySVG(60,14), label:'Midday, about 12 o\'clock. The Sun is high.', ok:true},
+        {pic:skySVG(106,50), label:'Evening, about 6 PM. The Sun is low.', ok:false, why:'In the evening the Sun is low again, so shadows are long.'} ] },
+     symbol:{k:'sun',n:12,why:'shadows are shortest around 12 o\'clock'}, facts:['shadows'], rewardFact:'shadows',
+     hints:{ search:['Notes hide under flowers and stones.','Try the sunflowers.'], puzzle:['When is the Sun highest in the sky?','A high Sun makes a short shadow.','Midday, around 12 o\'clock, has the shortest shadow.'] } }
+  ] };
+
+ADV.dino = { id:'dino', title:'The Dinosaur Dig', hub:'Fossil Canyon', em:'🦕', sub:'Rock layers, dinosaur teeth and a dig map',
+  card:'linear-gradient(160deg,#c46a2b,#e9a75a 55%,#7a5a3c)', fg:'#ffffff',
+  banner:'linear-gradient(#ffd9a0 0 50%,#c98f5a 50%)', bannerEm:['🦴','⛺','🦖','🔍'],
+  intro:['Welcome to Fossil Canyon! Professor Rex locked her best fossil in the Fossil Cabinet, then lost the code.','The cabinet needs three Dig Symbols. Search the canyon to find each puzzle\'s clues!'],
+  vault:{ name:'Fossil Cabinet', digits:3, answer:'435', engrave:'“Enter the numbers in dig order: Fossil, then Tooth, then Bone.”',
+    hints:['Find the numbers on your Fossil, Tooth and Bone symbols.','Put them in that order: Fossil first, then Tooth, then Bone.','The code is 4 3 5.'] },
+  reward:'pet.dino', finaleFact:'layers',
+  finale:['The Fossil Cabinet clicks open! Inside is a tiny Dino Pal who wants to come home with you. (Don\'t worry, it only eats leaves.)'],
+  stages:[
+   { id:'layers', name:'Canyon Wall', sub:'Which layer is oldest?', icon:'🪨',
+     intro:['The canyon wall has stripes of rock. Each one is a layer from a different time. Four finds are hidden here.','Find them, then put them in their layers. The oldest one goes at the bottom!'],
+     search:{ title:'Search the Canyon Wall', sub:'Tap the rocks and cracks. 4 finds are hiding.', bg:'linear-gradient(#ffe2b0 0 22%,#e9b57a 22% 44%,#c98f5a 44% 66%,#a46f42 66% 86%,#7a5a3c 86%)',
+       spots:[[12,18,'🪨','pot'],[44,16,'🪨',null],[80,18,'🌵',null],[22,40,'🪨','mammoth'],[64,42,'🪨',null],[14,64,'🪨',null],[52,62,'🪨','dino'],[86,64,'🪨',null,'birds','🐦'],[30,86,'🪨','trilo'],[72,88,'🪨',null]] },
+     items:{ trilo:{em:'🐚',name:'Trilobite',text:'Trilobites lived in the sea more than 250 million years ago.'},
+       dino:{em:'🦶',name:'Dinosaur footprint',text:'Dinosaurs lived from about 230 million to 66 million years ago.'},
+       mammoth:{em:'🦣',name:'Mammoth tooth',text:'Woolly mammoths lived until about 4,000 years ago.'},
+       pot:{em:'🏺',name:'Clay pot',text:'This clay pot was made about 300 years ago.'} },
+     puzzle:{ type:'order', title:'Stack the layers', sub:'The oldest find goes in the bottom layer, number 1. The newest goes on top, number 4.', lead:'⬇️ Bottom (oldest)', labels:['1 bottom','2','3','4 top'], answer:['trilo','dino','mammoth','pot'] },
+     symbol:{k:'fossil',n:4,why:'you sorted 4 rock layers'}, facts:['layers'], rewardFact:'layers',
+     hints:{ search:['Finds hide under rocks in every stripe of the wall.','One find is near the very bottom.'], puzzle:['Which find is the oldest? More years ago means older.','250 million years is older than 66 million years.'] } },
+   { id:'teeth', name:'Fossil Tent', sub:'Plant-eater or meat-eater?', icon:'🦷',
+     intro:['Six fossil teeth are hidden in Professor Rex\'s tent. Find them all!','Then sort each dinosaur: did it eat plants or meat? The tooth cards are your clues.'],
+     search:{ title:'Search the Fossil Tent', sub:'Tap the boxes, bags and tools. 6 fossil teeth are hiding.', bg:'linear-gradient(#f6e6c4 0 62%,#c9a46e 62%)',
+       spots:[[12,28,'📦','trike'],[36,26,'🎒','trex'],[60,28,'📦',null],[86,28,'🔦','stego'],[16,62,'🧰','raptor'],[42,62,'📦',null],[68,62,'🎒','brachio'],[90,64,'🧰',null],[30,88,'📦','spino'],[62,88,'🪣',null,'dinoword','📖']] },
+     items:{ trike:{em:'🦷',name:'Triceratops',text:'Triceratops had a beak and rows of flat teeth for chewing tough plants.'},
+       trex:{em:'🦷',name:'T. rex',text:'T. rex had huge, sharp teeth as long as bananas.'},
+       stego:{em:'🦷',name:'Stegosaurus',text:'Stegosaurus had small, peg-shaped teeth for nibbling low plants.'},
+       raptor:{em:'🦷',name:'Velociraptor',text:'Velociraptor had sharp, curved teeth and a big curved claw on each foot.'},
+       brachio:{em:'🦷',name:'Brachiosaurus',text:'Brachiosaurus had chisel-shaped teeth for stripping leaves from the treetops.'},
+       spino:{em:'🦷',name:'Spinosaurus',text:'Spinosaurus had long jaws and cone-shaped teeth, great for catching big fish.'} },
+     puzzle:{ type:'sort', title:'What did they eat?', sub:'Tap a dinosaur, then tap its group. Fish counts as meat!',
+       bins:[{id:'plant',name:'Plant-eater',em:'🌿',desc:'flat, peg or chisel teeth'},{id:'meat',name:'Meat-eater',em:'🍖',desc:'sharp, pointed teeth'}],
+       answer:{trike:'plant',stego:'plant',brachio:'plant',trex:'meat',raptor:'meat',spino:'meat'} },
+     symbol:{k:'tooth',n:3,why:'3 of the dinosaurs were meat-eaters'}, facts:['teeth'], rewardFact:'teeth',
+     hints:{ search:['Teeth hide in boxes, bags and toolkits.','There are 6 teeth and a few empty spots.'], puzzle:['Sharp and pointed teeth mean meat. Flat, peg or chisel teeth mean plants.','Spinosaurus caught fish, and fish counts as meat.'] } },
+   { id:'dig', name:'Dig Site', sub:'Read the dig map', icon:'🗺️',
+     intro:['Professor Rex wrote down where the big bone is buried, but the notes blew away! Find all 3.','Then tap the square where you should dig.'],
+     search:{ title:'Search the Dig Site', sub:'Tap the rocks, buckets and brushes. 3 notes are hiding.', bg:'linear-gradient(#ffd9a0 0 30%,#d9a066 30%)',
+       spots:[[12,34,'🪣','d1'],[38,32,'🪨',null],[64,34,'🖌️',null],[88,32,'🪨','d2'],[20,70,'🌵',null],[48,70,'🪣','d3'],[78,72,'🪨',null,'croc','🐊']] },
+     items:{ d1:{em:'📜',note:true,name:'Note 1',text:'Note: “Start at the tent ⛺.”'},
+       d2:{em:'📜',note:true,name:'Note 2',text:'Note: “Walk 2 squares east.”'},
+       d3:{em:'📜',note:true,name:'Note 3',text:'Note: “Then walk 3 squares north and dig!”'} },
+     puzzle:{ type:'grid', title:'Where do you dig?', sub:'North is at the top. Use the notes, then tap the square to dig.', start:[0,4], startName:'the tent', target:[2,1],
+       water:[], tiles:{'0,4':'⛺','4,0':'🌵','1,0':'🪨','3,2':'🌵','4,3':'🪨','0,1':'🌵','3,4':'🦴','4,1':'🦴','1,2':'🪨'} },
+     symbol:{k:'bone',n:5,why:'you walked 5 squares to the dig'}, facts:['digmap'], rewardFact:'digmap',
+     hints:{ search:['Notes hide under buckets and rocks.','One note is in a bucket near the bottom.'], puzzle:['Start at the tent ⛺. Count 2 squares to the right.','Now count 3 squares up.','Dig 2 squares right and 3 squares up from the tent.'] } }
+  ] };
+
+ADV.music = { id:'music', title:'The Music Box Mystery', hub:'Melody Hall', em:'🎵', sub:'Pitch, instrument families and a band puzzle',
+  card:'linear-gradient(160deg,#7a4fd6,#c77dff 55%,#ff9ec7)', fg:'#ffffff',
+  banner:'linear-gradient(#ffe6f2 0 60%,#c9a0dc 60%)', bannerEm:['🎻','🥁','🎺','🎹'],
+  intro:['Welcome to Melody Hall! The old music box has stopped playing, and its key is locked inside it.','The music box needs three Music Symbols. Search the hall to find each puzzle\'s clues!'],
+  vault:{ name:'Music Box', digits:2, answer:'36', engrave:'“Multiply all three of your Music Symbol numbers together.”',
+    hints:['Multiply means use times (×). Your numbers are 4, 3 and 3.','4 × 3 = 12. Now times 3 again.','4 × 3 × 3 = 36.'] },
+  reward:'corner.piano', finaleFact:'band',
+  finale:['The music box opens and starts to play a happy tune! You won a Toy Piano for your Explorer Room.'],
+  stages:[
+   { id:'bottles', name:'Practice Room', sub:'Low notes and high notes', icon:'🍾',
+     intro:['Four glass bottles make a xylophone, but they got mixed up. Find the bottles and the music teacher\'s note.','Then line the bottles up from the lowest note to the highest.'],
+     search:{ title:'Search the Practice Room', sub:'Tap the stands, cases and chairs. 4 bottles and 1 note are hiding.', bg:'linear-gradient(#ffe9f3 0 62%,#c9a0dc 62%)',
+       spots:[[12,30,'🎼','b1'],[38,28,'🪑',null],[62,30,'🧳','b2'],[88,28,'🎼',null],[16,66,'🧳','tip'],[42,66,'🪑','b3'],[68,66,'🎼',null],[88,68,'🧳','b4'],[40,90,'🪑',null,'cricket','🦗']] },
+     items:{ b1:{em:bottleSVG(.3,'#ff6b6b'),name:'Red bottle',text:'The red bottle has a little bit of water in it.'},
+       b2:{em:bottleSVG(.85,'#3d8bff'),name:'Blue bottle',text:'The blue bottle is almost full of water.'},
+       b3:{em:bottleSVG(.1,'#4cc35a'),name:'Green bottle',text:'The green bottle has hardly any water.'},
+       b4:{em:bottleSVG(.55,'#ffc23d'),name:'Yellow bottle',text:'The yellow bottle is about half full.'},
+       tip:{em:'📜',note:true,name:'Teacher\'s note',text:'Teacher\'s note: “When you tap a bottle, MORE water makes a LOWER note.”'} },
+     puzzle:{ type:'order', title:'Lowest to highest', sub:'Use the teacher\'s note. Put the lowest note first. Tap a bottle, then tap a space.', lead:'🔉 Lowest note', labels:['1 low','2','3','4 high'], answer:['b2','b4','b1','b3'] },
+     symbol:{k:'note',n:4,why:'your xylophone has 4 bottles'}, facts:['pitch'], rewardFact:'pitch',
+     hints:{ search:['Bottles hide behind music stands, cases and chairs.','The teacher\'s note is in a case.'], puzzle:['More water makes a lower note. Which bottle has the most water?','Start with the fullest bottle and end with the emptiest.'] } },
+   { id:'families', name:'Instrument Closet', sub:'Sort the instrument families', icon:'🎻',
+     intro:['Six instruments are hiding in the closet. Find them all!','Then sort them into families by how you play them.'],
+     search:{ title:'Search the closet', sub:'Tap the boxes and shelves. 6 instruments are hiding.', bg:'linear-gradient(#efe1ff 0 50%,#b98ad6 50%)',
+       spots:[[12,26,'📦','violin'],[36,24,'📦','trumpet'],[60,26,'🧳',null],[86,26,'📦','drum'],[16,58,'🧳','guitar'],[42,58,'📦',null],[68,58,'📦','sax'],[90,60,'🧳',null],[30,86,'📦','longdrum'],[62,86,'🧳',null,'whale','🐋']] },
+     items:{ violin:{em:'🎻',name:'Violin',text:'You play a violin by pulling a bow across its strings.'},
+       guitar:{em:'🎸',name:'Guitar',text:'You play a guitar by plucking or strumming its strings.'},
+       drum:{em:'🥁',name:'Drum',text:'You play a drum by hitting it with sticks.'},
+       longdrum:{em:'🪘',name:'Hand drum',text:'You play a hand drum by tapping it with your hands.'},
+       trumpet:{em:'🎺',name:'Trumpet',text:'You play a trumpet by buzzing your lips and blowing into it.'},
+       sax:{em:'🎷',name:'Saxophone',text:'You play a saxophone by blowing into it.'} },
+     puzzle:{ type:'sort', title:'Instrument families', sub:'Tap an instrument, then tap its family.',
+       bins:[{id:'strings',name:'Strings',em:'🎻',desc:'pluck or bow the strings'},{id:'percussion',name:'Percussion',em:'🥁',desc:'hit, tap or shake it'},{id:'wind',name:'Wind',em:'💨',desc:'blow into it'}],
+       answer:{violin:'strings',guitar:'strings',drum:'percussion',longdrum:'percussion',trumpet:'wind',sax:'wind'} },
+     symbol:{k:'drum',n:3,why:'you sorted 3 instrument families'}, facts:['families'], rewardFact:'families',
+     hints:{ search:['Instruments hide in boxes and cases.','There are 6 instruments and a few empty spots.'], puzzle:['Read each card: do you pluck it, hit it, or blow into it?','The trumpet and saxophone are both played by blowing.'] } },
+   { id:'band', name:'Stage', sub:'Who plays what in the band?', icon:'🎤',
+     intro:['Three friends are playing a concert tonight, but the poster with their instruments got torn up. Find the 3 clue pieces.','Then use the clues to match each friend to an instrument.'],
+     search:{ title:'Search the stage', sub:'Tap the speakers, lights and curtains. 3 clue pieces are hiding.', bg:'linear-gradient(#3b2a6e 0 22%,#7a4fd6 22% 70%,#a4693e 70%)',
+       spots:[[12,30,'🔊','c1'],[38,26,'💡',null],[62,26,'💡',null],[88,30,'🔊',null],[20,62,'🎤','c2'],[50,60,'🪑',null],[80,62,'🎼','c3'],[46,88,'🔊',null,'bat','🦇']] },
+     items:{ c1:{em:'📜',note:true,name:'Clue 1',text:'Clue 1: “Ava plays an instrument you blow into.”'},
+       c2:{em:'📜',note:true,name:'Clue 2',text:'Clue 2: “Ben\'s instrument has no strings.”'},
+       c3:{em:'📜',note:true,name:'Clue 3',text:'Clue 3: “Cleo doesn\'t play the drum.”'} },
+     puzzle:{ type:'match', title:'Match the band', sub:'Tap each friend\'s instrument to change it. Use all three clues, then tap Check.', rowEm:'🎵', noun:'friend',
+       rows:[{id:'ava',name:'Ava'},{id:'ben',name:'Ben'},{id:'cleo',name:'Cleo'}],
+       opts:[{id:'drum',name:'Drum',em:'🥁'},{id:'guitar',name:'Guitar',em:'🎸'},{id:'trumpet',name:'Trumpet',em:'🎺'}],
+       answer:{ava:'trumpet',ben:'drum',cleo:'guitar'},
+       clues:[{t:'Clue 1: Ava plays an instrument you blow into.', f:function(a){return a.ava==='trumpet';}},{t:'Clue 2: Ben\'s instrument has no strings.', f:function(a){return a.ben!=='guitar';}},{t:'Clue 3: Cleo doesn\'t play the drum.', f:function(a){return a.cleo!=='drum';}}] },
+     symbol:{k:'bell',n:3,why:'3 friends play in the band'}, facts:['band'], rewardFact:'band',
+     hints:{ search:['Clue pieces hide behind speakers and the microphone.','One clue is by the music stand.'], puzzle:['Which instrument do you blow into? That one is Ava\'s.','Ava has the trumpet. Ben has no strings, so Ben has the...?'] } }
+  ] };
+ADV_ORDER.push('weather','dino','music');
+
 function advDone(id){ return id==='beacon' ? S.done.vault : !!(S.ap && S.ap[id] && S.ap[id].done.vault); }
 function advSyms(id){ if (id==='beacon') return (S.done.obs?1:0)+(S.done.bridge?1:0)+(S.done.trail?1:0); var d=AP(id).done; return ADV[id].stages.filter(function(s){return d[s.id];}).length; }
 function AP(a){ if (!S.ap) S.ap={}; if (!S.ap[a]) S.ap[a]={done:{},secrets:{},st:{},vault:null}; return S.ap[a]; }
@@ -1467,7 +1668,7 @@ function gPuzzleHTML(a,stg,ss){
     h+='</div><div class="gtray">'+Object.keys(p.answer).filter(function(id){return !ss.place[id];}).map(function(id){ return chipHTML(stg,id,'g-pick',ui.wrong.indexOf(id)>=0?' wiggle':''); }).join('')+'</div>'+infoHTML(stg);
   } else if (p.type==='choose'){
     h+='<div class="choices">'+p.options.map(function(o,i){ var pot=function(x){ return '<span class="pot"><span>'+x[1]+'</span><span>'+x[0]+'</span><span>'+(x[2]||'🚫')+'</span></span>'; };
-      return '<button class="choice'+(ui.pick===i?(o.ok?' yes':' no'):'')+'" data-act="g-choose" data-i="'+i+'"><span class="pots">'+pot(o.a)+'<span class="vs">vs</span>'+pot(o.b)+'</span><span class="clabel"><b>Test '+'ABC'[i]+'.</b> '+esc(o.label)+'</span></button>'; }).join('')+'</div><p class="note">🚫 means no water. 🌑 means kept in the dark.</p>';
+      return '<button class="choice'+(ui.pick===i?(o.ok?' yes':' no'):'')+'" data-act="g-choose" data-i="'+i+'">'+(o.pic?'<span class="cpic">'+o.pic+'</span>':'<span class="pots">'+pot(o.a)+'<span class="vs">vs</span>'+pot(o.b)+'</span>')+'<span class="clabel"><b>'+(p.fair?'Test ':'Picture ')+'ABC'[i]+'.</b> '+esc(o.label)+'</span></button>'; }).join('')+'</div><p class="note">'+esc(p.note||'🚫 means no water. 🌑 means kept in the dark.')+'</p>';
   } else if (p.type==='grid'){
     h+='<div class="gmap" role="grid" aria-label="Island map, north is up"><span class="gnorth">N ⬆️</span>';
     for (var y=0;y<5;y++) for (var x=0;x<5;x++){ var k=x+','+y, wet=p.water.indexOf(k)>=0, t=p.tiles[k]||'';
@@ -1476,7 +1677,7 @@ function gPuzzleHTML(a,stg,ss){
   } else if (p.type==='match'){
     var clueTxt=foundIds(stg,ss).map(function(id){return stg.items[id].text;});
     h+='<div class="mrows">'+p.rows.map(function(r){ var oi=ss.asg[r.id], o=oi!=null?p.opts.filter(function(q){return q.id===oi;})[0]:null;
-      return '<div class="mrow"><span class="bee">🐝 <b>'+esc(r.name)+'</b></span><button class="mpick" data-act="g-cycle" data-r="'+r.id+'">'+(o?'<span class="fl">'+o.em+'</span>'+esc(o.name):'Tap to choose')+'</button></div>'; }).join('')+
+      return '<div class="mrow"><span class="bee">'+(p.rowEm||'🐝')+' <b>'+esc(r.name)+'</b></span><button class="mpick" data-act="g-cycle" data-r="'+r.id+'">'+(o?'<span class="fl">'+o.em+'</span>'+esc(o.name):'Tap to choose')+'</button></div>'; }).join('')+
       '</div><button class="btn" data-act="g-check" style="width:100%">Check</button>';
   } else if (p.type==='clock'){
     if (!ss.clock) ss.clock={h:p.start.h,m:p.start.m,pm:p.start.pm};
@@ -1558,7 +1759,7 @@ function gHint(){
         if (ss.lock.every(function(x){return x;})){ completeG(a,stg); render(); return; } }
       else if (p.type==='sort'){ var ids=Object.keys(p.answer); for (var j=0;j<ids.length;j++){ if (ss.place[ids[j]]!==p.answer[ids[j]]){ ss.place[ids[j]]=p.answer[ids[j]]; var b=p.bins.filter(function(x){return x.id===p.answer[ids[j]];})[0]; text='I put the '+stg.items[ids[j]].name+' in '+b.name+' for you.'; break; } } save();
         if (Object.keys(p.answer).every(function(id){return ss.place[id]===p.answer[id];})){ completeG(a,stg); render(); return; } }
-      else if (p.type==='match'){ for (var r=0;r<p.rows.length;r++){ var rid=p.rows[r].id; if (ss.asg[rid]!==p.answer[rid]){ ss.asg[rid]=p.answer[rid]; text=p.rows[r].name+' visits the '+p.answer[rid]+' flower. I set it for you.'; break; } } save(); }
+      else if (p.type==='match'){ for (var r=0;r<p.rows.length;r++){ var rid=p.rows[r].id; if (ss.asg[rid]!==p.answer[rid]){ ss.asg[rid]=p.answer[rid]; text=p.noun ? p.rows[r].name+' plays the '+p.answer[rid]+'. I set it for you.' : p.rows[r].name+' visits the '+p.answer[rid]+' flower. I set it for you.'; break; } } save(); }
       else text=stg.hints.puzzle[2] || stg.hints.puzzle[1];
     }
   }
@@ -1617,7 +1818,7 @@ var GA = {
   'g-choose': function(d){
     var a=curA(), stg=curStage(), o=stg.puzzle.options[+d.i]; ui.pick=+d.i;
     if (o.ok){ completeG(a,stg); render(); return; }
-    sfx('oops'); ui.gmsg={k:'oops',t:'Test '+'ABC'[+d.i]+' isn\'t fair. '+o.why}; render();
+    sfx('oops'); ui.gmsg={k:'oops',t:(stg.puzzle.fair?'Test '+'ABC'[+d.i]+' isn\'t fair. ':'Not picture '+'ABC'[+d.i]+'. ')+o.why}; render();
   },
   'g-tile': function(d){
     var a=curA(), stg=curStage(), p=stg.puzzle, x=+d.x, y=+d.y; ui.gtap=x+','+y;
@@ -1625,7 +1826,7 @@ var GA = {
     var dn=p.start[1]-y, de=x-p.start[0], parts=[];
     if (dn) parts.push(Math.abs(dn)+' square'+(Math.abs(dn)>1?'s':'')+' '+(dn>0?'north':'south'));
     if (de) parts.push(Math.abs(de)+' square'+(Math.abs(de)>1?'s':'')+' '+(de>0?'east':'west'));
-    sfx('oops'); ui.gmsg={k:'oops',t: parts.length ? 'No door here. That square is '+parts.join(' and ')+' of the dock. Check the map pieces again.' : 'That\'s the dock, where you start. Now follow the map pieces!'}; render();
+    sfx('oops'); ui.gmsg={k:'oops',t: parts.length ? (p.startName?'Not this square. It is ':'No door here. That square is ')+parts.join(' and ')+' of '+(p.startName||'the dock')+'. Check the '+(p.startName?'notes':'map pieces')+' again.' : 'That\'s '+(p.startName||'the dock')+', where you start. Now follow the '+(p.startName?'notes':'map pieces')+'!'}; render();
   },
   'g-cycle': function(d){ var a=curA(), stg=curStage(), ss=SS(a.id,stg.id), p=stg.puzzle, ids=p.opts.map(function(o){return o.id;}), cur=ss.asg[d.r];
     ss.asg[d.r] = ids[(cur==null ? 0 : (ids.indexOf(cur)+1)%ids.length)]; ui.gmsg=null; save(); sfx('tap'); render(); },
@@ -1638,9 +1839,9 @@ var GA = {
       if (c.h===ans.h && c.m===ans.m && c.pm===ans.pm){ completeG(a,stg); render(); return; }
       sfx('oops'); ui.gmsg={k:'oops',t:'Hmm, the tide won\'t be high at '+c.h+':'+(c.m?'30':'00')+' '+(c.pm?'PM':'AM')+'. Read the clue notes again.'}; render(); return; }
     if (p.type==='match'){
-      if (p.rows.some(function(r){return !ss.asg[r.id];})){ ui.gmsg={k:'',t:'Choose a flower for every bee first.'}; render(); return; }
+      if (p.rows.some(function(r){return !ss.asg[r.id];})){ ui.gmsg={k:'',t:p.noun?'Choose an instrument for every friend first.':'Choose a flower for every bee first.'}; render(); return; }
       var vals=p.rows.map(function(r){return ss.asg[r.id];});
-      if (vals.some(function(v,i){return vals.indexOf(v)!==i;})){ sfx('oops'); ui.gmsg={k:'oops',t:'Each bee visits a different flower. Two bees are on the same one.'}; render(); return; }
+      if (vals.some(function(v,i){return vals.indexOf(v)!==i;})){ sfx('oops'); ui.gmsg={k:'oops',t:p.noun?'Each friend plays a different instrument. Two friends have the same one.':'Each bee visits a different flower. Two bees are on the same one.'}; render(); return; }
       var bad=p.clues.filter(function(c){return !c.f(ss.asg);})[0];
       if (bad){ sfx('oops'); ui.gmsg={k:'oops',t:'That breaks a clue. '+bad.t}; render(); return; }
       completeG(a,stg); render(); return; }
