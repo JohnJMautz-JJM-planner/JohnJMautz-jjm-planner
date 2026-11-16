@@ -486,11 +486,11 @@ var ui = { screen: S.started ? 'hub' : 'welcome', ob:0, lines:[], li:0, sel:null
 /* ---------- content ---------- */
 var PLANETS = [
   {id:'mercury', name:'Mercury', r:11, clue:"I'm the closest planet to the Sun, and the smallest of all eight."},
-  {id:'venus',   name:'Venus',   r:15, clue:"I'm the hottest planet! My thick clouds trap heat. I sit between Mercury and Earth."},
+  {id:'venus',   name:'Venus',   r:15, clue:"I'm the hottest planet! My thick air traps heat. I sit between Mercury and Earth."},
   {id:'earth',   name:'Earth',   r:15.5, clue:"You live on me! Count out from the Sun and I'm number three."},
   {id:'mars',    name:'Mars',    r:13, clue:"Rusty dust makes me red. I'm Earth's neighbor, one step farther from the Sun."},
   {id:'jupiter', name:'Jupiter', r:25, clue:"I'm the biggest planet. The asteroid belt sits between Mars and me."},
-  {id:'saturn',  name:'Saturn',  r:18, clue:"My rings are the most famous. The biggest planet is my neighbor, one step closer to the Sun."},
+  {id:'saturn',  name:'Saturn',  r:18, clue:"My big, bright rings are made of chunks of ice and rock. The biggest planet is my neighbor, one step closer to the Sun."},
   {id:'uranus',  name:'Uranus',  r:19, clue:"I spin tipped over on my side! Only one planet is farther from the Sun than me."},
   {id:'neptune', name:'Neptune', r:18.5, clue:"I'm the farthest planet from the Sun, and my winds are the fastest of any planet."}
 ];
@@ -498,18 +498,18 @@ var ORD = ['1st','2nd','3rd','4th','5th','6th','7th','8th'];
 
 var FACTS = {
   planets:"There are 8 planets. In order from the Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.",
-  venus:"Venus is the hottest planet, even though Mercury is closer to the Sun. Its thick clouds trap the heat.",
+  venus:"Venus is the hottest planet, even though Mercury is closer to the Sun. Its thick atmosphere, mostly carbon dioxide, traps the heat.",
   belt:"The asteroid belt is a ring of rocky chunks that circles the Sun between Mars and Jupiter.",
-  comet:"A comet is a ball of ice and dust. As it nears the Sun it grows a tail, and the tail points away from the Sun.",
+  comet:"A comet is a ball of frozen gases, rock and dust. As it nears the Sun it grows a tail, and the tail points away from the Sun.",
   triangle:"A triangle keeps its shape when you push it, because its sides would have to change length to move. A square can lean over into a diamond.",
   truss:"A zig-zag row of triangles is called a truss. Many real bridges, towers and roofs are held up by trusses.",
   beaver:"Beavers build dams out of sticks and mud. The ponds behind their dams become homes for fish, frogs and birds.",
-  deer:"Deer walk on two toes on each foot, so a deer track looks like a heart split down the middle. The pointy tips face the way the deer walked.",
+  deer:"Deer walk on the tips of two toes on each foot, so a deer track looks like a heart split down the middle. The pointy tips face the way the deer walked.",
   duck:"Ducks have webbed feet. The skin between their toes works like a paddle in the water.",
   fox:"A fox track shows four toes and one pad. Foxes often step their back feet right into their front footprints.",
   compass:"On most maps, north is at the top. East is to the right, west is to the left, and south is at the bottom.",
-  frog:"Many frogs can breathe through their skin as well as with their lungs. That's one reason they stay near water.",
-  beacon:"Lighthouses use a bright light and big glass lenses, so sailors can see them from many miles away."
+  frog:"Many frogs can breathe through their skin as well as with their lungs. Their skin has to stay moist to do this.",
+  beacon:"Lighthouses use a bright light and big glass lenses called Fresnel lenses, so sailors can see them from many miles away."
 };
 
 var CAT = [
@@ -1002,6 +1002,11 @@ function bumpSparks(){ var el=document.getElementById('sparks'); if (el){ el.cla
 /* ---------- modals ---------- */
 function modalHTML(){
   var m = ui.modal; if (!m) return '';
+  if (m.type==='news') return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="What is new"><div class="big" style="width:120px;border-radius:20px;overflow:hidden">'+kidSVG(S.av)+'</div><h2>New in Vault Explorers!</h2>'+
+    '<div class="fact" style="text-align:left">👕 <b>Make your own explorer.</b> Pick your look, then tap your face at the top any time to change it.</div>'+
+    '<div class="fact" style="text-align:left">🪙 <b>Earn coins</b> for every puzzle and adventure you finish. Spend them on outfits, hats and scenes.</div>'+
+    '<div class="fact" style="text-align:left">⏱ <b>Do Again.</b> Finished an adventure? Play it again against the clock. The clues hide in new places and the lock has a new rule.</div>'+
+    '<div class="row" style="width:100%"><button class="btn alt" data-act="close" style="flex:1">Later</button><button class="btn" data-act="news-go" style="flex:1">Make my explorer</button></div></div>';
   if (m.type==='gate') return gateHTML();
   if (m.type==='shop') return shopHTML();
   if (m.type==='again-ask') return againAskHTML(m.a);
@@ -1060,7 +1065,7 @@ function modalHTML(){
       tg('sound','Sound effects')+tg('big','Bigger text')+tg('easy','Easy-read spacing','More space between letters and lines.')+tg('calm','Calm mode','Turns off moving effects.')+
       '<button class="toggle" data-act="worlds"><span>World<small>'+esc(WORLDS.filter(function(w){return w.id===S.world;})[0].name)+'</small></span><span>🌍</span></button>'+
       '<div class="grown"><b>For grown-ups:</b> This prototype runs entirely on this device. It has no accounts, chat, links, ads or tracking, and it sends nothing over the internet. The family shop is pretend in this test version and never charges money. Progress is saved only in this browser. Coins are earned in play, can\'t be bought, and have no money value. Nothing bought ever helps with puzzles.</div>'+
-      '<button class="hold" data-act="reset-ask"><span>Start over from the beginning</span></button>'+
+      '<p class="note" style="text-align:center">Version 9 · 16 Nov 2026</p><button class="hold" data-act="reset-ask"><span>Start over from the beginning</span></button>'+
       '<button class="btn" data-act="close">Done</button></div>';
   }
   return '';
@@ -1176,7 +1181,7 @@ var A = {
     if (ui.ob===0){ ui.ob=1; ui.names=makeNames(); setGuide(['First, every explorer needs a name. Pick one you like!']); }
     else if (ui.ob===1){ if(!S.name) return; ui.ob=2; setGuide(['Nice to meet you, '+S.name+'! Now make your explorer. Pick anything you like!']); }
     else if (ui.ob===2){ ui.ob=3; setGuide(['Last thing: pick a world. It changes how everything looks.']); }
-    else { S.started=true; save(); go(START_ADV ? 'hub' : 'book'); return; }
+    else { S.started=true; S.seen.v8=1; save(); go(START_ADV ? 'hub' : 'book'); return; }
     render(); window.scrollTo(0,0);
   },
   'name': function(d){ S.name=d.n; save(); render(); },
@@ -1313,18 +1318,18 @@ SYMS.flower   = {name:'Flower',   svg: flowerSVG('#ff8fc8').replace('<svg viewBo
 
 FACTS.chain = "A food chain shows who eats who. Energy starts with the Sun, goes into plants and seaweed, and then into the animals that eat them.";
 FACTS.starfish = "Sea stars (starfish) can grow back an arm they lose.";
-FACTS.tides = "Most beaches get two high tides and two low tides every day. The Moon's pull on the ocean is the main cause of tides.";
+FACTS.tides = "Most beaches get two high tides and two low tides each day. A tide day is 24 hours and 50 minutes long. The Moon's pull on the ocean is the main cause of tides.";
 FACTS.hermit = "Hermit crabs move into a bigger empty shell when they outgrow their old one.";
 FACTS.gills = "Gills take oxygen out of water. Animals with lungs, like dolphins and seals, must swim to the surface to breathe air.";
-FACTS.puffer = "A pufferfish can puff up into a big spiky ball to scare off hungry fish.";
+FACTS.puffer = "A pufferfish can gulp water and puff up into a big ball, which makes it hard for a predator to swallow.";
 FACTS.rocks = "Rocks come in three families. Igneous rocks form from cooled lava or magma, sedimentary rocks form from layers pressed together, and metamorphic rocks are changed by heat and pressure.";
-FACTS.gecko = "Geckos can climb walls because their toes are covered in millions of tiny hairs.";
+FACTS.gecko = "Many geckos can climb walls because their toe pads are covered in millions of tiny hairs.";
 FACTS.mapgrid = "Maps use directions like north, south, east and west. Counting squares on a map grid tells you how far to go.";
 FACTS.parrot = "Some big parrots can live for more than 50 years.";
 FACTS.magma = "Melted rock is called magma while it is underground, and lava once it comes out of a volcano.";
 FACTS.hawaii = "The Hawaiian Islands were built by volcanoes, one layer of cooled lava at a time.";
 FACTS.metamorph = "A butterfly's life has four stages: egg, caterpillar (larva), chrysalis (pupa) and adult. This big change is called metamorphosis.";
-FACTS.ladybug = "Ladybugs eat aphids, tiny bugs that can hurt garden plants.";
+FACTS.ladybug = "Many ladybugs eat aphids, tiny insects that can hurt garden plants.";
 FACTS.fairtest = "Scientists use fair tests. They change just one thing and keep everything else the same, so they know what caused the result.";
 FACTS.worm = "Earthworms tunnel through soil and mix it up, which helps plant roots get air and water.";
 FACTS.pollen = "Bees drink nectar from flowers. Pollen sticks to their fuzzy bodies and gets carried to the next flower, which helps plants make seeds.";
@@ -1437,7 +1442,7 @@ var ADV = {
        erupt:{em:'🌋',name:'Eruption',text:'The pressure pushes magma out of the volcano. Now it is called lava.'},
        cool:{em:'🪨',name:'Cooling',text:'The lava cools and hardens into new rock. Islands can grow this way!'} },
      puzzle:{ type:'order', title:'Put the volcano in order', sub:'Tap a card to read it, then tap a space.', lead:'⬇️ Deep underground', labels:['1','2','3','4'], answer:['melt','rise','erupt','cool'] },
-     symbol:{k:'flame',n:4,why:'4 steps from magma to new rock'}, facts:['magma'], rewardFact:'magma',
+     symbol:{k:'flame',n:4,why:'your volcano cards showed 4 steps'}, facts:['magma'], rewardFact:'magma',
      hints:{ search:['Picture cards hide behind bushes and rocks.','Look at the middle of the path.'], puzzle:['Everything starts deep underground, where it is hottest.','Magma has to rise before it can erupt.'] } }
   ] },
 
@@ -1517,16 +1522,16 @@ FACTS.shadows = "Your shadow is shortest around midday, when the Sun is highest 
 FACTS.snowflake = "Most snowflakes have six sides or six points.";
 FACTS.layers = "In rock layers that haven't been moved around, the deepest layers are the oldest and the top layers are the newest.";
 FACTS.birds = "Birds are living dinosaurs. They come from small, feathered dinosaurs.";
-FACTS.teeth = "Scientists can tell what a dinosaur ate from its teeth. Sharp, pointed teeth were for meat. Flat or peg-shaped teeth were for plants.";
-FACTS.dinoword = "The word dinosaur means 'terrible lizard'.";
+FACTS.teeth = "Scientists can tell what a dinosaur ate from its teeth. Sharp, pointed teeth were for meat. Leaf-shaped, peg-shaped or spoon-shaped teeth were for plants.";
+FACTS.dinoword = "The word dinosaur comes from Greek words meaning 'terrible lizard'. Scientist Richard Owen made up the name in 1842.";
 FACTS.digmap = "Fossil hunters make careful grid maps of a dig, so they know exactly where each bone was found.";
 FACTS.croc = "The ancestors of crocodiles lived alongside the dinosaurs.";
 FACTS.pitch = "When you tap a glass bottle, more water makes a lower note, because the heavier bottle vibrates more slowly.";
-FACTS.cricket = "Crickets chirp by rubbing their wings together.";
+FACTS.cricket = "Male crickets chirp by rubbing their wings together.";
 FACTS.families = "Instruments make sound by vibrating. Strings vibrate when plucked or bowed, drums when they are hit, and wind instruments when you blow into them.";
-FACTS.whale = "Humpback whales sing long songs that can travel far underwater.";
+FACTS.whale = "Male humpback whales sing long songs that can travel far underwater.";
 FACTS.band = "Every sound is made by something vibrating, from a guitar string to your own voice.";
-FACTS.bat = "Bats squeak and listen for the echoes to find their way in the dark.";
+FACTS.bat = "Many bats make high squeaks and listen for the echoes to find their way in the dark. This is called echolocation.";
 
 CAT.push(
   {id:'corner.kite',slot:'corner',name:'Rainbow Kite',cost:null,em:'🪁',reward:true},
@@ -1556,7 +1561,7 @@ ADV.weather = { id:'weather', title:'The Weather Station Mystery', hub:'Cloudtop
        rain:{em:'🌧️',name:'Precipitation',text:'When the droplets get big and heavy, they fall as rain, or as snow when it is cold.'},
        collect:{em:'🌊',name:'Collection',text:'The water runs into rivers, lakes and oceans, ready to go around again.'} },
      puzzle:{ type:'order', title:'The water cycle', sub:'Tap a card to read it, then tap a space.', lead:'🏞️ Water in the pond', labels:['1','2','3','4'], answer:['evap','cond','rain','collect'] },
-     symbol:{k:'drop',n:4,why:'the water cycle has 4 main steps'}, facts:['watercycle'], rewardFact:'watercycle',
+     symbol:{k:'drop',n:4,why:'your water cycle cards showed 4 steps'}, facts:['watercycle'], rewardFact:'watercycle',
      hints:{ search:['Picture cards hide behind trees, lily pads and reeds.','Two cards are near the trees at the top.'], puzzle:['First the Sun warms the water so it rises into the air.','Clouds have to form before it can rain.'] } },
    { id:'matter', name:'Picnic Table', sub:'Solid, liquid or gas?', icon:'🧊',
      intro:['Somebody left a picnic on the hill! Six things are hidden around the table.','Find them, then sort each one: solid, liquid or gas.'],
@@ -1566,27 +1571,27 @@ ADV.weather = { id:'weather', title:'The Weather Station Mystery', hub:'Cloudtop
        juice:{em:'🧃',name:'Juice',text:'Juice flows and takes the shape of the cup you pour it into.'},
        balloon:{em:'🎈',name:'Air in a balloon',text:'The air inside spreads out to fill the whole balloon.'},
        stone:{em:'🪨',name:'Pebble',text:'A pebble is hard and keeps its shape.'},
-       steam:{em:'♨️',name:'Steam from cocoa',text:'Steam rises from hot cocoa and spreads out into the air.'},
+       steam:{em:'🫧',name:'Soda bubbles',text:'The fizzy bubbles in soda are a gas called carbon dioxide. They rise up and spread out into the air.'},
        milk:{em:'🥛',name:'Milk',text:'Milk pours and fills the bottom of the glass.'} },
      puzzle:{ type:'sort', title:'Sort the states of matter', sub:'Tap a thing, then tap its group.',
        bins:[{id:'solid',name:'Solid',em:'🧱',desc:'keeps its own shape'},{id:'liquid',name:'Liquid',em:'💧',desc:'flows and fills a container'},{id:'gas',name:'Gas',em:'💨',desc:'spreads out to fill any space'}],
        answer:{ice:'solid',stone:'solid',juice:'liquid',milk:'liquid',balloon:'gas',steam:'gas'} },
      symbol:{k:'snow',n:3,why:'matter has 3 main states'}, facts:['matter'], rewardFact:'matter',
-     hints:{ search:['Things hide in baskets and under plates.','There are 6 things and a few empty spots.'], puzzle:['Does it keep its shape, flow, or spread out?','The air in the balloon and the steam both spread out.'] } },
+     hints:{ search:['Things hide in baskets and under plates.','There are 6 things and a few empty spots.'], puzzle:['Does it keep its shape, flow, or spread out?','The air in the balloon and the soda bubbles are both gases. They spread out.'] } },
    { id:'shadow', name:'Sundial Garden', sub:'When is your shadow shortest?', icon:'☀️',
      intro:['The sundial garden has three clue notes about the Sun. Find them!','Then use them to work out when your shadow is the shortest.'],
      search:{ title:'Search the Sundial Garden', sub:'Tap the flowers, benches and stones. 3 notes are hiding.', bg:'linear-gradient(#ffe9b0 0 34%,#a6dc85 34%)',
        spots:[[14,30,'🌻','s1'],[40,28,'🪨',null],[66,30,'🌷',null],[88,28,'🌻','s2'],[22,66,'🪑',null],[50,66,'🪨','s3'],[78,68,'🌷',null],[40,88,'🌼',null,'snowflake','❄️']] },
      items:{ s1:{em:'📜',note:true,name:'Note 1',text:'Note: “The Sun is low in the sky in the morning and in the evening.”'},
-       s2:{em:'📜',note:true,name:'Note 2',text:'Note: “The Sun is highest in the sky around midday, about 12 o\'clock.”'},
+       s2:{em:'📜',note:true,name:'Note 2',text:'Note: “The Sun is highest in the sky around noon, the middle of the day.”'},
        s3:{em:'📜',note:true,name:'Note 3',text:'Note: “The higher the Sun is, the shorter your shadow is.”'} },
      puzzle:{ type:'choose', title:'Find the shortest shadow', sub:'Look at where the Sun is in each picture. When will your shadow be shortest?', note:'Use your three notes. The shadows are not drawn. You have to work them out!',
        options:[
         {pic:skySVG(14,50), label:'Morning, about 8 AM. The Sun is low.', ok:false, why:'When the Sun is low, shadows are long, not short.'},
-        {pic:skySVG(60,14), label:'Midday, about 12 o\'clock. The Sun is high.', ok:true},
+        {pic:skySVG(60,14), label:'Noon, the middle of the day. The Sun is high.', ok:true},
         {pic:skySVG(106,50), label:'Evening, about 6 PM. The Sun is low.', ok:false, why:'In the evening the Sun is low again, so shadows are long.'} ] },
-     symbol:{k:'sun',n:12,why:'shadows are shortest around 12 o\'clock'}, facts:['shadows'], rewardFact:'shadows',
-     hints:{ search:['Notes hide under flowers and stones.','Try the sunflowers.'], puzzle:['When is the Sun highest in the sky?','A high Sun makes a short shadow.','Midday, around 12 o\'clock, has the shortest shadow.'] } }
+     symbol:{k:'sun',n:12,why:'shadows are shortest around noon, 12 o\'clock'}, facts:['shadows'], rewardFact:'shadows',
+     hints:{ search:['Notes hide under flowers and stones.','Try the sunflowers.'], puzzle:['When is the Sun highest in the sky?','A high Sun makes a short shadow.','Noon, the middle of the day, has the shortest shadow.'] } }
   ] };
 
 ADV.dino = { id:'dino', title:'The Dinosaur Dig', hub:'Fossil Canyon', em:'🦕', sub:'Rock layers, dinosaur teeth and a dig map',
@@ -1604,7 +1609,7 @@ ADV.dino = { id:'dino', title:'The Dinosaur Dig', hub:'Fossil Canyon', em:'🦕'
        spots:[[12,18,'🪨','pot'],[44,16,'🪨',null],[80,18,'🌵',null],[22,40,'🪨','mammoth'],[64,42,'🪨',null],[14,64,'🪨',null],[52,62,'🪨','dino'],[86,64,'🪨',null,'birds','🐦'],[30,86,'🪨','trilo'],[72,88,'🪨',null]] },
      items:{ trilo:{em:'🐚',name:'Trilobite',text:'Trilobites lived in the sea more than 250 million years ago.'},
        dino:{em:'🦶',name:'Dinosaur footprint',text:'Dinosaurs lived from about 230 million to 66 million years ago.'},
-       mammoth:{em:'🦣',name:'Mammoth tooth',text:'Woolly mammoths lived until about 4,000 years ago.'},
+       mammoth:{em:'🦣',name:'Mammoth tooth',text:'The last woolly mammoths lived until about 4,000 years ago, on an island in the Arctic.'},
        pot:{em:'🏺',name:'Clay pot',text:'This clay pot was made about 300 years ago.'} },
      puzzle:{ type:'order', title:'Stack the layers', sub:'The oldest find goes in the bottom layer, number 1. The newest goes on top, number 4.', lead:'⬇️ Bottom (oldest)', labels:['1 bottom','2','3','4 top'], answer:['trilo','dino','mammoth','pot'] },
      symbol:{k:'fossil',n:4,why:'you sorted 4 rock layers'}, facts:['layers'], rewardFact:'layers',
@@ -1613,17 +1618,17 @@ ADV.dino = { id:'dino', title:'The Dinosaur Dig', hub:'Fossil Canyon', em:'🦕'
      intro:['Six fossil teeth are hidden in Professor Rex\'s tent. Find them all!','Then sort each dinosaur: did it eat plants or meat? The tooth cards are your clues.'],
      search:{ title:'Search the Fossil Tent', sub:'Tap the boxes, bags and tools. 6 fossil teeth are hiding.', bg:'linear-gradient(#f6e6c4 0 62%,#c9a46e 62%)',
        spots:[[12,28,'📦','trike'],[36,26,'🎒','trex'],[60,28,'📦',null],[86,28,'🔦','stego'],[16,62,'🧰','raptor'],[42,62,'📦',null],[68,62,'🎒','brachio'],[90,64,'🧰',null],[30,88,'📦','spino'],[62,88,'🪣',null,'dinoword','📖']] },
-     items:{ trike:{em:'🦷',name:'Triceratops',text:'Triceratops had a beak and rows of flat teeth for chewing tough plants.'},
-       trex:{em:'🦷',name:'T. rex',text:'T. rex had huge, sharp teeth as long as bananas.'},
-       stego:{em:'🦷',name:'Stegosaurus',text:'Stegosaurus had small, peg-shaped teeth for nibbling low plants.'},
+     items:{ trike:{em:'🦷',name:'Triceratops',text:'Triceratops had a beak and hundreds of teeth packed in rows for slicing tough plants.'},
+       trex:{em:'🦷',name:'T. rex',text:'T. rex had huge, sharp teeth. The biggest were about the size of a banana.'},
+       stego:{em:'🦷',name:'Stegosaurus',text:'Stegosaurus had small, leaf-shaped teeth for nibbling low plants.'},
        raptor:{em:'🦷',name:'Velociraptor',text:'Velociraptor had sharp, curved teeth and a big curved claw on each foot.'},
-       brachio:{em:'🦷',name:'Brachiosaurus',text:'Brachiosaurus had chisel-shaped teeth for stripping leaves from the treetops.'},
+       brachio:{em:'🦷',name:'Brachiosaurus',text:'Brachiosaurus had spoon-shaped teeth for stripping leaves from tall trees.'},
        spino:{em:'🦷',name:'Spinosaurus',text:'Spinosaurus had long jaws and cone-shaped teeth, great for catching big fish.'} },
      puzzle:{ type:'sort', title:'What did they eat?', sub:'Tap a dinosaur, then tap its group. Fish counts as meat!',
-       bins:[{id:'plant',name:'Plant-eater',em:'🌿',desc:'flat, peg or chisel teeth'},{id:'meat',name:'Meat-eater',em:'🍖',desc:'sharp, pointed teeth'}],
+       bins:[{id:'plant',name:'Plant-eater',em:'🌿',desc:'leaf, peg, spoon or slicing teeth'},{id:'meat',name:'Meat-eater',em:'🍖',desc:'sharp, pointed teeth'}],
        answer:{trike:'plant',stego:'plant',brachio:'plant',trex:'meat',raptor:'meat',spino:'meat'} },
      symbol:{k:'tooth',n:3,why:'3 of the dinosaurs were meat-eaters'}, facts:['teeth'], rewardFact:'teeth',
-     hints:{ search:['Teeth hide in boxes, bags and toolkits.','There are 6 teeth and a few empty spots.'], puzzle:['Sharp and pointed teeth mean meat. Flat, peg or chisel teeth mean plants.','Spinosaurus caught fish, and fish counts as meat.'] } },
+     hints:{ search:['Teeth hide in boxes, bags and toolkits.','There are 6 teeth and a few empty spots.'], puzzle:['Sharp and pointed teeth mean meat. Leaf, peg or spoon-shaped teeth, or rows of slicing teeth, mean plants.','Spinosaurus caught fish, and fish counts as meat.'] } },
    { id:'dig', name:'Dig Site', sub:'Read the dig map', icon:'🗺️',
      intro:['Professor Rex wrote down where the big bone is buried, but the notes blew away! Find all 3.','Then tap the square where you should dig.'],
      search:{ title:'Search the Dig Site', sub:'Tap the rocks, buckets and brushes. 3 notes are hiding.', bg:'linear-gradient(#ffd9a0 0 30%,#d9a066 30%)',
@@ -2365,6 +2370,7 @@ function againDoneHTML(m){
     '<div class="row" style="width:100%"><button class="btn alt" data-act="again-ask" data-a="'+m.a+'" style="flex:1">⏱ Again!</button><button class="btn" data-act="close" style="flex:1">Done</button></div></div>';
 }
 var RA = {
+  'news-go': function(){ ui.modal=null; go('ward'); },
   'again-ask': function(d){ ui.modal={type:'again-ask', a:d.a||S.adv}; render(); },
   'again-go': function(d){ ui.modal=null; if (S.run) endRun(); startRun(d.a); ui.screen=null; go('hub'); setGuide(['Go go go! The clock is running. Remember: things moved since last time.']); render(); },
   'again-stop': function(){ endRun(); ui.modal=null; setGuide(['Do Again stopped. Your finished adventure is safe. Try again any time!']); if (ui.screen==='book') render(); else go('hub'); }
@@ -2380,6 +2386,7 @@ var INTRO_W = ['Hi there! I\'m Pip, a lantern-bot. I help keep the Beacon on Lan
 if (!S.started){ ui.screen='welcome'; setGuide(INTRO_W); render(); }
 else if (START_ADV) go('hub');
 else go('book');
+if (S.started && !S.seen.v8){ S.seen.v8=1; S.seen.v9=1; save(); ui.modal={type:'news'}; render(); }
 })();
 </script>
 </body>
