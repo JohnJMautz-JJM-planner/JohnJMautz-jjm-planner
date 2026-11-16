@@ -6,7 +6,7 @@
 <title>Vault Explorers</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <!-- The Vault: Explorers - Phase B prototype, adventure 1 "The Missing Beacon".
-     Self-contained: no network requests, no accounts, no links, no purchases, no tracking.
+     Self-contained: no network requests, no accounts, no links, no tracking. The family shop is pretend (no real payments).
      Progress is saved only in this browser (localStorage). -->
 <style>
 /* Layout: one centered column (max 720px) - top bar, guide bubble, then a light puzzle board.
@@ -345,6 +345,82 @@ html[data-world="clouds"] .worldtag{background:rgba(255,255,255,.6)}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
 #fx i{position:absolute;top:-20px;width:10px;height:14px;border-radius:3px;animation:fall 1.8s ease-in forwards}
 @keyframes fall{to{transform:translate(var(--dx),110vh) rotate(720deg)}}
+/* ---- kid avatar ---- */
+.kav{display:block;width:100%;height:auto}
+.kav .keyes{animation:kblink 5s infinite;transform-origin:100px 102px;transform-box:view-box}
+.kav .kbody{animation:kbob 3.2s ease-in-out infinite;transform-origin:100px 240px;transform-box:view-box}
+.kav .ktw{animation:ktw 1.8s ease-in-out infinite}
+.kav .kflame{animation:kflame .25s ease-in-out infinite alternate;transform-origin:100px 222px;transform-box:view-box}
+.kav .kwing{animation:kwing 1.4s ease-in-out infinite;transform-origin:100px 180px;transform-box:view-box}
+.kav .kaur{animation:kaur 6s ease-in-out infinite alternate}
+.kav .kwave{animation:kwave 3s linear infinite}
+.kav .ksnow{animation:ksnow 4s linear infinite}
+@keyframes kblink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes kbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+@keyframes ktw{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes kflame{from{transform:scaleY(.8)}to{transform:scaleY(1.15)}}
+@keyframes kwing{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.88)}}
+@keyframes kaur{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
+@keyframes kwave{from{transform:translateX(0)}to{transform:translateX(-30px)}}
+@keyframes ksnow{from{transform:translateY(-10px)}to{transform:translateY(30px)}}
+.wthumb .kav *, .packpv .kav *, .ib.me .kav *{animation:none!important}
+.ib.me{padding:0;overflow:hidden;background:var(--panel)}
+.ib.me .kav{width:44px;height:44px}
+/* run strip */
+.runstrip{display:flex;align-items:center;gap:10px;background:#2a2346;color:#fff;border-radius:16px;padding:6px 8px 6px 14px;font-weight:800;box-shadow:0 3px 0 rgba(0,0,0,.2);margin-top:-4px}
+.runstrip b{font-size:1.2rem;font-variant-numeric:tabular-nums;color:#ffd23f}
+.runstrip .rsx{flex:1;min-width:0;font-size:.82rem;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.runstrip .mini{background:#fff;color:#2a2346}
+.worldtag.hot{background:var(--accent);color:var(--accent-ink);font-weight:900}
+/* onboarding avatar maker */
+.obav{width:170px;margin:0 auto;border-radius:22px;overflow:hidden;box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.qlab{font-weight:900;font-size:.9rem;margin-bottom:-8px}
+.qrow{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none}
+.qrow .swatch{flex:none}
+.swatch.on{box-shadow:0 0 0 4px var(--accent2)}
+.qchip{flex:none;border:3px solid transparent;border-radius:14px;min-height:44px;padding:6px 12px;background:#f3eefe;color:#3b2d5c;font-weight:800;white-space:nowrap}
+.qchip.on{border-color:var(--accent2);background:#fff0f5}
+/* book card */
+.mecard{display:flex;align-items:center;gap:14px;width:100%;border:0;border-radius:22px;padding:10px 14px 10px 10px;background:var(--board);color:var(--board-ink);text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.16)}
+.mepv{width:84px;flex:none;border-radius:16px;overflow:hidden}
+.metx{display:flex;flex-direction:column;gap:4px;font-weight:800}
+.metx b{font-size:1.15rem}
+.mego{align-self:flex-start;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:4px 10px;font-weight:900;font-size:.9rem}
+/* wardrobe */
+.wardtop{display:flex;gap:14px;align-items:stretch}
+.wardpv{width:52%;max-width:240px;flex:none;border-radius:24px;overflow:hidden;box-shadow:0 4px 0 rgba(0,0,0,.18)}
+.wardside{flex:1;display:flex;flex-direction:column;gap:8px;justify-content:center;color:var(--onbg)}
+.wname{font-weight:900;font-size:1.1rem}
+.wcoins{font-weight:800;background:var(--panel);color:var(--ink);border-radius:14px;padding:8px 10px}
+.wsmall{min-height:46px;padding:8px 10px;font-size:.92rem}
+.trybar{display:flex;flex-direction:column;gap:8px;background:var(--board);color:var(--board-ink);border-radius:20px;padding:12px 14px;box-shadow:0 4px 0 rgba(0,0,0,.16);border:3px dashed var(--accent2)}
+.tneed{font-weight:700;font-size:.9rem}
+.witems{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}
+.witem{position:relative;border:3px solid transparent;background:#f6f2ff;border-radius:16px;padding:6px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;color:#3b2d5c;font-size:.78rem;text-align:center}
+.witem.on{border-color:var(--accent2);background:#fff0f5}
+.witem.fam{background:linear-gradient(160deg,#fff6d6,#ffe3f1)}
+.wthumb{width:72px;height:72px;display:block;border-radius:12px;overflow:hidden;background:#e9e2ff}
+.wthumb .kav{width:72px;height:72px;object-fit:cover}
+.witem .wt{font-size:.72rem;color:#6b5a99}
+.witem.lockd .wt{color:#b5541f}
+/* gate + shop */
+.gateq{font-size:1.3rem;font-weight:900;text-align:center;background:#f3eefe;border-radius:14px;padding:12px}
+.gatein{font-size:1.8rem;font-weight:900;text-align:center;letter-spacing:.1em;min-height:2.2rem}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.key{min-height:54px;border:0;border-radius:14px;background:#f3eefe;color:#3b2d5c;font-size:1.3rem;font-weight:900;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.key.ok{background:var(--accent);color:var(--accent-ink)}
+.packs{display:flex;flex-direction:column;gap:10px}
+.pack{display:flex;gap:12px;align-items:center;background:#f6f2ff;border-radius:18px;padding:8px}
+.packpv{width:84px;flex:none;border-radius:14px;overflow:hidden}
+.packtx{display:flex;flex-direction:column;gap:6px}
+.packtx small{font-weight:600;opacity:.85}
+.packtx .btn{min-height:46px;padding:8px 14px;font-size:.95rem}
+.packgot{font-weight:900;color:#2a8a4a}
+.scorebox{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
+.scorebox div{background:#f3eefe;border-radius:14px;padding:8px;text-align:center;display:flex;flex-direction:column}
+.scorebox small{font-weight:700;opacity:.75}
+.scorebox b{font-size:1.2rem;font-variant-numeric:tabular-nums}
+
 html.calm *{animation:none!important;transition:none!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -390,20 +466,22 @@ function fresh(){
     br:{slots:[null,null,null,null,null,null]},
     tr:{found:false, step:0},
     vault:{dials:[3,4,5]},
-    set:{read:false,big:false,easy:false,calm:false,sound:true}, adv:'beacon', ap:{} };
+    set:{read:false,big:false,easy:false,calm:false,sound:true}, adv:'beacon', ap:{},
+    av:{skin:'s3',hair:'short',hc:'brown',face:'smile',outfit:'tee',hat:'none',glasses:'none',gear:'none',scene:'sky'}, avOwn:[], packs:[], best:{}, fin:{}, run:null };
 }
 function load(){
   var s = store.get(), f = fresh();
   if (!s || s.v !== 1) return f;
   for (var k in f){ if (!(k in s)) s[k] = f[k]; }
-  ['done','secrets','room','set','obs','br','tr','vault'].forEach(function(k){ for (var j in f[k]) if (!(j in s[k])) s[k][j] = f[k][j]; });
+  ['done','secrets','room','set','obs','br','tr','vault','av'].forEach(function(k){ for (var j in f[k]) if (!(j in s[k])) s[k][j] = f[k][j]; });
+  if (typeof s.sparks!=='number' || isNaN(s.sparks)) s.sparks=0;
   return s;
 }
 var S = load();
 function save(){ store.set(S); }
 
 var ui = { screen: S.started ? 'hub' : 'welcome', ob:0, lines:[], li:0, sel:null, hint:{obs:0,bridge:0,trail:0,vault:0},
-  msg:null, hintMsg:null, modal:null, replay:{}, gs:null, gsel:null, gmsg:null, ghint:{}, pick:null, gtap:null, tab:'wall', names:[], busy:false, lab:{}, picked:null, brBad:-1, brBadKind:'', wrong:[] };
+  msg:null, hintMsg:null, modal:null, replay:{}, gs:null, gsel:null, gmsg:null, ghint:{}, pick:null, gtap:null, tab:'wall', wtab:'hair', tryOn:null, gate:null, names:[], busy:false, lab:{}, picked:null, brBad:-1, brBadKind:'', wrong:[] };
 
 /* ---------- content ---------- */
 var PLANETS = [
@@ -563,7 +641,7 @@ var PRINT = {
 };
 function printSVG(k, rot){ return '<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate('+(rot||0)+' 50 50)">'+PRINT[k]+'</g></svg>'; }
 
-function avatarSVG(color, hatId){
+function avatarSVGOld(color, hatId){
   var h = item(hatId), em = h && h.em ? h.em : '';
   return '<svg viewBox="0 0 100 124" aria-hidden="true">'+
     '<ellipse cx="50" cy="118" rx="30" ry="5" fill="rgba(0,0,0,.15)"/>'+
@@ -586,7 +664,7 @@ function resetStage(st){
   if (st==='trail') S.tr={found:false,step:0};
   ui.replay[st]=true; ui.hint[st]=0; ui.msg=null; ui.hintMsg=null; ui.brBad=-1; ui.brBadKind=''; ui.picked=null; ui.wrong=[]; ui.lab={};
   ui.sel = st==='bridge' ? 'up' : null; save();
-  setGuide(['Let\'s play it again! (Sparks are only earned the first time.)'].concat(INTRO[st]));
+  setGuide(['Let\'s play it again! (Coins are only earned the first time.)'].concat(INTRO[st]));
 }
 /* ---------- guide ---------- */
 function setGuide(lines){ ui.lines = Array.isArray(lines) ? lines : [lines]; ui.li = 0; say(ui.lines[0]); }
@@ -598,12 +676,11 @@ function guideHTML(){
 }
 function topHTML(title, back){
   return '<div class="top">'+
-    (back ? '<button class="backbtn" data-act="back" aria-label="Back">‹ '+(back==='book'?'Adventures':(ui.screen==='room'?'Back':'Map'))+'</button>' : '')+
+    (back ? '<button class="backbtn" data-act="back" aria-label="Back">‹ '+(back==='book'?'Adventures':(ui.screen==='room'||ui.screen==='ward'?'Back':'Map'))+'</button>' : '')+
     '<div class="ttl">'+esc(title)+'</div>'+
-    '<button class="sparks" id="sparks" data-act="journal" aria-label="'+S.sparks+' sparks. Open backpack"><b>✦</b>'+S.sparks+'<span aria-hidden="true">🎒</span></button>'+
-    
-    '<button class="ib" data-act="go" data-to="room" aria-label="My room">🏠</button>'+
-    '<button class="ib" data-act="settings" aria-label="Settings">⚙️</button></div>';
+    '<button class="sparks" id="sparks" data-act="journal" aria-label="'+S.sparks+' coins. Open backpack"><b>🪙</b>'+S.sparks+'</button>'+
+    '<button class="ib me" data-act="go" data-to="ward" aria-label="My explorer and wardrobe">'+headSVG()+'</button>'+
+    '<button class="ib" data-act="settings" aria-label="Settings">⚙️</button></div>'+runStrip();
 }
 function hintHTML(stage){
   return '<div class="hintbar"><button class="hintbtn" data-act="hint" data-s="'+stage+'">💡 '+(ui.hintMsg?'Another hint':'Hint')+'</button><span class="free">Hints are free. Use as many as you like!</span></div>'+
@@ -624,9 +701,12 @@ function welcomeHTML(){
       ui.names.map(function(n){ return '<button class="namebtn'+(S.name===n?' on':'')+'" data-act="name" data-n="'+esc(n)+'">'+esc(n)+'</button>'; }).join('')+
       '</div><div class="row"><button class="btn alt" data-act="reroll">🎲 New names</button><button class="btn" data-act="ob-next" '+(S.name?'':'disabled')+'>Next</button></div></div>';
   } else if (ui.ob===2){
-    h += guideHTML()+'<div class="board"><h2>Choose your color</h2><div style="width:140px;margin:0 auto">'+avatarSVG(S.color,S.hat)+'</div><div class="row" style="justify-content:center">'+
-      COLORS.map(function(c){ return '<button class="swatch" style="background:'+c+';'+(S.color===c?'box-shadow:0 0 0 4px var(--accent2)':'')+'" data-act="color" data-c="'+c+'" aria-label="Color '+c+'"></button>'; }).join('')+
-      '</div><button class="btn" data-act="ob-next">Next</button></div>';
+    var qrow=function(slot,sw){ return '<div class="qlab">'+AVC[slot].name+'</div><div class="qrow">'+AVC[slot].items.filter(function(r){ return !r[2] && !r[3]; }).map(function(r){
+        var on=S.av[slot]===r[0];
+        return sw ? '<button class="swatch'+(on?' on':'')+'" style="background:'+(slot==='skin'?SKINS[r[0]]:HAIRC[r[0]])+'" data-act="av-pick" data-s="'+slot+'" data-k="'+r[0]+'" aria-label="'+esc(r[1])+'"></button>'
+          : '<button class="qchip'+(on?' on':'')+'" data-act="av-pick" data-s="'+slot+'" data-k="'+r[0]+'">'+esc(r[1])+'</button>'; }).join('')+'</div>'; };
+    h += guideHTML()+'<div class="board"><h2>Make your explorer</h2><div class="obav">'+kidSVG(S.av)+'</div>'+qrow('skin',1)+qrow('hair')+qrow('hc',1)+qrow('outfit')+
+      '<p class="note">You can change your look any time, and earn coins for even more.</p><button class="btn" data-act="ob-next">Next</button></div>';
   } else {
     h += guideHTML()+'<div class="board"><h2>Choose a world</h2><p class="sub">Every world has the very same puzzles. You can switch any time.</p>'+worldsHTML()+
       '<button class="btn" data-act="ob-next">Start the adventure</button></div>';
@@ -671,10 +751,11 @@ function hubHTML(){
     h += '<button class="stop'+(S.done[s.k]?' done':'')+(s.locked?' locked':'')+'" data-act="go" data-to="'+s.k+'"><span class="ic">'+s.ic+'</span><span class="tx"><h3>'+s.name+'</h3><p>'+s.sub+'</p></span><span class="st" aria-hidden="true">'+st+'</span></button>';
   });
   h += '</div><div class="row"><button class="worldtag" data-act="go" data-to="book">📖 All adventures</button><button class="worldtag" data-act="worlds">'+w.em+' World: '+esc(w.name)+'</button>'+
-    (S.done.vault ? '<button class="worldtag" data-act="replay-adv">🔁 Play again</button>' : '')+'</div>';
+    (advDone('beacon')&&!runOn('beacon') ? '<button class="worldtag hot" data-act="again-ask" data-a="beacon">⏱ Do Again'+(S.best.beacon?' (best '+fmtT(S.best.beacon.score)+')':'')+'</button>' : '')+'</div>';
   return h;
 }
 function hubLines(){
+  if (runOn('beacon')) return ['Do Again! Find the three Light Symbols as fast as you can. Things moved, so look carefully.'];
   if (S.done.vault) return ['The Beacon is shining again, thanks to you, '+S.name+'!', 'You can decorate your room, switch worlds, or play again to look for secret finds.'];
   var n = (S.done.obs?1:0)+(S.done.bridge?1:0)+(S.done.trail?1:0);
   if (n===3) return ['You found all three Light Symbols! The Beacon Vault is ready. Let\'s wake up the Beacon!'];
@@ -692,7 +773,7 @@ function obsHTML(){
     h += '<button class="oslot'+(S.obs.lock[i]?' lock':'')+(ui.sel&&!p?' target':'')+'" data-act="obs-slot" data-i="'+i+'" aria-label="Space '+(i+1)+(p?', '+p.name:'')+'"><span class="n">'+ORD[i]+'</span>'+(p?planetSVG(p)+'<span class="pn">'+p.name+'</span>':'')+'</button>';
   }
   h += '</div><div class="tray">';
-  PLANETS.forEach(function(p){
+  mix(PLANETS,'planets').forEach(function(p){
     var used = placed.indexOf(p.id)>=0;
     h += '<button class="pchip'+(used?' gone':'')+(ui.sel===p.id?' sel':'')+(ui.wrong.indexOf(p.id)>=0?' wiggle':'')+'" data-act="obs-pick" data-id="'+p.id+'" '+(used?'tabindex="-1" aria-hidden="true"':'')+'>'+planetSVG(p)+p.name+'</button>';
   });
@@ -818,7 +899,7 @@ function trailHTML(){
   var h = topHTML('Whispering Trail', true)+guideHTML();
   if (!S.tr.found){
     h += '<div class="board"><div><h2>Whose footprints?</h2><p class="sub">Three sets of tracks start at camp. Olive the owl 🦉 saw the one who carried off the Light Symbol.</p></div><div class="prints">';
-    [['duck','Tracks A'],['deer','Tracks B'],['fox','Tracks C']].forEach(function(p){
+    trPrints().forEach(function(p){
       var picked = ui.picked && ui.picked.indexOf(p[0])>=0;
       h += '<button class="print'+(picked?' no':'')+'" data-act="tr-print" data-k="'+p[0]+'">'+printSVG(p[0],0)+p[1]+(picked?'<span>'+(p[0]==='duck'?'Duck':'Fox')+'</span>':'')+'</button>';
     });
@@ -848,7 +929,7 @@ function trailHTML(){
 /* Vault */
 function vaultHTML(){
   var h = topHTML('Beacon Vault', true)+guideHTML()+'<div class="board"><div class="vault">'+
-    '<div class="engrave">“Wake me with the Light Symbols, from the fewest to the most.”</div><div class="dials">';
+    '<div class="engrave">“Wake me with the Light Symbols, from the '+(beaconRev()?'most to the fewest':'fewest to the most')+'.”</div><div class="dials">';
   for (var i=0;i<3;i++){ var k=DIAL[S.vault.dials[i]];
     h += '<div><button class="dial" data-act="dial" data-i="'+i+'" aria-label="Dial '+(i+1)+': '+SYMS[k].name+'. Tap to turn">'+sym(k)+'</button><div class="dlabel">'+SYMS[k].name+'</div></div>'; }
   h += '</div><button class="btn" data-act="vault-try">✨ Wake the Beacon</button></div>'+msgHTML()+
@@ -867,15 +948,15 @@ function finaleHTML(){
 }
 
 /* Room */
-var TABS = [['wall','Walls'],['floor','Floors'],['art','Wall art'],['shelf','Shelf'],['corner','Corner'],['pet','Pets'],['hat','Hats'],['color','Colors']];
+var TABS = [['wall','Walls'],['floor','Floors'],['art','Wall art'],['shelf','Shelf'],['corner','Corner'],['pet','Pets']];
 function roomHTML(){
   var wall=item(S.room.wall), floor=item(S.room.floor), art=item(S.room.art), shelf=item(S.room.shelf), corner=item(S.room.corner), pet=item(S.pet);
   var h = topHTML('My Explorer Room', true)+guideHTML()+
     '<div class="room" aria-label="Your explorer room"><div class="wall" style="background:'+wall.css+'"></div><div class="floor" style="background:'+floor.css+'"></div>'+
     '<div class="win"></div><div class="art'+(art?'':' empty')+'">'+(art?art.em:'')+'</div><div class="shelf">'+(shelf?'<span>'+shelf.em+'</span>':'')+'</div>'+
-    (corner?'<div class="corner">'+corner.em+'</div>':'')+'<div class="ava">'+avatarSVG(S.color,S.hat)+'</div>'+(pet&&pet.em?'<div class="pet">'+pet.em+'</div>':'')+
+    (corner?'<div class="corner">'+corner.em+'</div>':'')+'<div class="ava">'+kidSVG(S.av,{nobg:true})+'</div>'+(pet&&pet.em?'<div class="pet">'+pet.em+'</div>':'')+
     '<div class="rname">'+esc(S.name)+'</div></div>'+
-    '<div class="board"><div class="tabs" role="tablist">'+TABS.map(function(t){ return '<button class="tab'+(ui.tab===t[0]?' on':'')+'" data-act="tab" data-t="'+t[0]+'" role="tab" aria-selected="'+(ui.tab===t[0])+'">'+t[1]+'</button>'; }).join('')+'</div>';
+    '<div class="board"><button class="btn alt" data-act="go" data-to="ward">👕 Dress up my explorer</button><div class="tabs" role="tablist">'+TABS.map(function(t){ return '<button class="tab'+(ui.tab===t[0]?' on':'')+'" data-act="tab" data-t="'+t[0]+'" role="tab" aria-selected="'+(ui.tab===t[0])+'">'+t[1]+'</button>'; }).join('')+'</div>';
   if (ui.tab==='color'){
     h += '<div class="row">'+COLORS.map(function(c){ return '<button class="swatch" style="background:'+c+';'+(S.color===c?'box-shadow:0 0 0 4px var(--accent2)':'')+'" data-act="color" data-c="'+c+'" aria-label="Color"></button>'; }).join('')+'</div>';
   } else {
@@ -884,12 +965,12 @@ function roomHTML(){
       var owned = S.owned.indexOf(c.id)>=0, using = current(c.slot)===c.id;
       if (c.reward && !owned){ h += '<div class="item cant"><span class="pv">🔒</span>'+esc(c.name)+'<span class="cost">Adventure prize</span></div>'; return; }
       var pv = c.css ? '<span class="pv" style="background:'+c.css+'"></span>' : '<span class="pv">'+(c.em||'∅')+'</span>';
-      var label = using ? 'Using ✓' : owned ? (c.slot==='art'||c.slot==='shelf'||c.slot==='corner' ? 'Place' : 'Use') : ('✦ '+c.cost);
+      var label = using ? 'Using ✓' : owned ? (c.slot==='art'||c.slot==='shelf'||c.slot==='corner' ? 'Place' : 'Use') : ('🪙 '+c.cost);
       h += '<button class="item'+(using?' using':'')+(!owned&&S.sparks<c.cost?' cant':'')+'" data-act="item" data-id="'+c.id+'">'+pv+esc(c.name)+'<span class="cost">'+label+'</span></button>';
     });
     h += '</div>';
   }
-  h += '<p class="note">Sparks are earned by exploring. They can\'t be bought, and they are only for decorating.</p></div>';
+  h += '<p class="note">Coins are earned by finishing puzzles and adventures. They can\'t be bought, and they are only for fun looks.</p></div>';
   return h;
 }
 function current(slot){ if (slot==='pet') return S.pet; if (slot==='hat') return S.hat; return S.room[slot]; }
@@ -907,12 +988,13 @@ function completeStage(st){
   render(); bumpSparks();
 }
 function finishVault(){
+  if (runOn('beacon')){ finishRun(); return; }
   S.done.vault = true;
   var amt = earn('chapter.beacon', 100);
   if (S.owned.indexOf('shelf.beacon')<0){ S.owned.push('shelf.beacon'); if (!S.room.shelf) S.room.shelf='shelf.beacon'; }
   addFact('beacon'); save(); sfx('win'); confetti(); setTimeout(confetti, 700);
   ui.screen = 'finale';
-  setGuide(['Look! The Beacon is shining again! You did it, '+S.name+'!', 'You earned '+(amt?amt+' sparks and ':'')+'the Beacon Lantern. Let\'s put it in your Explorer Room!']);
+  setGuide(['Look! The Beacon is shining again! You did it, '+S.name+'!', 'You earned '+(amt?amt+' coins and ':'')+'the Beacon Lantern. Let\'s put it in your Explorer Room!']);
   render(); bumpSparks(); window.scrollTo(0,0);
 }
 function bumpSparks(){ var el=document.getElementById('sparks'); if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
@@ -920,31 +1002,35 @@ function bumpSparks(){ var el=document.getElementById('sparks'); if (el){ el.cla
 /* ---------- modals ---------- */
 function modalHTML(){
   var m = ui.modal; if (!m) return '';
+  if (m.type==='gate') return gateHTML();
+  if (m.type==='shop') return shopHTML();
+  if (m.type==='again-ask') return againAskHTML(m.a);
+  if (m.type==='again-done') return againDoneHTML(m);
   if (m.type==='reward'){
     var si=SYMINFO[m.st], fact={obs:'venus',bridge:'truss',trail:'deer'}[m.st];
     return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Light Symbol found"><div class="big">'+sym(si.k)+'</div><h2>'+SYMS[si.k].name+' Symbol found!</h2>'+
-      '<p>Its number is <b>'+si.n+'</b>, because '+esc(si.why)+'. It\'s saved in your backpack.</p>'+(m.amt?'<div class="plus">+'+m.amt+' ✦ sparks</div>':'<p class="note">You already earned sparks for this one.</p>')+
+      '<p>Its number is <b>'+si.n+'</b>, because '+esc(si.why)+'. It\'s saved in your backpack.</p>'+(m.amt?'<div class="plus">+'+m.amt+' 🪙 coins</div>':(S.run?'<p class="note">⏱ Keep going, the clock is running!</p>':'<p class="note">You already earned coins for this one.</p>'))+
       '<div class="fact"><b>Did you know?</b>'+esc(FACTS[fact])+'</div><button class="btn" data-act="close-reward" style="width:100%">Back to the map</button></div>';
   }
   if (m.type==='greward'){
     var ga=ADV[m.a], gs=ga.stages.filter(function(x){return x.id===m.s;})[0], gsy=gs.symbol;
     return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Symbol found"><div class="big">'+sym(gsy.k)+'</div><h2>'+SYMS[gsy.k].name+' Symbol found!</h2>'+
-      '<p>Its number is <b>'+gsy.n+'</b>, because '+esc(gsy.why)+'. It\'s saved in your backpack.</p>'+(m.amt?'<div class="plus">+'+m.amt+' ✦ sparks</div>':'<p class="note">You already earned sparks for this one.</p>')+
+      '<p>Its number is <b>'+gsy.n+'</b>, because '+esc(gsy.why)+'. It\'s saved in your backpack.</p>'+(m.amt?'<div class="plus">+'+m.amt+' 🪙 coins</div>':(S.run?'<p class="note">⏱ Keep going, the clock is running!</p>':'<p class="note">You already earned coins for this one.</p>'))+
       '<div class="fact"><b>Did you know?</b>'+esc(FACTS[gs.rewardFact])+'</div><button class="btn" data-act="close-greward" style="width:100%">Back to the map</button></div>';
   }
   if (m.type==='secret'){
     return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Secret find"><div class="big" style="font-size:3.4rem">'+m.em+'</div><h2>Secret find!</h2>'+
-      (m.amt?'<div class="plus">+'+m.amt+' ✦ sparks</div>':'')+'<div class="fact"><b>Did you know?</b>'+esc(FACTS[m.fact])+'</div><button class="btn" data-act="close" style="width:100%">Keep exploring</button></div>';
+      (m.amt?'<div class="plus">+'+m.amt+' 🪙 coins</div>':'')+'<div class="fact"><b>Did you know?</b>'+esc(FACTS[m.fact])+'</div><button class="btn" data-act="close" style="width:100%">Keep exploring</button></div>';
   }
   if (m.type==='buy'){
     var c=item(m.id);
     return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Get item"><div class="big">'+(c.css?'<span style="width:70px;height:70px;border-radius:14px;background:'+c.css+'"></span>':'<span style="font-size:3.2rem">'+c.em+'</span>')+'</div>'+
-      '<h2>Get the '+esc(c.name)+'?</h2><p>It costs <b>✦ '+c.cost+'</b> sparks. You have <b>✦ '+S.sparks+'</b>.</p>'+
+      '<h2>Get the '+esc(c.name)+'?</h2><p>It costs <b>🪙 '+c.cost+'</b> coins. You have <b>🪙 '+S.sparks+'</b>.</p>'+
       '<div class="row" style="width:100%"><button class="btn alt" data-act="close" style="flex:1">Not now</button><button class="btn" data-act="buy-yes" data-id="'+c.id+'" style="flex:1">Yes, get it!</button></div></div>';
   }
   if (m.type==='need'){
     var c2=item(m.id);
-    return '<div class="sheet reward" role="dialog" aria-modal="true"><div class="big" style="font-size:3.2rem">'+(c2.em||'🎨')+'</div><h2>Almost!</h2><p>The '+esc(c2.name)+' needs <b>✦ '+(c2.cost-S.sparks)+'</b> more sparks. Solve puzzles and look for secret finds to earn more!</p><button class="btn" data-act="close" style="width:100%">OK</button></div>';
+    return '<div class="sheet reward" role="dialog" aria-modal="true"><div class="big" style="font-size:3.2rem">'+(c2.em||'🎨')+'</div><h2>Almost!</h2><p>The '+esc(c2.name)+' needs <b>🪙 '+(c2.cost-S.sparks)+'</b> more coins. Solve puzzles and look for secret finds to earn more!</p><button class="btn" data-act="close" style="width:100%">OK</button></div>';
   }
   if (m.type==='journal'){
     var h='<div class="sheet" role="dialog" aria-modal="true" aria-label="Backpack"><h2>🎒 '+esc(S.name)+'\'s backpack</h2><h3 style="font-size:.95rem">🏮 The Missing Beacon</h3><div class="mysyms">';
@@ -955,13 +1041,13 @@ function modalHTML(){
     ADV_ORDER.slice(1).forEach(function(id){ var ga=ADV[id], ap=AP(id); tot+=3; sc+=Object.keys(ap.secrets).length;
       h += '<h3 style="font-size:.95rem">'+ga.em+' '+esc(ga.title)+'</h3><div class="mysyms">'+ga.stages.map(function(st){ var got=ap.done[st.id], sy=st.symbol;
         return '<div class="symcard'+(got?'':' empty')+'">'+(got?sym(sy.k):'<div style="font-size:2rem;line-height:44px">❔</div>')+'<div>'+(got?SYMS[sy.k].name:'Not found yet')+'</div>'+(got?'<span class="num">'+sy.n+'</span>':'')+'</div>'; }).join('')+'</div>'; });
-    h += '<p><b>✦ '+S.sparks+'</b> sparks · <b>'+sc+' of '+tot+'</b> secret finds</p><h3 style="font-size:1rem">Things you discovered</h3>';
+    h += '<p><b>🪙 '+S.sparks+'</b> coins · <b>'+sc+' of '+tot+'</b> secret finds</p><h3 style="font-size:1rem">Things you discovered</h3>';
     if (!S.facts.length) h += '<p class="note">Solve puzzles to fill your explorer notes.</p>';
     S.facts.forEach(function(f){ h += '<div class="fact">'+esc(FACTS[f])+'</div>'; });
     return h+'<button class="btn" data-act="close">Close</button></div>';
   }
   if (m.type==='reset'){
-    return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Start over"><div class="big" style="font-size:3rem">🔄</div><h2>Start over?</h2><p>This erases your explorer, sparks, room and progress on this device.</p>'+
+    return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Start over"><div class="big" style="font-size:3rem">🔄</div><h2>Start over?</h2><p>This erases your explorer, coins, room and progress on this device.</p>'+
       '<div class="row" style="width:100%"><button class="btn alt" data-act="settings" style="flex:1">No, keep it</button><button class="btn" data-act="reset-yes" style="flex:1;background:#e8544e;color:#fff">Yes, start over</button></div></div>';
   }
   if (m.type==='worlds'){
@@ -973,7 +1059,7 @@ function modalHTML(){
       tg('read','Read aloud', voice ? 'Pip reads the words out loud using this device\'s own voice.' : 'This device has no built-in voice we can use.')+
       tg('sound','Sound effects')+tg('big','Bigger text')+tg('easy','Easy-read spacing','More space between letters and lines.')+tg('calm','Calm mode','Turns off moving effects.')+
       '<button class="toggle" data-act="worlds"><span>World<small>'+esc(WORLDS.filter(function(w){return w.id===S.world;})[0].name)+'</small></span><span>🌍</span></button>'+
-      '<div class="grown"><b>For grown-ups:</b> This prototype runs entirely on this device. It has no accounts, chat, links, ads, purchases or tracking, and it sends nothing over the internet. Progress is saved only in this browser. Sparks are earned in play and have no money value.</div>'+
+      '<div class="grown"><b>For grown-ups:</b> This prototype runs entirely on this device. It has no accounts, chat, links, ads or tracking, and it sends nothing over the internet. The family shop is pretend in this test version and never charges money. Progress is saved only in this browser. Coins are earned in play, can\'t be bought, and have no money value. Nothing bought ever helps with puzzles.</div>'+
       '<button class="hold" data-act="reset-ask"><span>Start over from the beginning</span></button>'+
       '<button class="btn" data-act="close">Done</button></div>';
   }
@@ -997,6 +1083,7 @@ function render(){
     case 'vault': h=vaultHTML(); break;
     case 'finale': h=finaleHTML(); break;
     case 'room': h=roomHTML(); break;
+    case 'ward': h=wardHTML(); break;
     case 'book': h=bookHTML(); break;
     case 'ghub': h=gHubHTML(); break;
     case 'gstage': h=gStageHTML(); break;
@@ -1015,9 +1102,11 @@ var INTRO = {
   bridge:['Oh no! The Wobbly Bridge lost its supports. We need to fill the six spaces under the road.','First, try the Shape Lab. Push each shape and see which one stays strong.','Then pick a shape, tap a space, and test the bridge with the cart!'],
   trail:['This is the Whispering Trail. Olive the owl saw who carried off the last Light Symbol.','Olive says: "Its footprints look like a heart split in two, with two pointy toes. It nibbles leaves and twigs in the forest."','Which tracks match? Tap one.'],
   vault:['This is the Beacon Vault! The words on the door say: "Wake me with the Light Symbols, from the fewest to the most."','Each Light Symbol has a number. Turn the dials to put them in order, then wake the Beacon!'],
-  room:['Welcome to your Explorer Room! Spend your sparks on things you like, and change them any time.']
+  room:['Welcome to your Explorer Room! Spend your coins on things you like, and change them any time.'],
+  ward:wardLines()
 };
 function go(to){
+  ui.tryOn=null;
   if (to==='book' || (to==='hub' && S.adv!=='beacon')){
     ui.hintMsg=null; ui.gmsg=null; ui.gsel=null; ui.msg=null;
     ui.screen = to==='book' ? 'book' : 'ghub'; setGuide(to==='book' ? bookLines() : gHubLines());
@@ -1028,13 +1117,16 @@ function go(to){
   if (to==='hub') setGuide(hubLines());
   else if (to==='trail' && S.tr.found && !locked('trail')) setGuide(['Keep following the deer tracks! The pointy tips show which way it went.']);
   else if (S.done[to] && to!=='room' && to!=='vault' && !ui.replay[to]) setGuide(['You already solved this one! Tap "Play this puzzle again" to try it again.']);
+  else if (to==='vault' && beaconRev()) setGuide(['The words on the door changed! Now they say: "Wake me with the Light Symbols, from the most to the fewest."']);
   else if (INTRO[to]) setGuide(INTRO[to]);
+  if (to==='ward') ui.wtab=ui.wtab||'hair';
   if (to==='room' && !S.seen.room){ S.seen.room=1; save(); }
   render(); window.scrollTo(0,0);
 }
 
 /* ---------- hints ---------- */
 function hint(st){
+  if (S.run && S.run.a===S.adv){ S.run.hints++; }
   if (st==='g'){ gHint(); return; }
   var n = ++ui.hint[st];
   if (st==='obs'){
@@ -1058,16 +1150,17 @@ function hint(st){
     if (!S.tr.found){
       if (n===1) setGuide(['Olive said the tracks have two pointy toes, like a heart split in two.']);
       else if (n===2) setGuide(['Count the toes on each set of tracks. Which one has just two parts?']);
-      else setGuide(['It\'s Tracks B, the two-toed hoofprints.']);
+      else setGuide(['Look for the tracks with just two parts, shaped like a split heart. Which letter are they?']);
     } else {
       if (n===1) setGuide(['Look at the hoofprint on your square. The pointy tips show which way the deer went.']);
       else if (n===2) setGuide(['On the compass, N (north) is up, S (south) is down, E (east) is right and W (west) is left.']);
       else if (S.tr.step<PATH.length) setGuide(['Next, go '+DIRS[PATH[S.tr.step]][3]+'. Tap '+PATH[S.tr.step]+'.']);
     }
   } else if (st==='vault'){
-    if (n===1) setGuide(['"Fewest to most" means start with the smallest number and end with the biggest.']);
-    else if (n===2) setGuide(['The Hoofprint has 2, the Triangle has 3, and the Star has 8.']);
-    else setGuide(['Turn the dials to: Hoofprint, then Triangle, then Star.']);
+    var rv=beaconRev();
+    if (n===1) setGuide([rv?'"Most to fewest" means start with the biggest number and end with the smallest.':'"Fewest to most" means start with the smallest number and end with the biggest.']);
+    else if (n===2) setGuide(['The Hoofprint has 2, the Triangle has 3, and the Star has 8. Which number is the '+(rv?'biggest':'smallest')+'?']);
+    else setGuide([rv?'The Star has the most (8), so it goes on the first dial. Which symbol comes next?':'The Hoofprint has the fewest (2), so it goes on the first dial. Which symbol comes next?']);
   }
   ui.hintMsg = ui.lines[0] || null;
   sfx('tap'); render();
@@ -1081,7 +1174,7 @@ var A = {
   'go': function(d){ go(d.to); },
   'ob-next': function(){
     if (ui.ob===0){ ui.ob=1; ui.names=makeNames(); setGuide(['First, every explorer needs a name. Pick one you like!']); }
-    else if (ui.ob===1){ if(!S.name) return; ui.ob=2; setGuide(['Nice to meet you, '+S.name+'! What color are you?']); }
+    else if (ui.ob===1){ if(!S.name) return; ui.ob=2; setGuide(['Nice to meet you, '+S.name+'! Now make your explorer. Pick anything you like!']); }
     else if (ui.ob===2){ ui.ob=3; setGuide(['Last thing: pick a world. It changes how everything looks.']); }
     else { S.started=true; save(); go(START_ADV ? 'hub' : 'book'); return; }
     render(); window.scrollTo(0,0);
@@ -1149,18 +1242,18 @@ var A = {
     var el=document.querySelectorAll('.dial')[i]; if (el){ el.classList.add('spin'); el.focus({preventScroll:true}); } },
   'vault-try': function(){
     var pick=S.vault.dials.map(function(x){return DIAL[x];});
-    if (pick.join()==='hoof,triangle,star'){ ui.msg=null; finishVault(); return; }
-    sfx('oops'); ui.msg={k:'oops',t:'The Beacon flickers, but stays dark. Check your Light Symbols: smallest number first.'};
+    if (pick.join()===(beaconRev()?'star,triangle,hoof':'hoof,triangle,star')){ ui.msg=null; finishVault(); return; }
+    sfx('oops'); ui.msg={k:'oops',t:'The Beacon flickers, but stays dark. Read the words on the door again, then check your symbol numbers.'};
     setGuide(['So close! Look at the numbers on your symbols and try again.']); render();
   },
   'replay-adv': function(){
     S.done={obs:false,bridge:false,trail:false,vault:false}; S.obs={slots:[null,null,null,null,null,null,null,null],lock:[0,0,0,0,0,0,0,0]};
     S.br={slots:[null,null,null,null,null,null]}; S.tr={found:false,step:0}; S.vault={dials:[3,4,5]}; ui.hint={obs:0,bridge:0,trail:0,vault:0}; ui.replay={}; save();
-    setGuide(['Let\'s play again! You keep your room and sparks. Sparks are only earned the first time, but any secret finds you missed still count.']); ui.screen='hub'; render();
+    setGuide(['Let\'s play again! You keep your room and coins. Coins are only earned the first time, but any secret finds you missed still count.']); ui.screen='hub'; render();
   },
   'stage-replay': function(d){ resetStage(d.s); render(); window.scrollTo(0,0); },
   'reset-ask': function(){ ui.modal={type:'reset'}; render(); },
-  'reset-yes': function(){ store.clear(); S=fresh(); ui.modal=null; ui.replay={}; ui.ghint={}; ui.screen='welcome'; ui.ob=0; ui.hint={obs:0,bridge:0,trail:0,vault:0}; setGuide(INTRO_W); render(); window.scrollTo(0,0); },
+  'reset-yes': function(){ store.clear(); S=fresh(); applyRun(); ui.modal=null; ui.replay={}; ui.ghint={}; ui.screen='welcome'; ui.ob=0; ui.hint={obs:0,bridge:0,trail:0,vault:0}; setGuide(INTRO_W); render(); window.scrollTo(0,0); },
   'tab': function(d){ ui.tab=d.t; render(); },
   'item': function(d){
     var c=item(d.id); if (!c) return;
@@ -1284,7 +1377,7 @@ var ADV = {
        n3:{em:'📜',note:true,name:'Message in a bottle',text:'Bottle note: “Half an hour is 30 minutes. 12 hours after a morning time is the same time in the evening (PM).”'} },
      puzzle:{ type:'clock', title:'Set the next high tide', sub:'Use your clue notes. Change the clock, then tap Check.', start:{h:6,m:0,pm:false}, answer:{h:6,m:30,pm:true} },
      symbol:{k:'wave',n:2,why:'most beaches get 2 high tides a day'}, facts:['tides'], rewardFact:'tides',
-     hints:{ search:['Notes can hide inside boxes, baskets and bottles.','Try the things near the floor.'], puzzle:['Start at 6:00 AM and count 12 hours. Where does that take you?','12 hours after 6:00 AM is 6:00 PM. Now add half an hour.','The next high tide is at 6:30 PM.'] } },
+     hints:{ search:['Notes can hide inside boxes, baskets and bottles.','Try the things near the floor.'], puzzle:['Start at 6:00 AM and count 12 hours. Where does that take you?','12 hours after 6:00 AM is 6:00 PM. Now add half an hour.','It is 6:00 PM plus half an hour. What time is that? Remember: evening times are PM.'] } },
    { id:'breathe', name:'Coral Reef', sub:'Who breathes air?', icon:'🐠',
      intro:['Dive into the reef! Six sea animals are hiding. Find them all.','Then sort them. Some breathe underwater with gills. Others swim up to breathe air with lungs.'],
      search:{ title:'Search the reef', sub:'Tap the coral, rocks and seaweed. 6 animals are hiding.', bg:'linear-gradient(#69d4e8,#1a83ab)',
@@ -1597,29 +1690,30 @@ ADV.music = { id:'music', title:'The Music Box Mystery', hub:'Melody Hall', em:'
   ] };
 ADV_ORDER.push('weather','dino','music');
 
-function advDone(id){ return id==='beacon' ? S.done.vault : !!(S.ap && S.ap[id] && S.ap[id].done.vault); }
+function advDone(id){ if (S.fin && S.fin[id]) return true; return id==='beacon' ? S.done.vault : !!(S.ap && S.ap[id] && S.ap[id].done.vault); }
 function advSyms(id){ if (id==='beacon') return (S.done.obs?1:0)+(S.done.bridge?1:0)+(S.done.trail?1:0); var d=AP(id).done; return ADV[id].stages.filter(function(s){return d[s.id];}).length; }
 function AP(a){ if (!S.ap) S.ap={}; if (!S.ap[a]) S.ap[a]={done:{},secrets:{},st:{},vault:null}; return S.ap[a]; }
 function SS(a,sid){ var ap=AP(a); if (!ap.st[sid]) ap.st[sid]={open:[],slots:null,lock:null,place:{},asg:{},clock:null}; return ap.st[sid]; }
 function curA(){ return ADV[S.adv]; }
 function curStage(){ var a=curA(); return a.stages.filter(function(s){return s.id===ui.gs;})[0]; }
 function emH(e){ return (e && e.indexOf('<svg')===0) ? e : esc(e||''); }
-function itemSpots(stg){ return stg.search.spots.filter(function(sp){ return sp[3]; }); }
-function foundIds(stg,ss){ var out=[]; stg.search.spots.forEach(function(sp,i){ if (sp[3] && ss.open.indexOf(i)>=0) out.push(sp[3]); }); return out; }
+function itemSpots(stg){ return SP(stg).filter(function(sp){ return sp[3]; }); }
+function foundIds(stg,ss){ var out=[]; SP(stg).forEach(function(sp,i){ if (sp[3] && ss.open.indexOf(i)>=0) out.push(sp[3]); }); return out; }
 function gLocked(a,sid){ return AP(a).done[sid] && !ui.replay[a+':'+sid]; }
 
 /* ---- book (adventure picker) ---- */
 function bookHTML(){
-  var h = topHTML('Adventure Book', false)+guideHTML()+'<div class="book">';
+  var h = topHTML('Adventure Book', false)+guideHTML()+'<button class="mecard" data-act="go" data-to="ward"><span class="mepv">'+kidSVG(S.av)+'</span><span class="metx"><b>'+esc(S.name)+'</b><span>🪙 '+S.sparks+' coins</span><span class="mego">👕 Wardrobe</span></span></button><div class="book">';
   ADV_ORDER.forEach(function(id){ var a=ADV[id], n=advSyms(id), fin=advDone(id);
     h += '<button class="advcard" data-act="adv" data-a="'+id+'" style="background:'+a.card+';color:'+a.fg+'"><span class="advem" aria-hidden="true">'+a.em+'</span><span class="advtx"><b>'+esc(a.title)+'</b><span>'+esc(a.sub)+'</span>'+
-      '<span class="advst">'+(fin?'✅ Finished':(n?n+' of 3 symbols found':'New adventure'))+'</span></span></button>'; });
-  return h+'</div><p class="note" style="color:var(--onbg);opacity:.85;text-align:center">Your room and sparks go with you on every adventure.</p>';
+      '<span class="advst">'+(runOn(id)?'⏱ Do Again running':fin?'✅ Finished'+(S.best[id]?' · ⏱ Best '+fmtT(S.best[id].score):''):(n?n+' of 3 symbols found':'New adventure'))+'</span></span></button>'; });
+  return h+'</div><p class="note" style="color:var(--onbg);opacity:.85;text-align:center">Your room and coins go with you on every adventure.</p>';
 }
-function bookLines(){ return ['Pick an adventure! You can play them in any order, and your room and sparks come with you.']; }
+function bookLines(){ return ['Pick an adventure! You can play them in any order, and your room and coins come with you.']; }
 
 /* ---- generic hub ---- */
 function gHubLines(){ var a=curA(), ap=AP(a.id), n=advSyms(a.id);
+  if (runOn(a.id)) return n===3 ? ['All three symbols! Quick, open the '+a.vault.name+'. Its rule is new this time!'] : ['Do Again! Find all three symbols as fast as you can. Things moved, so look carefully.'];
   if (ap.done.vault) return ['You opened the '+a.vault.name+'! Great exploring, '+S.name+'.','Decorate your room, play again for secret finds, or pick another adventure.'];
   if (n===3) return ['You found all three symbols! The '+a.vault.name+' is ready to open.'];
   if (n>0) return ['Nice work! '+n+' of 3 symbols found. Where to next?'];
@@ -1635,14 +1729,14 @@ function gHubHTML(){
   a.stages.forEach(function(s,i){ if (i) h+='<div class="link"></div>';
     h+='<button class="stop'+(ap.done[s.id]?' done':'')+'" data-act="g-go" data-s="'+s.id+'"><span class="ic" style="font-size:2rem">'+s.icon+'</span><span class="tx"><h3>'+esc(s.name)+'</h3><p>'+esc(s.sub)+'</p></span><span class="st" aria-hidden="true">'+(ap.done[s.id]?'✅':'▶️')+'</span></button>'; });
   h+='<div class="link"></div><button class="stop'+(ap.done.vault?' done':'')+(all3?'':' locked')+'" data-act="g-go" data-s="vault"><span class="ic" style="font-size:2rem">🔐</span><span class="tx"><h3>'+esc(a.vault.name)+'</h3><p>'+(all3?'Use your three symbols':'Find all three symbols to open')+'</p></span><span class="st" aria-hidden="true">'+(ap.done.vault?'✅':(all3?'▶️':'🔒'))+'</span></button></div>';
-  h+='<div class="row"><button class="worldtag" data-act="go" data-to="book">📖 All adventures</button><button class="worldtag" data-act="worlds">'+w.em+' World: '+esc(w.name)+'</button>'+(ap.done.vault?'<button class="worldtag" data-act="g-replay-adv">🔁 Play again</button>':'')+'</div>';
+  h+='<div class="row"><button class="worldtag" data-act="go" data-to="book">📖 All adventures</button><button class="worldtag" data-act="worlds">'+w.em+' World: '+esc(w.name)+'</button>'+(advDone(a.id)&&!runOn(a.id)?'<button class="worldtag hot" data-act="again-ask" data-a="'+a.id+'">⏱ Do Again'+(S.best[a.id]?' (best '+fmtT(S.best[a.id].score)+')':'')+'</button>':'')+'</div>';
   return h;
 }
 
 /* ---- generic stage ---- */
 function sceneHTML(a, stg, ss, solved){
   var h='<div class="scene" style="background:'+stg.search.bg+'">', ap=AP(a.id);
-  stg.search.spots.forEach(function(sp,i){
+  SP(stg).forEach(function(sp,i){
     var open = solved || ss.open.indexOf(i)>=0, cls='spot', inner=esc(sp[2]), lab='Search here';
     if (sp[4]){ if (ap.secrets[stg.id]){ cls+=' got sec'; inner=esc(sp[5]); lab='Secret find'; } }
     else if (open && sp[3]){ var it=stg.items[sp[3]]; cls+=' got'; inner=emH(it.em); lab=it.name; }
@@ -1675,15 +1769,15 @@ function gPuzzleHTML(a,stg,ss){
     h+='<div class="olead">'+esc(p.lead)+' <span aria-hidden="true">➜</span></div><div class="gslots" style="grid-template-columns:repeat('+p.answer.length+',1fr)">';
     ss.slots.forEach(function(id,i){ var it=id?stg.items[id]:null;
       h+='<button class="gslot'+(ss.lock[i]?' lock':'')+(ui.gsel&&!it?' target':'')+'" data-act="g-slot" data-i="'+i+'" aria-label="Space '+(i+1)+(it?', '+esc(it.name):'')+'"><span class="n">'+p.labels[i]+'</span>'+(it?'<span class="gem">'+emH(it.em)+'</span><span class="pn">'+esc(it.name)+'</span>':'')+'</button>'; });
-    h+='</div><div class="gtray">'+p.answer.filter(function(id){return ss.slots.indexOf(id)<0;}).map(function(id){ return chipHTML(stg,id,'g-pick',ui.wrong.indexOf(id)>=0?' wiggle':''); }).join('')+'</div>'+infoHTML(stg);
+    h+='</div><div class="gtray">'+mix(p.answer,stg.id+'tray').filter(function(id){return ss.slots.indexOf(id)<0;}).map(function(id){ return chipHTML(stg,id,'g-pick',ui.wrong.indexOf(id)>=0?' wiggle':''); }).join('')+'</div>'+infoHTML(stg);
   } else if (p.type==='sort'){
     h+='<div class="bins" style="grid-template-columns:repeat('+p.bins.length+',1fr)">';
     p.bins.forEach(function(b){ h+='<div class="bin"><button class="binbtn" data-act="g-bin" data-b="'+b.id+'"><span class="bem">'+b.em+'</span><b>'+esc(b.name)+'</b><small>'+esc(b.desc)+'</small>'+(ui.gsel?'<span class="put">Put it here</span>':'')+'</button><div class="binitems">'+
       Object.keys(ss.place).filter(function(id){return ss.place[id]===b.id;}).map(function(id){ return '<button class="mchip" data-act="g-unplace" data-id="'+id+'" aria-label="Take back '+esc(stg.items[id].name)+'">'+emH(stg.items[id].em)+'</button>'; }).join('')+'</div></div>'; });
-    h+='</div><div class="gtray">'+Object.keys(p.answer).filter(function(id){return !ss.place[id];}).map(function(id){ return chipHTML(stg,id,'g-pick',ui.wrong.indexOf(id)>=0?' wiggle':''); }).join('')+'</div>'+infoHTML(stg);
+    h+='</div><div class="gtray">'+mix(Object.keys(p.answer),stg.id+'tray').filter(function(id){return !ss.place[id];}).map(function(id){ return chipHTML(stg,id,'g-pick',ui.wrong.indexOf(id)>=0?' wiggle':''); }).join('')+'</div>'+infoHTML(stg);
   } else if (p.type==='choose'){
-    h+='<div class="choices">'+p.options.map(function(o,i){ var pot=function(x){ return '<span class="pot"><span>'+x[1]+'</span><span>'+x[0]+'</span><span>'+(x[2]||'🚫')+'</span></span>'; };
-      return '<button class="choice'+(ui.pick===i?(o.ok?' yes':' no'):'')+'" data-act="g-choose" data-i="'+i+'">'+(o.pic?'<span class="cpic">'+o.pic+'</span>':'<span class="pots">'+pot(o.a)+'<span class="vs">vs</span>'+pot(o.b)+'</span>')+'<span class="clabel"><b>'+(p.fair?'Test ':'Picture ')+'ABC'[i]+'.</b> '+esc(o.label)+'</span></button>'; }).join('')+'</div><p class="note">'+esc(p.note||'🚫 means no water. 🌑 means kept in the dark.')+'</p>';
+    h+='<div class="choices">'+mix(p.options.map(function(_,i){return 'o'+i;}),stg.id+'opt').map(function(s,pos){ var i=+s.slice(1), o=p.options[i], pot=function(x){ return '<span class="pot"><span>'+x[1]+'</span><span>'+x[0]+'</span><span>'+(x[2]||'🚫')+'</span></span>'; };
+      return '<button class="choice'+(ui.pick===i?(o.ok?' yes':' no'):'')+'" data-act="g-choose" data-i="'+i+'" data-l="'+pos+'">'+(o.pic?'<span class="cpic">'+o.pic+'</span>':'<span class="pots">'+pot(o.a)+'<span class="vs">vs</span>'+pot(o.b)+'</span>')+'<span class="clabel"><b>'+(p.fair?'Test ':'Picture ')+'ABC'[pos]+'.</b> '+esc(o.label)+'</span></button>'; }).join('')+'</div><p class="note">'+esc(p.note||'🚫 means no water. 🌑 means kept in the dark.')+'</p>';
   } else if (p.type==='grid'){
     h+='<div class="gmap" role="grid" aria-label="Island map, north is up"><span class="gnorth">N ⬆️</span>';
     for (var y=0;y<5;y++) for (var x=0;x<5;x++){ var k=x+','+y, wet=p.water.indexOf(k)>=0, t=p.tiles[k]||'';
@@ -1691,7 +1785,7 @@ function gPuzzleHTML(a,stg,ss){
     h+='</div>';
   } else if (p.type==='match'){
     var clueTxt=foundIds(stg,ss).map(function(id){return stg.items[id].text;});
-    h+='<div class="mrows">'+p.rows.map(function(r){ var oi=ss.asg[r.id], o=oi!=null?p.opts.filter(function(q){return q.id===oi;})[0]:null;
+    h+='<div class="mrows">'+mix(p.rows,stg.id+'rows').map(function(r){ var oi=ss.asg[r.id], o=oi!=null?p.opts.filter(function(q){return q.id===oi;})[0]:null;
       return '<div class="mrow"><span class="bee">'+(p.rowEm||'🐝')+' <b>'+esc(r.name)+'</b></span><button class="mpick" data-act="g-cycle" data-r="'+r.id+'">'+(o?'<span class="fl">'+o.em+'</span>'+esc(o.name):'Tap to choose')+'</button></div>'; }).join('')+
       '</div><button class="btn" data-act="g-check" style="width:100%">Check</button>';
   } else if (p.type==='clock'){
@@ -1730,7 +1824,7 @@ function completeG(a,stg){
 
 /* ---- generic vault ---- */
 function gVaultHTML(){
-  var a=curA(), ap=AP(a.id), v=a.vault; if (!ap.vault || ap.vault.length!==v.digits) ap.vault=new Array(v.digits+1).join('0').split('').map(Number);
+  var a=curA(), ap=AP(a.id), v=vaultNow(a); if (!ap.vault || ap.vault.length!==v.digits) ap.vault=new Array(v.digits+1).join('0').split('').map(Number);
   var h=topHTML(v.name,true)+guideHTML()+'<div class="board"><div class="vault"><div class="engrave">'+esc(v.engrave)+'</div><div class="rollers">';
   ap.vault.forEach(function(d,i){ h+='<div class="roller"><button class="rbtn" data-act="gv-up" data-i="'+i+'" aria-label="Digit '+(i+1)+' up">▲</button><div class="rdig" aria-live="polite">'+d+'</div><button class="rbtn" data-act="gv-down" data-i="'+i+'" aria-label="Digit '+(i+1)+' down">▼</button></div>'; });
   h+='</div><button class="btn" data-act="gv-open">🔓 Open</button></div>'+gMsgHTML()+'<div><h2 style="font-size:1.05rem">Your symbols</h2><p class="sub">Each symbol has a number you discovered.</p></div><div class="mysyms">'+
@@ -1749,7 +1843,7 @@ function gGo(sid){
   ui.gmsg=null; ui.gsel=null; ui.hintMsg=null; ui.wrong=[]; ui.pick=null; ui.gtap=null;
   if (sid==='vault'){
     if (!a.stages.every(function(s){return ap.done[s.id];})){ setGuide(['The '+a.vault.name+' is locked. Find all three symbols first!']); sfx('oops'); render(); return; }
-    ui.screen='gvault'; setGuide(['The words say: '+a.vault.engrave,'Use the numbers on your symbols, then tap Open.']);
+    ui.screen='gvault'; setGuide(['The words say: '+vaultNow(a).engrave,'Use the numbers on your symbols, then tap Open.']);
   } else {
     ui.gs=sid; ui.screen='gstage'; var stg=curStage();
     setGuide(gLocked(a.id,sid) ? ['You already solved this one! Tap "Play this puzzle again" to try it again.'] : stg.intro);
@@ -1758,14 +1852,14 @@ function gGo(sid){
 }
 function gHint(){
   var a=curA(), text;
-  if (ui.screen==='gvault'){ var nv=ui.ghint['v:'+a.id]=(ui.ghint['v:'+a.id]||0)+1; text=a.vault.hints[Math.min(nv,3)-1]; }
+  if (ui.screen==='gvault'){ var nv=ui.ghint['v:'+a.id]=(ui.ghint['v:'+a.id]||0)+1; text=vaultNow(a).hints[Math.min(nv,3)-1]; }
   else {
     var stg=curStage(), ss=SS(a.id,stg.id), need=itemSpots(stg).length, f=foundIds(stg,ss), all=f.length>=need;
     var key=a.id+':'+stg.id+':'+(all?'p':'s'), n=ui.ghint[key]=(ui.ghint[key]||0)+1;
     if (!all){
-      if (n<=2) text=(stg.hints.search||[])[n-1] || 'Tap everything in the picture. Clues can hide under anything!';
-      else { var idx=-1; stg.search.spots.some(function(sp,i){ if (sp[3] && ss.open.indexOf(i)<0){ idx=i; return true; } return false; });
-        if (idx>=0){ ss.open.push(idx); var it=stg.items[stg.search.spots[idx][3]]; text='I found one for you: '+it.name+'!'; save();
+      if (n<=2) text=runOn(a.id) ? ['Things moved since last time! Tap every hiding spot.','Keep going. Try the spots you have not tapped yet.'][n-1] : ((stg.hints.search||[])[n-1] || 'Tap everything in the picture. Clues can hide under anything!');
+      else { var idx=-1; SP(stg).some(function(sp,i){ if (sp[3] && ss.open.indexOf(i)<0){ idx=i; return true; } return false; });
+        if (idx>=0){ ss.open.push(idx); var it=stg.items[SP(stg)[idx][3]]; text='I found one for you: '+it.name+'!'; save();
           if (foundIds(stg,ss).length>=need) text+=' That\'s all of them. The puzzle is open below.'; } }
     } else {
       var p=stg.puzzle;
@@ -1783,23 +1877,24 @@ function gHint(){
 }
 function gVaultTry(){
   var a=curA(), ap=AP(a.id);
-  if (ap.vault.join('')===a.vault.answer){
+  if (ap.vault.join('')===vaultNow(a).answer){
+    if (runOn(a.id)){ finishRun(); return; }
     ap.done.vault=true; var amt=earn(a.id+'.chapter',100);
     var it=item(a.reward); if (S.owned.indexOf(it.id)<0){ S.owned.push(it.id); if (it.slot==='pet'){ if (S.pet==='pet.none') S.pet=it.id; } else if (!S.room[it.slot]) S.room[it.slot]=it.id; }
     addFact(a.finaleFact); save(); sfx('win'); confetti(); setTimeout(confetti,700);
     ui.screen='gfinale'; ui.gmsg=null; ui.hintMsg=null;
-    setGuide(a.finale.concat(['You earned '+(amt?amt+' sparks and ':'')+'the '+it.name+'. Let\'s go put it in your room!']));
+    setGuide(a.finale.concat(['You earned '+(amt?amt+' coins and ':'')+'the '+it.name+'. Let\'s go put it in your room!']));
     render(); bumpSparks(); window.scrollTo(0,0); return;
   }
   sfx('oops'); ui.gmsg={k:'oops',t:'Click... the lock stays shut. Read the words on the lock again and check your numbers.'}; setGuide(['So close! Try again.']); render();
 }
 var GA = {
-  'adv': function(d){ S.adv=d.a; save(); go('hub'); },
+  'adv': function(d){ if (S.run && S.run.a!==d.a) endRun(); S.adv=d.a; save(); go('hub'); },
   'g-go': function(d){ gGo(d.s); },
-  'g-replay-adv': function(){ var a=curA(); S.ap[a.id]={done:{},secrets:AP(a.id).secrets,st:{},vault:null}; ui.ghint={}; ui.replay={}; save(); setGuide(['Let\'s play again! You keep your room and sparks. Sparks are only earned the first time, but any secret finds you missed still count.']); render(); },
+  'g-replay-adv': function(){ var a=curA(); S.ap[a.id]={done:{},secrets:AP(a.id).secrets,st:{},vault:null}; ui.ghint={}; ui.replay={}; save(); setGuide(['Let\'s play again! You keep your room and coins. Coins are only earned the first time, but any secret finds you missed still count.']); render(); },
   'g-replay': function(d){ var a=curA(); AP(a.id).st[d.s]=null; delete AP(a.id).st[d.s]; ui.replay[a.id+':'+d.s]=true; ui.ghint={}; save(); gGo(d.s); },
   'g-spot': function(d){
-    var a=curA(), stg=curStage(), ss=SS(a.id,stg.id), i=+d.i, sp=stg.search.spots[i], ap=AP(a.id);
+    var a=curA(), stg=curStage(), ss=SS(a.id,stg.id), i=+d.i, sp=SP(stg)[i], ap=AP(a.id);
     if (sp[4]){ if (ap.secrets[stg.id]){ ui.gmsg={k:'',t:FACTS[sp[4]]}; render(); return; }
       ap.secrets[stg.id]=true; var amt=earn(a.id+'.secret.'+stg.id,20); addFact(sp[4]); save(); sfx('coin'); ui.modal={type:'secret',em:sp[5],fact:sp[4],amt:amt}; render(); bumpSparks(); return; }
     if (gLocked(a.id,stg.id)){ if (sp[3]){ ui.gmsg={k:'',t:stg.items[sp[3]].text}; render(); } return; }
@@ -1833,7 +1928,7 @@ var GA = {
   'g-choose': function(d){
     var a=curA(), stg=curStage(), o=stg.puzzle.options[+d.i]; ui.pick=+d.i;
     if (o.ok){ completeG(a,stg); render(); return; }
-    sfx('oops'); ui.gmsg={k:'oops',t:(stg.puzzle.fair?'Test '+'ABC'[+d.i]+' isn\'t fair. ':'Not picture '+'ABC'[+d.i]+'. ')+o.why}; render();
+    sfx('oops'); ui.gmsg={k:'oops',t:(stg.puzzle.fair?'Test '+'ABC'[+(d.l||d.i)]+' isn\'t fair. ':'Not picture '+'ABC'[+(d.l||d.i)]+'. ')+o.why}; render();
   },
   'g-tile': function(d){
     var a=curA(), stg=curStage(), p=stg.puzzle, x=+d.x, y=+d.y; ui.gtap=x+','+y;
@@ -1866,6 +1961,417 @@ var GA = {
   'gv-open': function(){ gVaultTry(); }
 };
 for (var gk in GA) A[gk]=GA[gk];
+
+/* ================= Kid avatar (layered SVG) ================= */
+var KSEQ = 0;
+var SKINS = {s1:'#ffe3cc',s2:'#f8cfa8',s3:'#ebb88e',s4:'#d49d6e',s5:'#b77d50',s6:'#93603a',s7:'#704629',s8:'#4e301c'};
+var HAIRC = {black:'#2b2220',dark:'#4a2f20',brown:'#7a4a2a',auburn:'#a8462a',blonde:'#e8c46a',light:'#f5e2ae',gray:'#b8b8c6',
+  pink:'#ff7ab8',blue:'#5aa8ff',purple:'#9a6bff',green:'#3fc58a',rainbow:'url(#P-rb)',galaxy:'url(#P-gx)'};
+var AVC = {
+ skin:{name:'Skin', items:[['s1','Tone 1'],['s2','Tone 2'],['s3','Tone 3'],['s4','Tone 4'],['s5','Tone 5'],['s6','Tone 6'],['s7','Tone 7'],['s8','Tone 8']]},
+ hair:{name:'Hair', items:[['short','Short'],['curly','Curly'],['long','Long'],['pigtails','Pigtails'],['bun','Top bun'],['spiky','Spiky'],['puffs','Puffs'],['afro','Big curls'],['bob','Bob'],['buzz','Buzz cut']]},
+ hc:{name:'Hair color', items:[['black','Black'],['dark','Dark brown'],['brown','Brown'],['auburn','Auburn'],['blonde','Blonde'],['light','Light blonde'],['gray','Silver'],
+   ['pink','Bubblegum',60],['blue','Ocean blue',60],['purple','Grape',60],['green','Mint',60],['rainbow','Rainbow',0,'rainbow'],['galaxy','Galaxy',0,'space']]},
+ face:{name:'Face', items:[['smile','Smiley'],['grin','Big grin'],['happy','Happy'],['big','Bright eyes'],['wink','Wink'],['sleepy','Sleepy'],['wow','Surprised'],['freckles','Freckles'],
+   ['stars','Star eyes',40],['hearts','Heart eyes',40]]},
+ outfit:{name:'Outfit', items:[['tee','Red tee'],['startee','Star tee'],['hoodie','Hoodie'],['overalls','Overalls'],['stripes','Stripes'],
+   ['vest','Explorer vest',80],['lab','Lab coat',80],['rain','Raincoat',70],['jersey','Team jersey',70],['sweater','Cozy sweater',60],['space','Space suit',120],
+   ['hero','Hero suit',0,'hero'],['dragon','Dragon costume',0,'dragon'],['knight','Knight armor',0,'royal'],['robe','Starlight robe',0,'space']]},
+ hat:{name:'Hat', items:[['none','No hat'],['cap','Cap'],['beanie','Beanie'],['sunhat','Sun hat'],
+   ['safari','Explorer hat',70],['pirate','Pirate hat',80],['wizard','Wizard hat',90],['flowers','Flower crown',60],['phones','Headphones',60],
+   ['crown','Jewel crown',0,'royal'],['helmet','Space helmet',0,'space'],['hood','Dragon hood',0,'dragon'],['unicorn','Unicorn horn',0,'rainbow']]},
+ glasses:{name:'Glasses', items:[['none','None'],['round','Round glasses'],['shades','Sunglasses',40],['starg','Star glasses',60],['goggles','Goggles',60],['mask','Hero mask',0,'hero']]},
+ gear:{name:'Gear', items:[['none','None'],['backpack','Backpack'],['magnifier','Magnifier'],['net','Bug net',60],['scope','Telescope',80],['map','Treasure map',50],['torch','Flashlight',70],
+   ['jetpack','Jetpack',0,'space'],['wings','Glow wings',0,'rainbow'],['wand','Star wand',0,'hero']]},
+ scene:{name:'Scene', items:[['sky','Blue sky'],['meadow','Meadow'],['sunset','Sunset'],['ocean','Ocean',60],['snow','Snowy peaks',60],['jungle','Jungle',60],['space','Outer space',90],
+   ['aurora','Northern lights',0,'space'],['candy','Candy land',0,'rainbow'],['castle','Castle',0,'royal'],['city','Hero city',0,'hero']]}
+};
+var AV_SLOTS = ['skin','hair','hc','face','outfit','hat','glasses','gear','scene'];
+var PACKS = [
+  {id:'space',name:'Space Pack',em:'🚀',price:'$2.99',blurb:'Space helmet, jetpack, starlight robe, galaxy hair and northern lights.'},
+  {id:'hero',name:'Hero Pack',em:'🦸',price:'$1.99',blurb:'Hero suit, hero mask, star wand and hero city.'},
+  {id:'royal',name:'Royal Pack',em:'👑',price:'$1.99',blurb:'Knight armor, jewel crown and a castle.'},
+  {id:'dragon',name:'Dragon Pack',em:'🐉',price:'$0.99',blurb:'Dragon costume and dragon hood.'},
+  {id:'rainbow',name:'Rainbow Pack',em:'🌈',price:'$1.99',blurb:'Rainbow hair, glow wings, unicorn horn and candy land.'},
+  {id:'pass',name:'Explorer Pass (every pack)',em:'⭐',price:'$5.99',blurb:'All five packs together.'}
+];
+function avItem(slot,key){ var L=AVC[slot].items; for (var i=0;i<L.length;i++) if (L[i][0]===key) return {slot:slot,key:key,id:slot+'.'+key,name:L[i][1],cost:L[i][2]||0,pack:L[i][3]||null}; return null; }
+function familyItems(){ var out=[]; AV_SLOTS.forEach(function(s){ AVC[s].items.forEach(function(it){ if (it[3]) out.push(avItem(s,it[0])); }); }); return out; }
+function weekNo(){ return Math.floor(Date.now()/(7*24*3600*1000)); }
+function starItem(){ var f=familyItems(); return f[weekNo()%f.length]; }
+var STAR_COST = 300;
+function avOwned(it){
+  if (!it) return false;
+  if (S.avOwn.indexOf(it.id)>=0) return true;
+  if (it.pack) return S.packs.indexOf(it.pack)>=0 || S.packs.indexOf('pass')>=0;
+  return !it.cost;
+}
+function avCost(it){ if (!it.pack) return it.cost; var st=starItem(); return st && st.id===it.id ? STAR_COST : null; }
+
+/* ---- drawing ---- */
+function sh(hex, amt){ // darken (amt<0) / lighten (amt>0)
+  var n=parseInt(hex.slice(1),16), r=n>>16, g=(n>>8)&255, b=n&255, f=function(c){ return Math.max(0,Math.min(255,Math.round(amt<0?c*(1+amt):c+(255-c)*amt))); };
+  return '#'+((1<<24)+(f(r)<<16)+(f(g)<<8)+f(b)).toString(16).slice(1);
+}
+var TORSO = 'M50 240 C50 188 66 152 100 150 C134 152 150 188 150 240 Z';
+function arms(c, skin){ return '<path d="M68 170 Q46 200 54 226" stroke="'+c+'" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M132 170 Q154 200 146 226" stroke="'+c+'" stroke-width="22" fill="none" stroke-linecap="round"/>'+
+  '<circle cx="54" cy="228" r="11" fill="'+skin+'"/><circle cx="146" cy="228" r="11" fill="'+skin+'"/>'; }
+function torso(c){ return '<path d="'+TORSO+'" fill="'+c+'"/>'; }
+
+function sceneSVG(k, P){
+  var g='', d;
+  switch(k){
+    case 'meadow': g='<rect width="200" height="240" fill="#bfe9ff"/><circle cx="160" cy="44" r="18" fill="#ffe27a"/><path d="M0 170 Q60 130 120 165 T200 150 V240 H0Z" fill="#7fd36b"/><path d="M0 200 Q80 170 200 195 V240 H0Z" fill="#5dbb52"/>'+
+      [[24,186,'#ff7aa8'],[58,206,'#fff'],[170,190,'#ffd23f'],[186,214,'#ff7aa8'],[18,222,'#ffd23f']].map(function(f){ return '<circle cx="'+f[0]+'" cy="'+f[1]+'" r="5" fill="'+f[2]+'"/><circle cx="'+f[0]+'" cy="'+f[1]+'" r="2" fill="#f5a623"/>'; }).join(''); break;
+    case 'sunset': g='<defs><linearGradient id="'+P+'ss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4bc4"/><stop offset=".55" stop-color="#ff8a65"/><stop offset="1" stop-color="#ffd27a"/></linearGradient></defs><rect width="200" height="240" fill="url(#'+P+'ss)"/><circle cx="100" cy="180" r="44" fill="#ffe08a" opacity=".9"/><path d="M0 196 Q100 178 200 196 V240 H0Z" fill="#7a4a8c"/>'; break;
+    case 'ocean': g='<rect width="200" height="240" fill="#9fe0ff"/><circle cx="34" cy="40" r="16" fill="#fff3a6"/><path d="M0 150 H200 V240 H0Z" fill="#2aa7d6"/><path class="kwave" d="M-20 160 q15 -10 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" stroke="#bff0ff" stroke-width="5" fill="none"/><path d="M150 150 l10 -30 l10 30z" fill="#fff"/><path d="M146 150 h28 l-4 8 h-20z" fill="#b36a3c"/>'; break;
+    case 'snow': g='<rect width="200" height="240" fill="#cfe6ff"/><path d="M-10 190 L50 90 L110 190Z" fill="#8aa7cf"/><path d="M50 90 L66 117 L58 112 L50 120 L42 112 L34 117Z" fill="#fff"/><path d="M80 200 L150 70 L220 200Z" fill="#a3bde0"/><path d="M150 70 L168 104 L158 98 L150 108 L142 98 L132 104Z" fill="#fff"/><rect y="190" width="200" height="50" fill="#fff"/>'+
+      [[20,30],[70,50],[120,24],[180,40],[40,140],[180,150]].map(function(s){ return '<circle class="ksnow" cx="'+s[0]+'" cy="'+s[1]+'" r="3" fill="#fff"/>'; }).join(''); break;
+    case 'jungle': g='<rect width="200" height="240" fill="#bff2c8"/>'+[[10,40,30],[190,60,-30],[0,150,20],[200,170,-20],[30,220,10],[170,230,-10]].map(function(l){ return '<ellipse cx="'+l[0]+'" cy="'+l[1]+'" rx="46" ry="16" fill="#2f9e57" transform="rotate('+l[2]+' '+l[0]+' '+l[1]+')"/>'; }).join('')+'<rect y="210" width="200" height="30" fill="#5b8f3a"/>'; break;
+    case 'space': g='<rect width="200" height="240" fill="#1a1446"/>'+[[20,20],[60,50],[150,30],[180,90],[30,120],[170,190],[16,200],[110,14]].map(function(s,i){ return '<circle class="ktw" style="animation-delay:'+(i*.3)+'s" cx="'+s[0]+'" cy="'+s[1]+'" r="2" fill="#fff"/>'; }).join('')+
+      '<circle cx="160" cy="60" r="20" fill="#ff9f6b"/><ellipse cx="160" cy="60" rx="32" ry="7" fill="none" stroke="#ffd59e" stroke-width="3" transform="rotate(-15 160 60)"/>'; break;
+    case 'aurora': g='<defs><linearGradient id="'+P+'au" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3cf2b0"/><stop offset=".5" stop-color="#7b8cff"/><stop offset="1" stop-color="#e46bff"/></linearGradient></defs><rect width="200" height="240" fill="#0f1a3d"/>'+
+      '<path class="kaur" d="M-20 70 Q40 20 100 70 T220 60 V110 Q160 70 100 110 T-20 110Z" fill="url(#'+P+'au)" opacity=".75"/><path d="M0 200 L40 170 L80 200 L130 160 L200 205 V240 H0Z" fill="#1c2a4f"/>'; break;
+    case 'candy': g='<rect width="200" height="240" fill="#ffd6ec"/><path d="M0 200 Q50 180 100 200 T200 196 V240 H0Z" fill="#fff"/>'+[[26,120,'#ff6fa8'],[176,110,'#7ad3ff']].map(function(l){ return '<rect x="'+(l[0]-2)+'" y="'+l[1]+'" width="4" height="90" fill="#fff" stroke="#e6a"/><circle cx="'+l[0]+'" cy="'+l[1]+'" r="20" fill="'+l[2]+'"/><path d="M'+(l[0]-12)+' '+l[1]+' a12 12 0 0 1 24 0 a8 8 0 0 1 -16 0" fill="none" stroke="#fff" stroke-width="4"/>'; }).join('')+
+      '<circle cx="40" cy="40" r="14" fill="#fff"/><circle cx="56" cy="36" r="16" fill="#fff"/><circle cx="150" cy="40" r="12" fill="#fff"/>'; break;
+    case 'castle': g='<rect width="200" height="240" fill="#c9b8ff"/><g fill="#8b77d6"><rect x="10" y="100" width="40" height="140"/><rect x="150" y="100" width="40" height="140"/><rect x="40" y="140" width="120" height="100"/>'+
+      '<path d="M6 100 L30 66 L54 100Z M146 100 L170 66 L194 100Z" fill="#ff7aa8"/></g><rect x="22" y="120" width="14" height="18" rx="7" fill="#ffe08a"/><rect x="164" y="120" width="14" height="18" rx="7" fill="#ffe08a"/><path d="M30 66 v-16 l14 6 -14 6" fill="#ffd23f"/>'; break;
+    case 'city': g='<rect width="200" height="240" fill="#ffb86b"/><circle cx="150" cy="60" r="26" fill="#fff1a8"/><g fill="#5a3e8a">'+[[0,120,34],[30,90,30],[64,140,26],[140,100,30],[172,130,28]].map(function(b){ return '<rect x="'+b[0]+'" y="'+b[1]+'" width="'+b[2]+'" height="160"/>'; }).join('')+'</g>'+
+      [[8,130],[40,100],[40,120],[150,110],[150,130],[180,140]].map(function(w){ return '<rect x="'+w[0]+'" y="'+w[1]+'" width="8" height="8" fill="#ffe08a"/>'; }).join(''); break;
+    default: g='<rect width="200" height="240" fill="#a9dcff"/><g fill="#fff"><circle cx="40" cy="50" r="14"/><circle cx="58" cy="44" r="18"/><circle cx="76" cy="52" r="12"/><circle cx="150" cy="80" r="12"/><circle cx="166" cy="74" r="15"/></g><path d="M0 210 Q100 192 200 210 V240 H0Z" fill="#8edc7a"/>';
+  }
+  return g;
+}
+function hairParts(st, c){
+  var b='', f='';
+  switch(st){
+    case 'curly': b='<ellipse cx="100" cy="88" rx="62" ry="56" fill="'+c+'"/>';
+      for (var i=0;i<11;i++){ var an=Math.PI*(1.05+i*0.09), x=100+56*Math.cos(an), y=92+52*Math.sin(an); f+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="15" fill="'+c+'"/>'; }
+      f+='<ellipse cx="100" cy="52" rx="44" ry="18" fill="'+c+'"/>'; break;
+    case 'long': b='<path d="M42 96 C38 36 162 36 158 96 L164 196 C140 206 60 206 36 196 Z" fill="'+c+'"/>';
+      f='<path d="M48 96 C46 50 74 40 100 40 C128 40 156 50 152 96 C140 72 120 64 100 70 C80 64 60 72 48 96Z" fill="'+c+'"/>'; break;
+    case 'pigtails': b='<circle cx="36" cy="118" r="20" fill="'+c+'"/><circle cx="164" cy="118" r="20" fill="'+c+'"/><circle cx="46" cy="104" r="6" fill="#ff7aa8"/><circle cx="154" cy="104" r="6" fill="#ff7aa8"/>';
+      f='<path d="M48 98 C46 50 74 40 100 40 C128 40 156 50 152 98 C146 76 126 62 100 66 C74 62 54 76 48 98Z" fill="'+c+'"/>'; break;
+    case 'bun': b='<circle cx="100" cy="36" r="22" fill="'+c+'"/>';
+      f='<path d="M46 100 C42 52 70 40 100 40 C132 40 160 52 154 100 C150 80 140 68 126 64 C110 72 88 72 72 64 C58 70 50 82 46 100Z" fill="'+c+'"/>'; break;
+    case 'spiky': f='<polygon points="46,100 42,64 58,62 54,38 76,50 82,26 100,44 118,24 124,48 146,38 142,62 158,64 154,100 140,74 100,68 60,74" fill="'+c+'"/>'; break;
+    case 'puffs': b='<circle cx="50" cy="52" r="28" fill="'+c+'"/><circle cx="150" cy="52" r="28" fill="'+c+'"/>';
+      f='<path d="M48 96 C46 56 72 46 100 46 C128 46 154 56 152 96 C140 76 120 70 100 70 C80 70 60 76 48 96Z" fill="'+c+'"/>'; break;
+    case 'afro': b='<circle cx="100" cy="84" r="70" fill="'+c+'"/>';
+      f='<path d="M48 96 C46 56 72 46 100 46 C128 46 154 56 152 96 C140 76 120 70 100 70 C80 70 60 76 48 96Z" fill="'+c+'"/>'; break;
+    case 'bob': b='<path d="M40 98 C36 38 164 38 160 98 L162 142 C150 150 138 148 134 140 L66 140 C62 148 50 150 38 142Z" fill="'+c+'"/>';
+      f='<path d="M48 98 C46 50 80 38 108 40 C140 42 156 60 152 98 C146 76 132 62 112 60 C100 76 70 84 48 98Z" fill="'+c+'"/>'; break;
+    case 'buzz': f='<path d="M48 96 C46 52 72 44 100 44 C128 44 154 52 152 96 C146 76 128 66 100 66 C72 66 54 76 48 96Z" fill="'+c+'" opacity=".6"/>'; break;
+    default: f='<path d="M46 100 C42 52 70 38 100 38 C132 38 160 52 154 100 C150 82 142 70 128 66 C112 74 86 74 70 66 C58 72 50 84 46 100Z" fill="'+c+'"/>';
+  }
+  return {b:b,f:f};
+}
+function faceSVG(k){
+  var ink='#2a2346', dot=function(x){ return '<ellipse cx="'+x+'" cy="102" rx="6" ry="8" fill="'+ink+'"/><circle cx="'+(x+2)+'" cy="99" r="2.2" fill="#fff"/>'; };
+  var arc=function(x){ return '<path d="M'+(x-8)+' 104 Q'+x+' 94 '+(x+8)+' 104" stroke="'+ink+'" stroke-width="4" fill="none" stroke-linecap="round"/>'; };
+  var eyes, mouth='<path d="M88 122 Q100 134 112 122" stroke="'+ink+'" stroke-width="4" fill="none" stroke-linecap="round"/>', extra='';
+  switch(k){
+    case 'grin': eyes=dot(80)+dot(120); mouth='<path d="M84 119 Q100 142 116 119 Z" fill="'+ink+'"/><path d="M92 130 Q100 138 108 130 Q100 126 92 130Z" fill="#ff8fa3"/>'; break;
+    case 'happy': eyes=arc(80)+arc(120); break;
+    case 'big': eyes=[80,120].map(function(x){ return '<ellipse cx="'+x+'" cy="102" rx="11" ry="12" fill="#fff" stroke="'+ink+'" stroke-width="2"/><circle cx="'+x+'" cy="104" r="7" fill="#5a3d8a"/><circle cx="'+x+'" cy="104" r="3.5" fill="'+ink+'"/><circle cx="'+(x+3)+'" cy="100" r="2.5" fill="#fff"/>'; }).join(''); break;
+    case 'wink': eyes=dot(80)+arc(120); mouth='<path d="M88 122 Q104 134 114 120" stroke="'+ink+'" stroke-width="4" fill="none" stroke-linecap="round"/>'; break;
+    case 'sleepy': eyes=[80,120].map(function(x){ return '<path d="M'+(x-8)+' 102 Q'+x+' 110 '+(x+8)+' 102" stroke="'+ink+'" stroke-width="4" fill="none" stroke-linecap="round"/>'; }).join(''); mouth='<path d="M92 124 Q100 128 108 124" stroke="'+ink+'" stroke-width="4" fill="none" stroke-linecap="round"/>'; break;
+    case 'wow': eyes=dot(80)+dot(120); mouth='<ellipse cx="100" cy="126" rx="7" ry="9" fill="'+ink+'"/>'; break;
+    case 'freckles': eyes=dot(80)+dot(120); extra=[[66,114],[72,118],[64,120],[134,114],[128,118],[136,120]].map(function(p){ return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="1.8" fill="#b06a4a"/>'; }).join(''); break;
+    case 'stars': eyes=[80,120].map(function(x){ return '<polygon points="'+starPts(x,102,10,4.5)+'" fill="#ffc23d" stroke="#c98a00" stroke-width="1.5"/>'; }).join(''); mouth='<path d="M84 119 Q100 142 116 119 Z" fill="'+ink+'"/>'; break;
+    case 'hearts': eyes=[80,120].map(function(x){ return '<path d="M'+x+' 110 C'+(x-14)+' 100 '+(x-8)+' 90 '+x+' 97 C'+(x+8)+' 90 '+(x+14)+' 100 '+x+' 110Z" fill="#ff4f7d"/>'; }).join(''); break;
+    default: eyes=dot(80)+dot(120);
+  }
+  return '<g class="keyes">'+eyes+'</g>'+mouth+extra+'<circle cx="68" cy="116" r="6" fill="#ff9fb4" opacity=".55"/><circle cx="132" cy="116" r="6" fill="#ff9fb4" opacity=".55"/>';
+}
+function outfitSVG(k, skin, P){
+  var o='', back='';
+  switch(k){
+    case 'startee': o=arms('#3d8bff',skin)+torso('#3d8bff')+'<polygon points="'+starPts(100,194,16,7)+'" fill="#ffd23f"/>'; break;
+    case 'hoodie': back='<path d="M66 156 Q100 132 134 156 L128 168 Q100 150 72 168Z" fill="#2f9e6a"/>'; o=arms('#3fbf7f',skin)+torso('#3fbf7f')+'<path d="M70 158 Q100 176 130 158" stroke="#2f9e6a" stroke-width="8" fill="none"/><path d="M92 166 v20 M108 166 v20" stroke="#fff" stroke-width="3" stroke-linecap="round"/><rect x="74" y="206" width="52" height="22" rx="8" fill="#2f9e6a"/>'; break;
+    case 'overalls': o=arms('#ffd23f',skin)+torso('#ffd23f')+'<path d="M68 240 V186 H132 V240Z" fill="#4a7fd1"/><path d="M72 186 L78 154 M128 186 L122 154" stroke="#4a7fd1" stroke-width="9"/><circle cx="78" cy="190" r="4" fill="#ffd23f"/><circle cx="122" cy="190" r="4" fill="#ffd23f"/><rect x="88" y="198" width="24" height="16" rx="4" fill="#3d6cb8"/>'; break;
+    case 'stripes': o='<defs><clipPath id="'+P+'tc"><path d="'+TORSO+'"/></clipPath></defs>'+arms('#ff8a3d',skin)+torso('#fff')+'<g clip-path="url(#'+P+'tc)">'+[160,180,200,220].map(function(y){ return '<rect x="40" y="'+y+'" width="120" height="10" fill="#ff8a3d"/>'; }).join('')+'</g>'; break;
+    case 'vest': o=arms('#e9f3ff',skin)+torso('#e9f3ff')+'<path d="M50 240 C50 188 66 152 88 150 L92 240Z M150 240 C150 188 134 152 112 150 L108 240Z" fill="#b9935a"/><rect x="58" y="190" width="22" height="18" rx="3" fill="#a37d47"/><rect x="120" y="190" width="22" height="18" rx="3" fill="#a37d47"/><circle cx="70" cy="214" r="3" fill="#7a5a2c"/>'; break;
+    case 'lab': o=arms('#ffffff',skin)+torso('#7ab8ff')+'<path d="M50 240 C50 188 66 152 92 150 L100 186 L96 240Z M150 240 C150 188 134 152 108 150 L100 186 L104 240Z" fill="#fff" stroke="#d9e2f0" stroke-width="2"/><rect x="118" y="196" width="18" height="4" fill="#ff6b6b"/><rect x="122" y="192" width="4" height="12" fill="#3d8bff"/>'; break;
+    case 'rain': o=arms('#ffd23f',skin)+torso('#ffd23f')+'<path d="M100 152 V240" stroke="#e0b01e" stroke-width="3"/>'+[170,192,214].map(function(y){ return '<circle cx="108" cy="'+y+'" r="4" fill="#3d3d6b"/>'; }).join('')+'<path d="M74 156 Q100 170 126 156" stroke="#e0b01e" stroke-width="6" fill="none"/>'; break;
+    case 'jersey': o=arms('#ffffff',skin)+torso('#e8544e')+'<path d="M86 152 L100 166 L114 152" stroke="#fff" stroke-width="5" fill="none"/><text x="100" y="214" font-size="40" font-weight="900" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif">7</text>'; break;
+    case 'sweater': o=arms('#9b6bff',skin)+torso('#9b6bff')+'<path d="M80 154 Q100 166 120 154" stroke="#7a4fe0" stroke-width="8" fill="none"/>'+[[78,190],[122,190],[100,214],[70,224],[130,224]].map(function(s){ return '<polygon points="'+starPts(s[0],s[1],7,3)+'" fill="#ffe08a"/>'; }).join(''); break;
+    case 'space': o=arms('#eef1f7',skin)+torso('#eef1f7')+'<rect x="78" y="176" width="44" height="30" rx="6" fill="#c9d1e3"/><circle cx="90" cy="191" r="5" fill="#ff6b6b"/><circle cx="104" cy="191" r="5" fill="#3fc58a"/><circle cx="116" cy="186" r="3" fill="#ffd23f"/><path d="M66 172 Q46 200 54 226" stroke="#ff8a3d" stroke-width="5" fill="none" stroke-dasharray="1 8" stroke-linecap="round"/>'; break;
+    case 'hero': back='<path d="M66 160 L36 238 H164 L134 160Z" fill="#e8544e"/>'; o=arms('#3d6cf0',skin)+torso('#3d6cf0')+'<circle cx="100" cy="190" r="17" fill="#ffd23f"/><path d="M104 176 L92 192 H101 L96 205 L110 188 H101Z" fill="#e8544e"/><rect x="50" y="224" width="100" height="8" fill="#ffd23f"/>'; break;
+    case 'dragon': back='<path d="M100 150 L84 132 L96 140 L100 124 L104 140 L116 132Z" fill="#2f9e57"/>'; o=arms('#3fbf6a',skin)+torso('#3fbf6a')+'<ellipse cx="100" cy="206" rx="28" ry="34" fill="#c9f29b"/>'+[186,200,214,228].map(function(y){ return '<path d="M78 '+y+' Q100 '+(y+6)+' 122 '+y+'" stroke="#9fd46e" stroke-width="3" fill="none"/>'; }).join(''); break;
+    case 'knight': o=arms('#b9c2d3',skin)+torso('#c9d1e0')+'<path d="M100 156 L132 172 L126 222 L100 236 L74 222 L68 172Z" fill="#9aa5bb" stroke="#e0b01e" stroke-width="4"/><path d="M100 172 V220 M84 192 H116" stroke="#e0b01e" stroke-width="6"/>'; break;
+    case 'robe': o='<defs><linearGradient id="'+P+'rb2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b3fc4"/><stop offset="1" stop-color="#26186e"/></linearGradient></defs>'+arms('#4a33a8',skin)+torso('url(#'+P+'rb2)')+
+      [[80,180],[120,196],[96,220],[134,226],[68,214]].map(function(s,i){ return '<polygon class="ktw" style="animation-delay:'+(i*.4)+'s" points="'+starPts(s[0],s[1],6,2.5)+'" fill="#ffe08a"/>'; }).join('')+'<path d="M82 152 L100 170 L118 152" stroke="#ffd23f" stroke-width="4" fill="none"/>'; break;
+    default: o=arms('#ff5d5d',skin)+torso('#ff5d5d')+'<path d="M86 152 Q100 164 114 152" stroke="#d94444" stroke-width="5" fill="none"/>';
+  }
+  return {b:back, f:o};
+}
+function hatSVG(k, P){
+  switch(k){
+    case 'cap': return '<path d="M48 74 C50 30 150 30 152 74 Z" fill="#e8544e"/><path d="M100 70 H170 Q176 78 166 82 H100Z" fill="#c43c36"/><circle cx="100" cy="34" r="5" fill="#c43c36"/>';
+    case 'beanie': return '<path d="M46 80 C46 24 154 24 154 80 Z" fill="#3d8bff"/><rect x="42" y="66" width="116" height="18" rx="8" fill="#2a6ad1"/><circle cx="100" cy="24" r="11" fill="#fff"/>';
+    case 'sunhat': return '<ellipse cx="100" cy="66" rx="84" ry="16" fill="#f3d27a"/><path d="M58 66 C60 24 140 24 142 66 Z" fill="#f3d27a"/><rect x="58" y="54" width="84" height="10" fill="#ff7aa8"/>';
+    case 'safari': return '<ellipse cx="100" cy="66" rx="78" ry="14" fill="#b9935a"/><path d="M56 66 C58 22 142 22 144 66 Z" fill="#c9a46a"/><rect x="56" y="52" width="88" height="10" fill="#7a5a2c"/>';
+    case 'pirate': return '<path d="M30 70 Q100 40 170 70 Q150 18 100 22 Q50 18 30 70Z" fill="#2a2346"/><path d="M34 68 Q100 46 166 68" stroke="#ffd23f" stroke-width="4" fill="none"/><polygon points="'+starPts(100,44,10,4)+'" fill="#fff"/>';
+    case 'wizard': return '<path d="M44 74 L100 -6 L156 74Z" fill="#6b4fe0"/><ellipse cx="100" cy="74" rx="66" ry="12" fill="#5a3fc4"/><polygon points="'+starPts(96,40,9,4)+'" fill="#ffe08a"/><polygon points="'+starPts(116,58,6,2.6)+'" fill="#ffe08a"/>';
+    case 'flowers': return [[52,70,'#ff7aa8'],[70,52,'#ffd23f'],[90,44,'#7ad3ff'],[110,44,'#ff7aa8'],[130,52,'#b18cff'],[148,70,'#ffd23f']].map(function(f){ return '<circle cx="'+f[0]+'" cy="'+f[1]+'" r="10" fill="'+f[2]+'"/><circle cx="'+f[0]+'" cy="'+f[1]+'" r="3.5" fill="#fff6c8"/>'; }).join('');
+    case 'phones': return '<path d="M48 96 C44 30 156 30 152 96" stroke="#2a2346" stroke-width="9" fill="none"/><rect x="34" y="84" width="22" height="34" rx="10" fill="#ff7aa8"/><rect x="144" y="84" width="22" height="34" rx="10" fill="#ff7aa8"/>';
+    case 'crown': return '<path d="M54 72 L58 30 L78 52 L100 22 L122 52 L142 30 L146 72Z" fill="#ffc83d" stroke="#c98a00" stroke-width="3"/><circle cx="100" cy="58" r="7" fill="#ff4f7d"/><circle cx="74" cy="62" r="5" fill="#3fc5ff"/><circle cx="126" cy="62" r="5" fill="#3fc58a"/>'+
+      '<polygon class="ktw" points="'+starPts(150,26,7,2.5)+'" fill="#fff"/><polygon class="ktw" style="animation-delay:.7s" points="'+starPts(52,30,5,2)+'" fill="#fff"/>';
+    case 'helmet': return '<circle cx="100" cy="98" r="70" fill="rgba(200,235,255,.28)" stroke="#e8eef8" stroke-width="7"/><path d="M58 60 Q78 40 104 38" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/><rect x="72" y="160" width="56" height="12" rx="6" fill="#c9d1e3"/>';
+    case 'hood': return '<path d="M42 104 C36 30 164 30 158 104 C150 70 128 58 100 58 C72 58 50 70 42 104Z" fill="#3fbf6a"/><path d="M60 46 L48 16 L74 38Z M140 46 L152 16 L126 38Z" fill="#fff3c4"/><circle cx="80" cy="50" r="7" fill="#fff"/><circle cx="120" cy="50" r="7" fill="#fff"/><circle cx="80" cy="50" r="3.5" fill="#2a2346"/><circle cx="120" cy="50" r="3.5" fill="#2a2346"/>';
+    case 'unicorn': return '<defs><linearGradient id="'+P+'uh" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff7ab8"/><stop offset=".5" stop-color="#ffd23f"/><stop offset="1" stop-color="#7ad3ff"/></linearGradient></defs><path d="M50 66 C60 40 140 40 150 66" stroke="#ff7ab8" stroke-width="8" fill="none"/><path d="M88 50 L100 0 L112 50Z" fill="url(#'+P+'uh)" stroke="#fff" stroke-width="2"/>';
+  }
+  return '';
+}
+function glassesSVG(k){
+  switch(k){
+    case 'round': return '<g fill="rgba(255,255,255,.25)" stroke="#2a2346" stroke-width="3.5"><circle cx="80" cy="102" r="14"/><circle cx="120" cy="102" r="14"/></g><path d="M94 102 H106" stroke="#2a2346" stroke-width="3.5"/>';
+    case 'shades': return '<path d="M62 94 H96 Q96 116 80 116 Q62 116 62 94Z M104 94 H138 Q138 116 120 116 Q104 116 104 94Z" fill="#2a2346"/><path d="M96 98 H104" stroke="#2a2346" stroke-width="4"/><path d="M68 98 l8 0" stroke="#fff" stroke-width="2" opacity=".6"/>';
+    case 'starg': return '<polygon points="'+starPts(80,102,18,9)+'" fill="rgba(255,122,168,.45)" stroke="#ff4f7d" stroke-width="3"/><polygon points="'+starPts(120,102,18,9)+'" fill="rgba(255,122,168,.45)" stroke="#ff4f7d" stroke-width="3"/>';
+    case 'goggles': return '<path d="M48 100 H152" stroke="#7a5a2c" stroke-width="8"/><circle cx="80" cy="102" r="15" fill="rgba(122,211,255,.45)" stroke="#b9935a" stroke-width="6"/><circle cx="120" cy="102" r="15" fill="rgba(122,211,255,.45)" stroke="#b9935a" stroke-width="6"/>';
+    case 'mask': return '<path d="M56 96 Q80 84 100 96 Q120 84 144 96 Q144 116 122 114 Q108 112 100 106 Q92 112 78 114 Q56 116 56 96Z" fill="#e8544e"/><ellipse cx="80" cy="102" rx="7" ry="6" fill="#fff"/><ellipse cx="120" cy="102" rx="7" ry="6" fill="#fff"/><circle cx="80" cy="102" r="3.5" fill="#2a2346"/><circle cx="120" cy="102" r="3.5" fill="#2a2346"/>';
+  }
+  return '';
+}
+function gearSVG(k){
+  switch(k){
+    case 'backpack': return {b:'<rect x="40" y="168" width="120" height="66" rx="18" fill="#ff8a3d"/>', f:'<path d="M74 156 L68 236 M126 156 L132 236" stroke="#d96a1f" stroke-width="7"/>'};
+    case 'magnifier': return {b:'', f:'<path d="M150 224 L170 196" stroke="#7a5a2c" stroke-width="8" stroke-linecap="round"/><circle cx="178" cy="184" r="15" fill="rgba(190,235,255,.55)" stroke="#5b4b8a" stroke-width="5"/>'};
+    case 'net': return {b:'', f:'<path d="M148 228 L176 120" stroke="#b9935a" stroke-width="6" stroke-linecap="round"/><ellipse cx="180" cy="108" rx="16" ry="20" fill="rgba(255,255,255,.55)" stroke="#5b4b8a" stroke-width="4"/>'};
+    case 'scope': return {b:'', f:'<path d="M138 222 L190 170" stroke="#5b4b8a" stroke-width="14" stroke-linecap="round"/><path d="M182 178 L196 164" stroke="#ffd23f" stroke-width="18" stroke-linecap="round"/>'};
+    case 'map': return {b:'', f:'<rect x="140" y="196" width="50" height="36" rx="4" fill="#f5e2ae" stroke="#b9935a" stroke-width="3"/><path d="M148 222 q10 -14 20 -4 t14 -8" stroke="#e8544e" stroke-width="3" fill="none" stroke-dasharray="4 3"/><path d="M178 206 l6 6 m0 -6 l-6 6" stroke="#e8544e" stroke-width="3"/>'};
+    case 'torch': return {b:'', f:'<path d="M172 196 L200 150 L200 230Z" fill="rgba(255,240,160,.55)"/><rect x="146" y="200" width="30" height="14" rx="5" fill="#5b4b8a" transform="rotate(-20 160 207)"/>'};
+    case 'jetpack': return {b:'<rect x="34" y="160" width="34" height="62" rx="12" fill="#c9d1e3"/><rect x="132" y="160" width="34" height="62" rx="12" fill="#c9d1e3"/><path class="kflame" d="M40 222 Q51 252 62 222Z M138 222 Q149 252 160 222Z" fill="#ff8a3d"/><path class="kflame" d="M45 222 Q51 240 57 222Z M143 222 Q149 240 155 222Z" fill="#ffe08a"/>', f:''};
+    case 'wings': return {b:'<g class="kwing"><path d="M84 170 C30 120 4 170 22 214 C40 230 70 210 84 190Z" fill="rgba(186,140,255,.65)" stroke="#fff" stroke-width="3"/><path d="M116 170 C170 120 196 170 178 214 C160 230 130 210 116 190Z" fill="rgba(122,211,255,.65)" stroke="#fff" stroke-width="3"/></g>', f:''};
+    case 'wand': return {b:'', f:'<path d="M148 226 L176 170" stroke="#2a2346" stroke-width="6" stroke-linecap="round"/><polygon class="ktw" points="'+starPts(178,162,16,7)+'" fill="#ffd23f" stroke="#c98a00" stroke-width="2"/>'};
+  }
+  return {b:'',f:''};
+}
+function kidSVG(av, opt){
+  opt = opt || {}; av = av || S.av;
+  var P='k'+(++KSEQ)+'-', skin=SKINS[av.skin]||SKINS.s3, hc=HAIRC[av.hc]||HAIRC.brown;
+  var defs='';
+  if (av.hc==='rainbow'){ hc='url(#'+P+'rb)'; defs+='<linearGradient id="'+P+'rb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5d8f"/><stop offset=".3" stop-color="#ffc23d"/><stop offset=".6" stop-color="#4cc35a"/><stop offset="1" stop-color="#3d8bff"/></linearGradient>'; }
+  if (av.hc==='galaxy'){ hc='url(#'+P+'gx)'; defs+='<linearGradient id="'+P+'gx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a1a6e"/><stop offset=".5" stop-color="#7b4fff"/><stop offset="1" stop-color="#ff6fd8"/></linearGradient>'; }
+  var hair=hairParts(av.hat==='helmet'||av.hat==='hood' ? (av.hair==='afro'||av.hair==='puffs'?'short':av.hair) : av.hair, hc), out=outfitSVG(av.outfit, skin, P), gear=gearSVG(av.gear);
+  var vb = opt.head ? '36 18 128 128' : '0 0 200 240';
+  var s='<svg class="kav" viewBox="'+vb+'" aria-hidden="true">'+(defs?'<defs>'+defs+'</defs>':'');
+  if (!opt.nobg && !opt.head) s+='<g>'+sceneSVG(av.scene, P)+'</g><ellipse cx="100" cy="236" rx="60" ry="6" fill="rgba(0,0,0,.18)"/>';
+  s+='<g class="kbody">'+gear.b+hair.b+out.b+
+    '<rect x="88" y="132" width="24" height="24" rx="8" fill="'+sh(skin,-.12)+'"/>'+out.f+
+    '<circle cx="48" cy="102" r="11" fill="'+skin+'"/><circle cx="152" cy="102" r="11" fill="'+skin+'"/>'+
+    '<ellipse cx="100" cy="96" rx="52" ry="50" fill="'+skin+'"/>'+faceSVG(av.face)+hair.f+glassesSVG(av.glasses)+hatSVG(av.hat,P)+gear.f+'</g></svg>';
+  return s;
+}
+function avatarSVG(){ return kidSVG(S.av); }
+function headSVG(){ return kidSVG(S.av,{head:true}); }
+
+/* ---- wardrobe screen ---- */
+function wardLines(){ return ['This is your wardrobe! Tap anything to try it on. Coins come from finishing puzzles and adventures.','Everything here is just for fun looks. Nothing ever helps with puzzles, so every explorer has the same chance.']; }
+function tryAv(){ var a={}; for (var k in S.av) a[k]=S.av[k]; if (ui.tryOn) a[ui.tryOn.slot]=ui.tryOn.key; return a; }
+function wardHTML(){
+  var slot=ui.wtab||'hair', cur=tryAv(), t=ui.tryOn ? avItem(ui.tryOn.slot, ui.tryOn.key) : null;
+  var h=topHTML('Wardrobe', true)+guideHTML()+'<div class="wardtop"><div class="wardpv">'+kidSVG(cur)+'</div><div class="wardside"><div class="wname">'+esc(S.name)+'</div><div class="wcoins">🪙 <b>'+S.sparks+'</b> coins</div>'+
+    '<button class="btn alt wsmall" data-act="go" data-to="room">🏠 My room</button><button class="btn alt wsmall" data-act="shop-ask">⭐ Family shop</button></div></div>';
+  if (t && !avOwned(t)){
+    var c=avCost(t), star=starItem();
+    h+='<div class="trybar"><span>Trying on: <b>'+esc(t.name)+'</b></span>';
+    if (c!=null){ h+= S.sparks>=c ? '<button class="btn" data-act="av-buy">Get it for 🪙 '+c+'</button>' : '<span class="tneed">Needs 🪙 '+c+'. You have '+S.sparks+'. Finish more puzzles to earn coins!</span>'; }
+    if (t.pack){ var pk=PACKS.filter(function(p){return p.id===t.pack;})[0]; h+='<span class="tneed">⭐ Part of the '+esc(pk.name)+(c!=null?'. This week you can also earn it with coins!':'.')+'</span><button class="btn alt" data-act="shop-ask">Ask a grown-up</button>'; }
+    h+='<button class="btn alt" data-act="av-untry">Take it off</button></div>';
+  }
+  h+='<div class="board"><div class="tabs" role="tablist">'+AV_SLOTS.map(function(s){ return '<button class="tab'+(slot===s?' on':'')+'" data-act="wtab" data-t="'+s+'" role="tab" aria-selected="'+(slot===s)+'">'+AVC[s].name+'</button>'; }).join('')+'</div><div class="witems">';
+  var st=starItem();
+  AVC[slot].items.forEach(function(r){ var it=avItem(slot,r[0]), own=avOwned(it), on=cur[slot]===r[0], c=avCost(it);
+    var pv={}; for (var k in S.av) pv[k]=S.av[k]; pv[slot]=r[0];
+    var tag = own ? (S.av[slot]===r[0]?'Wearing ✓':'Yours') : it.pack ? (st&&st.id===it.id?'⭐ or 🪙 '+STAR_COST:'⭐ Family') : '🪙 '+c;
+    h+='<button class="witem'+(on?' on':'')+(own?'':' lockd')+(it.pack?' fam':'')+'" data-act="av-pick" data-s="'+slot+'" data-k="'+r[0]+'"><span class="wthumb">'+kidSVG(pv,{head:slot!=='outfit'&&slot!=='gear'&&slot!=='scene', nobg:slot!=='scene'})+'</span><span class="wn">'+esc(it.name)+'</span><span class="wt">'+tag+'</span></button>'; });
+  h+='</div><p class="note">Coins are earned by finishing puzzles and adventures, never bought. Family shop items are only for looks and never help you win.</p></div>';
+  return h;
+}
+
+/* ---- grown-up gate + pretend shop ---- */
+var NUMW = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+var TENW = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+function numWord(n){ if (n<20) return NUMW[n]; return TENW[Math.floor(n/10)]+(n%10?'-'+NUMW[n%10]:''); }
+function newGate(){ var a=13+Math.floor(Math.random()*20), b=3+Math.floor(Math.random()*6); return {a:a,b:b,ans:a*b,typed:''}; }
+function gateHTML(){
+  var g=ui.gate, keys=['1','2','3','4','5','6','7','8','9','⌫','0','OK'];
+  return '<div class="sheet" role="dialog" aria-modal="true" aria-label="Grown-ups only"><h2>🔒 Grown-ups only</h2><p>To open the family shop, type the answer:</p>'+
+    '<div class="gateq">'+numWord(g.a)+' times '+numWord(g.b)+'</div><div class="gatein" aria-live="polite">'+(g.typed||'&nbsp;')+'</div>'+
+    (ui.gateBad?'<div class="msg oops">Not quite. Try again.</div>':'')+
+    '<div class="keypad">'+keys.map(function(k){ return '<button class="key'+(k==='OK'?' ok':'')+'" data-act="gate-key" data-k="'+k+'">'+k+'</button>'; }).join('')+'</div>'+
+    '<button class="btn alt" data-act="close">Cancel</button></div>';
+}
+function shopHTML(){
+  var h='<div class="sheet" role="dialog" aria-modal="true" aria-label="Family shop"><h2>⭐ Family shop</h2>'+
+    '<div class="grown"><b>Test version: pretend purchases only.</b> No money is charged and no payment details are asked for. In a real release, purchases would go through the App Store or Google Play with your family\'s purchase approval. Packs only change how things look. They never help with puzzles.</div><div class="packs">';
+  PACKS.forEach(function(p){ var got=S.packs.indexOf(p.id)>=0 || (p.id!=='pass' && S.packs.indexOf('pass')>=0);
+    var pv={}; for (var k in S.av) pv[k]=S.av[k];
+    familyItems().filter(function(it){ return p.id==='pass' || it.pack===p.id; }).forEach(function(it){ if (it.slot!=='hc' || p.id!=='pass') pv[it.slot]=it.key; });
+    h+='<div class="pack"><span class="packpv">'+kidSVG(pv)+'</span><div class="packtx"><b>'+p.em+' '+esc(p.name)+'</b><small>'+esc(p.blurb)+'</small>'+
+      (got?'<span class="packgot">Unlocked ✓</span>':'<button class="btn" data-act="pack-buy" data-p="'+p.id+'">Pretend buy '+p.price+'</button>')+'</div></div>'; });
+  return h+'</div><button class="btn alt" data-act="close">Done</button></div>';
+}
+var KA = {
+  'wtab': function(d){ ui.wtab=d.t; ui.tryOn=null; render(); },
+  'av-pick': function(d){ var it=avItem(d.s,d.k); if (!it) return; sfx('tap');
+    if (avOwned(it)){ S.av[d.s]=d.k; ui.tryOn=null; save(); if (d.s!=='skin' && d.s!=='hc') setGuide([rnd(['Looking good!','Great choice!','So stylish!','Ooh, nice!'])]); }
+    else { ui.tryOn={slot:d.s,key:d.k}; setGuide(['You\'re trying on the '+it.name+'. '+(it.pack?'It\'s part of a family pack. You can ask a grown-up, or keep exploring with your own things.':'You can get it with coins.')]); }
+    render(); },
+  'av-untry': function(){ ui.tryOn=null; render(); },
+  'av-buy': function(){ var t=ui.tryOn && avItem(ui.tryOn.slot, ui.tryOn.key); if (!t) return; var c=avCost(t);
+    if (c==null || S.sparks<c){ render(); return; }
+    S.sparks-=c; S.ledger.push({id:'spend.'+t.id, amt:-c, t:Date.now()}); S.avOwn.push(t.id); S.av[t.slot]=t.key; ui.tryOn=null; save();
+    sfx('coin'); confetti(); setGuide(['You got the '+t.name+'! You earned that by exploring.']); render(); bumpSparks(); },
+  'shop-ask': function(){ ui.gate=newGate(); ui.gateBad=false; ui.modal={type:'gate'}; render(); },
+  'gate-key': function(d){ var g=ui.gate; if (!g) return; ui.gateBad=false;
+    if (d.k==='⌫') g.typed=g.typed.slice(0,-1);
+    else if (d.k==='OK'){ if (+g.typed===g.ans){ ui.modal={type:'shop'}; ui.gate=null; render(); return; } ui.gateBad=true; ui.gate=newGate(); }
+    else if (g.typed.length<4) g.typed+=d.k;
+    render(); },
+  'pack-buy': function(d){ if (!ui.modal || ui.modal.type!=='shop') return; if (S.packs.indexOf(d.p)<0) S.packs.push(d.p); save(); sfx('coin'); confetti(); render(); }
+};
+for (var kk in KA) A[kk]=KA[kk];
+
+/* ================= Vault rules, staged math hints, Do Again ================= */
+var VRULE = { tidepool:{k:'desc'}, volcano:{k:'sum'}, garden:{k:'mulAdd',o:[0,2,1]}, weather:{k:'mulAdd',o:[0,1,2]}, dino:{k:'seq',o:[0,1,2]}, music:{k:'mulAll'} };
+function symList(a){ return a.stages.map(function(s){ return {name:SYMS[s.symbol.k].name, n:s.symbol.n}; }); }
+function ruleCalc(r, L){
+  var o=r.o||[0,1,2], x=L[o[0]], y=L[o[1]], z=L[o[2]], ns=L.map(function(s){return s.n;});
+  switch(r.k){
+    case 'desc': return ns.slice().sort(function(p,q){return q-p;}).join('');
+    case 'asc': return ns.slice().sort(function(p,q){return p-q;}).join('');
+    case 'seq': return ''+x.n+y.n+z.n;
+    case 'sum': return ''+(ns[0]+ns[1]+ns[2]);
+    case 'mulAdd': return ''+(x.n*y.n+z.n);
+    case 'mulSub': return ''+(x.n*y.n-z.n);
+    case 'mulAll': return ''+(ns[0]*ns[1]*ns[2]);
+  }
+}
+function ruleText(r, L){
+  var o=r.o||[0,1,2], X=L[o[0]].name, Y=L[o[1]].name, Z=L[o[2]].name;
+  switch(r.k){
+    case 'desc': return '“Enter your symbol numbers from the biggest to the smallest.”';
+    case 'asc': return '“Enter your symbol numbers from the smallest to the biggest.”';
+    case 'seq': return '“Enter the numbers in this order: '+X+', then '+Y+', then '+Z+'.”';
+    case 'sum': return '“Add up all three of your symbol numbers.”';
+    case 'mulAdd': return '“Multiply the '+X+' number by the '+Y+' number. Then add the '+Z+' number.”';
+    case 'mulSub': return '“Multiply the '+X+' number by the '+Y+' number. Then take away the '+Z+' number.”';
+    case 'mulAll': return '“Multiply all three of your symbol numbers together.”';
+  }
+}
+/* Hints come in three steps: a nudge, the first step, then everything but the last step. Never the code itself. */
+function ruleHints(r, L){
+  var o=r.o||[0,1,2], x=L[o[0]], y=L[o[1]], z=L[o[2]], ns=L.map(function(s){return s.n;}), list=ns.slice(0,2).join(', ')+' and '+ns[2];
+  switch(r.k){
+    case 'desc': return ['Biggest to smallest means the largest number goes in the first roller.','Your numbers are '+list+'. Which one is the biggest?','The biggest is '+Math.max.apply(null,ns)+', so it goes first. Which number comes next?'];
+    case 'asc': return ['Smallest to biggest means the smallest number goes in the first roller.','Your numbers are '+list+'. Which one is the smallest?','The smallest is '+Math.min.apply(null,ns)+', so it goes first. Which number comes next?'];
+    case 'seq': return ['Look at your symbol cards. Each one has a number.','The '+x.name+' goes first. Its number is '+x.n+'. Put that in the first roller.','The '+x.name+' is '+x.n+' and the '+y.name+' is '+y.n+'. What number is on the '+z.name+'?'];
+    case 'sum': return ['Add means put the numbers together with plus (+). Your numbers are on the symbol cards.','Start with two of them. What is '+ns[0]+' + '+ns[1]+'?',ns[0]+' + '+ns[1]+' = '+(ns[0]+ns[1])+'. Now add the last one. What is '+(ns[0]+ns[1])+' + '+ns[2]+'?'];
+    case 'mulAdd': return ['Multiply means times (×). Do the times part first, then add.','The '+x.name+' is '+x.n+' and the '+y.name+' is '+y.n+'. What is '+x.n+' × '+y.n+'?',x.n+' × '+y.n+' = '+(x.n*y.n)+'. Now add the '+z.name+' number. What is '+(x.n*y.n)+' + '+z.n+'?'];
+    case 'mulSub': return ['Multiply means times (×). Do the times part first, then take away.','The '+x.name+' is '+x.n+' and the '+y.name+' is '+y.n+'. What is '+x.n+' × '+y.n+'?',x.n+' × '+y.n+' = '+(x.n*y.n)+'. Now take away the '+z.name+' number. What is '+(x.n*y.n)+' − '+z.n+'?'];
+    case 'mulAll': return ['Multiply means times (×). Do two numbers first, then the third.','Your numbers are '+list+'. What is '+ns[0]+' × '+ns[1]+'?',ns[0]+' × '+ns[1]+' = '+(ns[0]*ns[1])+'. Now times '+ns[2]+'. What is '+(ns[0]*ns[1])+' × '+ns[2]+'?'];
+  }
+}
+var PERMS = [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+function pickRule(a){
+  var L=symList(a), small=L.every(function(s){return s.n<=9;}), orig=a.vault.answer, c=[];
+  if (small){ c.push({k:'desc'},{k:'asc'}); PERMS.forEach(function(o){ c.push({k:'seq',o:o}); }); }
+  c.push({k:'sum'},{k:'mulAll'});
+  PERMS.forEach(function(o){ c.push({k:'mulAdd',o:o}); if (L[o[0]].n*L[o[1]].n-L[o[2]].n>0) c.push({k:'mulSub',o:o}); });
+  c = c.filter(function(r){ var ans=ruleCalc(r,L); return ans!==orig && ans.length<=3; });
+  return rnd(c);
+}
+function vaultNow(a){
+  var L=symList(a), v=a.vault;
+  if (runOn(a.id) && S.run.rule){ var r=S.run.rule, ans=ruleCalc(r,L); return {name:v.name, engrave:ruleText(r,L), answer:ans, digits:ans.length, hints:ruleHints(r,L)}; }
+  return {name:v.name, engrave:v.engrave, answer:v.answer, digits:v.digits, hints:VRULE[a.id] ? ruleHints(VRULE[a.id],L) : v.hints};
+}
+
+/* ---- shuffling for Do Again ---- */
+function runOn(id){ return !!(S.run && S.run.a===id); }
+function hsh(s){ var h=2166136261; for (var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function mix(arr, key){
+  if (!S.run || S.run.a!==S.adv) return arr;
+  var sd=S.run.seed+':'+key;
+  return arr.slice().sort(function(p,q){ var a=hsh(sd+(typeof p==='string'?p:(p.id||JSON.stringify(p)))), b=hsh(sd+(typeof q==='string'?q:(q.id||JSON.stringify(q)))); return a-b; });
+}
+function SP(stg){
+  var sp=stg.search.spots; if (!S.run || S.run.a!==S.adv) return sp;
+  var idx=mix(sp.map(function(_,i){return 'i'+i;}), stg.id+'spots').map(function(s){return +s.slice(1);});
+  return sp.map(function(s,i){ var src=sp[idx[i]]; return [s[0],s[1],s[2],src[3],src[4],src[5]]; });
+}
+function trPrints(){ var L=[['duck'],['deer'],['fox']]; if (runOn('beacon')) L=mix(['duck','deer','fox'],'prints').map(function(k){return [k];}); return L.map(function(p,i){ return [p[0],'Tracks '+'ABC'[i]]; }); }
+function beaconRev(){ return runOn('beacon') && S.run.rev; }
+
+/* ---- timer + scores ---- */
+function fmtT(ms){ var s=Math.max(0,Math.round(ms/1000)); return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2); }
+function runStrip(){
+  if (!S.run) return '';
+  var a=ADV[S.run.a];
+  return '<div class="runstrip" role="status"><span>⏱ <b id="runclock">'+fmtT(Date.now()-S.run.t0)+'</b></span><span class="rsx">Do Again: '+esc(a.title)+(S.run.hints?' · 💡'+S.run.hints:'')+'</span><button class="mini" data-act="again-stop">Stop</button></div>';
+}
+setInterval(function(){ var el=document.getElementById('runclock'); if (el && S.run) el.textContent=fmtT(Date.now()-S.run.t0); }, 1000);
+var ORIG_PATH = PATH.slice();
+function startRun(id){
+  var a=ADV[id], run={a:id, t0:Date.now(), hints:0, seed:String(Math.random()).slice(2,10)};
+  if (id==='beacon'){
+    run.saved={done:S.done, obs:S.obs, br:S.br, tr:S.tr, vault:S.vault};
+    run.rev = Math.random()<.6;
+    var p; do { p=['N','N','N','N','E','E']; for (var i=p.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=p[i]; p[i]=p[j]; p[j]=t; } } while (p.join()===ORIG_PATH.join());
+    run.path=p;
+    S.done={obs:false,bridge:false,trail:false,vault:false}; S.obs={slots:[null,null,null,null,null,null,null,null],lock:[0,0,0,0,0,0,0,0]};
+    S.br={slots:[null,null,null,null,null,null]}; S.tr={found:false,step:0}; S.vault={dials:[3,4,5]}; ui.hint={obs:0,bridge:0,trail:0,vault:0};
+  } else {
+    var ap=AP(id); run.saved={done:ap.done, st:ap.st, vault:ap.vault};
+    S.ap[id]={done:{}, secrets:ap.secrets, st:{}, vault:null};
+  }
+  S.run=run; S.adv=id; applyRun(); if (id!=='beacon') run.rule=pickRule(a);
+  S.fin[id]=true; ui.replay={}; ui.ghint={}; save();
+}
+function applyRun(){ PATH = (S.run && S.run.a==='beacon' && S.run.path) ? S.run.path : ORIG_PATH; }
+function endRun(){
+  var r=S.run; if (!r) return;
+  if (r.a==='beacon'){ S.done={obs:true,bridge:true,trail:true,vault:true}; S.obs=r.saved.obs; S.br=r.saved.br; S.tr=r.saved.tr; S.vault=r.saved.vault; }
+  else { var ap=AP(r.a); ap.done=r.saved.done; ap.st=r.saved.st; ap.vault=r.saved.vault; }
+  S.run=null; applyRun(); ui.replay={}; ui.ghint={}; save();
+}
+function finishRun(){
+  var r=S.run, ms=Date.now()-r.t0, score=ms+r.hints*10000, prev=S.best[r.a], first=!S.earned['again.'+r.a], better=!prev || score<prev.score, coins=0;
+  if (first) coins=earn('again.'+r.a, 25);
+  else if (better){ coins=10; S.sparks+=10; S.ledger.push({id:'best.'+r.a, amt:10, t:Date.now()}); }
+  if (better) S.best[r.a]={score:score, ms:ms, hints:r.hints, at:Date.now()};
+  var res={type:'again-done', a:r.a, ms:ms, hints:r.hints, score:score, prev:prev?prev.score:null, better:better, coins:coins};
+  endRun(); sfx('win'); confetti(); setTimeout(confetti,700);
+  ui.modal=res; ui.gmsg=null; ui.msg=null; ui.hintMsg=null;
+  go('hub'); bumpSparks();
+}
+function againAskHTML(id){
+  var a=ADV[id], b=S.best[id];
+  return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Do Again"><div class="big" style="font-size:3rem">⏱</div><h2>Do Again: '+esc(a.title)+'</h2>'+
+    '<p>Same adventure, but things got shuffled! Clues hide in new spots, cards are mixed up'+(id==='beacon'?', the deer takes a new path, and the Beacon may want its symbols in a new order.':', and the lock has a brand new rule.')+' Pay attention!</p>'+
+    '<p>The clock starts when you tap Go. Hints are still free, but each one adds 10 seconds to your score.</p>'+
+    (b?'<div class="plus">Your best: '+fmtT(b.score)+'</div>':'<p class="note">Finish your first Do Again to earn 🪙 25 coins. Beat your best time for 🪙 10 more.</p>')+
+    '<div class="row" style="width:100%"><button class="btn alt" data-act="close" style="flex:1">Not now</button><button class="btn" data-act="again-go" data-a="'+id+'" style="flex:1">Go! ⏱</button></div></div>';
+}
+function againDoneHTML(m){
+  var a=ADV[m.a];
+  return '<div class="sheet reward" role="dialog" aria-modal="true" aria-label="Do Again finished"><div class="big" style="font-size:3rem">'+(m.better?'🏆':'⏱')+'</div><h2>'+(m.better?(m.prev?'New best time!':'You did it again!'):'Nice run!')+'</h2>'+
+    '<div class="scorebox"><div><small>Time</small><b>'+fmtT(m.ms)+'</b></div><div><small>Hints</small><b>'+m.hints+(m.hints?' (+'+(m.hints*10)+'s)':'')+'</b></div><div><small>Score</small><b>'+fmtT(m.score)+'</b></div></div>'+
+    (m.prev!=null?'<p>Your best before: <b>'+fmtT(m.prev)+'</b>'+(m.better?'. You beat it!':'. Try again to beat it!')+'</p>':'')+
+    (m.coins?'<div class="plus">+'+m.coins+' 🪙 coins</div>':'')+
+    '<div class="row" style="width:100%"><button class="btn alt" data-act="again-ask" data-a="'+m.a+'" style="flex:1">⏱ Again!</button><button class="btn" data-act="close" style="flex:1">Done</button></div></div>';
+}
+var RA = {
+  'again-ask': function(d){ ui.modal={type:'again-ask', a:d.a||S.adv}; render(); },
+  'again-go': function(d){ ui.modal=null; if (S.run) endRun(); startRun(d.a); ui.screen=null; go('hub'); setGuide(['Go go go! The clock is running. Remember: things moved since last time.']); render(); },
+  'again-stop': function(){ endRun(); ui.modal=null; setGuide(['Do Again stopped. Your finished adventure is safe. Try again any time!']); if (ui.screen==='book') render(); else go('hub'); }
+};
+for (var rk in RA) A[rk]=RA[rk];
+
+applyRun();
 
 var START_ADV = (function(){ var hsh=(location.hash||'').replace('#',''); return ADV_ORDER.indexOf(hsh)>=0 ? hsh : null; })();
 if (START_ADV) S.adv = START_ADV;
