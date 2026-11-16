@@ -45,7 +45,10 @@ p{margin:0;line-height:1.5}
   display:flex;flex-direction:column;gap:14px}
 
 /* top bar */
-.top{display:flex;align-items:center;gap:8px}
+.top{display:flex;align-items:center;gap:8px;position:sticky;top:env(safe-area-inset-top,0px);z-index:30;margin:0 -16px;padding:8px 16px;background:var(--bg1);box-shadow:0 6px 12px -8px rgba(0,0,0,.35)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:31;background:var(--bg1)}
+.backbtn{flex:none;height:46px;padding:0 16px;border:0;border-radius:23px;background:var(--accent);color:var(--accent-ink);font-weight:900;font-size:1rem;box-shadow:0 3px 0 rgba(0,0,0,.22);white-space:nowrap}
+.backbtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
 .top .ttl{flex:1;min-width:0;color:var(--onbg);font-weight:900;font-size:1.05rem;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ib{width:46px;height:46px;border-radius:50%;border:0;background:var(--panel);display:grid;place-items:center;font-size:1.3rem;box-shadow:0 3px 0 rgba(0,0,0,.18);flex:none}
 .ib:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
@@ -595,7 +598,7 @@ function guideHTML(){
 }
 function topHTML(title, back){
   return '<div class="top">'+
-    (back==='book' ? '<button class="ib" data-act="go" data-to="book" aria-label="Adventure book">📖</button>' : back ? '<button class="ib" data-act="go" data-to="hub" aria-label="Back to the map">🗺️</button>' : '')+
+    (back ? '<button class="backbtn" data-act="back" aria-label="Back">‹ '+(back==='book'?'Adventures':(ui.screen==='room'?'Back':'Map'))+'</button>' : '')+
     '<div class="ttl">'+esc(title)+'</div>'+
     '<button class="sparks" id="sparks" data-act="journal" aria-label="'+S.sparks+' sparks. Open backpack"><b>✦</b>'+S.sparks+'<span aria-hidden="true">🎒</span></button>'+
     
@@ -1002,6 +1005,7 @@ function render(){
     default: h=hubHTML();
   }
   app.innerHTML = h;
+  if (ui.screen!==ui.last){ if (ui.last && !ui.popping && ui.screen!=='welcome'){ try { history.pushState({ve:1}, ''); ui.depth=(ui.depth||0)+1; } catch(e){} } ui.last=ui.screen; }
   var md=document.getElementById('modal');
   if (ui.modal){ md.innerHTML = modalHTML(); md.hidden=false; } else { md.hidden=true; md.innerHTML=''; }
 }
@@ -1182,6 +1186,17 @@ document.addEventListener('click', function(e){
   fn(d);
 });
 
+function navBack(){
+  var s=ui.screen; if (s==='book' || s==='welcome') return;
+  if (ui.modal){ ui.modal=null; }
+  if (s==='hub' || s==='ghub') go('book'); else go('hub');
+}
+A['back'] = function(){ if (ui.depth>0){ try { history.back(); return; } catch(e){} } navBack(); };
+window.addEventListener('popstate', function(){
+  ui.depth=Math.max(0,(ui.depth||0)-1);
+  if (ui.modal && ui.modal.type!=='greward' && ui.modal.type!=='reward'){ ui.modal=null; render(); return; }
+  ui.popping=true; try { navBack(); } finally { ui.popping=false; }
+});
 document.addEventListener('keydown', function(e){ if (e.key==='Escape' && ui.modal && ui.modal.type!=='reward'){ ui.modal=null; render(); } });
 
 /* =====================================================================
