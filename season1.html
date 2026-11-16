@@ -2851,7 +2851,7 @@ return{open,paintDock,hubCard,bindHub,profileSheet,endBlock,bindEnd,st,cardHTML,
    BOOT
    ===================================================================== */
 S.week=Math.max(S.week||1,6);save(); // preview: weeks 2 to 6 back-dated so testers can play all six
-document.body.dataset.world=S.world;paintSnd();loadRoom("study");
+document.body.dataset.world=S.world;document.body.dataset.room="study";paintSnd();loadRoom("study");
 $("#startBtn").onclick=()=>{
   AU.init();AU.resume();AU.sfx("open");
   const t=$("#title");t.classList.add("fade");
