@@ -290,6 +290,179 @@ body[data-world="gaslight"][data-room="kitchen"]{--wall:#4a3a26;--wallpat:#5a463
 body[data-world="gaslight"][data-room="observatory"]{--wall:#1e2638;--wallpat:#28324a}
 body[data-world="gaslight"][data-room="bedroom"]{--wall:#4a2a32;--wallpat:#5e3540}
 
+/* ---------- detective avatar ---------- */
+.avsvg{display:block;width:100%;height:100%}
+@keyframes avb{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+.avbreath{animation:avb 4.2s ease-in-out infinite}
+@keyframes avbl{0%,95%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
+.avblink{animation:avbl 5.5s infinite;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes avbl2{0%,95%,100%{opacity:1}96%,98%{opacity:0}}
+.avblink2{animation:avbl2 5.5s infinite}
+@keyframes avtw{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1)}}
+.avtw{animation:avtw 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes avgl{0%,100%{opacity:1}50%{opacity:.55}}
+.avglow{animation:avgl 1.8s ease-in-out infinite}
+.avpulse{animation:avgl 2.6s ease-in-out infinite}
+@keyframes avfl{0%,100%{opacity:1}40%{opacity:.8}60%{opacity:.95}80%{opacity:.75}}
+.avflick{animation:avfl .9s infinite}
+@keyframes avrn{from{transform:translateY(0)}to{transform:translateY(480px)}}
+.avrain{animation:avrn .7s linear infinite}
+@keyframes avdr{0%,100%{transform:translateX(-20px)}50%{transform:translateX(30px)}}
+.avdrift{animation:avdr 9s ease-in-out infinite}.avdrift2{animation:avdr 12s ease-in-out infinite reverse}
+@keyframes avrs{from{transform:translateY(0);opacity:1}to{transform:translateY(-500px);opacity:0}}
+.avrise{animation:avrs 6s linear infinite}
+@keyframes avfa{from{transform:translate(0,0) rotate(0)}to{transform:translate(-60px,540px) rotate(320deg)}}
+.avfall{animation:avfa 8s linear infinite;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes avfp{0%,100%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(.5) translateY(-6px)}}
+.avflap{animation:avfp .5s ease-in-out infinite}
+@keyframes avfs{0%,88%,92%,100%{opacity:0}89%,91%{opacity:.5}}
+.avflash{animation:avfs 7s infinite;opacity:0}.avflash2{animation:avfs 7s infinite;opacity:0}
+@keyframes avbm{0%,100%{opacity:.04}50%{opacity:.2}}
+.avbeam{animation:avbm 4s ease-in-out infinite}
+@keyframes avsw{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.avsweep{animation:avsw 5s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
+@keyframes avsp{to{transform:rotate(360deg)}}
+.avspin{animation:avsp 40s linear infinite}
+@keyframes avbo{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.avbob{animation:avbo 2.8s ease-in-out infinite}
+@keyframes avti{0%,70%,100%{transform:rotate(0)}78%,90%{transform:rotate(-12deg)}}
+.avtilt{animation:avti 6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 80%}
+@media (prefers-reduced-motion:reduce){.avsvg *{animation:none!important}}
+/* ---------- creator overlay ---------- */
+.avcoin{display:inline-block;width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d4a650 55%,#8a6526);vertical-align:-2px;margin-right:4px;box-shadow:0 0 6px rgba(232,182,90,.5)}
+.avc{position:absolute;inset:0;z-index:23;background:radial-gradient(120% 70% at 30% 0%,#2a1d14,#0a0809 60%);opacity:0;transition:opacity .35s;color:var(--ui-text)}
+.avc.on{opacity:1}
+.avc-in{position:absolute;inset:0;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+.avc-h{display:flex;align-items:center;gap:8px;padding:10px 12px 6px}
+.avc-t{flex:1;min-width:0;line-height:1.1}.avc-t small{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ui-muted)}.avc-t b{font:700 22px var(--serif)}
+.avc-shop{display:flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:20px;background:linear-gradient(135deg,#f6d77a,#c8902e);color:#2a1a08;font-weight:700;font-size:14px;box-shadow:0 4px 18px rgba(242,193,78,.35)}
+.avc-shop svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.avc-main{flex:1;min-height:0;display:flex;flex-direction:column}
+.avc-stage{position:relative;flex:none;height:min(44vh,440px);min-height:220px;display:flex;justify-content:center;padding:4px 0 8px}
+.avc-card{height:100%;aspect-ratio:400/480;position:relative}
+.avc-card.pop{animation:avpop .35s ease}
+@keyframes avpop{0%{transform:scale(.97)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
+.avc-dice{position:absolute;right:max(14px,calc(50% - min(44vh,440px)*.42 - 56px));bottom:16px;width:48px;height:48px;border-radius:16px;background:rgba(20,16,22,.75);border:1px solid var(--ui-line);display:grid;place-items:center}
+.avc-dice svg{width:24px;height:24px;fill:none;stroke:var(--ui-text);stroke-width:1.8}.avc-dice circle{fill:var(--ui-text)}
+.avc-ctl{flex:1;min-height:0;display:flex;flex-direction:column;background:rgba(14,11,14,.92);border-top:1px solid var(--ui-line);border-radius:22px 22px 0 0}
+.avc-tabs,.avc-subs{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:10px 12px 4px;flex:none}
+.avc-tabs::-webkit-scrollbar,.avc-subs::-webkit-scrollbar{display:none}
+.avc-tabs button{flex:none;height:38px;padding:0 15px;border-radius:19px;font-weight:700;font-size:14px;color:var(--ui-muted);background:rgba(255,255,255,.05);border:1px solid transparent}
+.avc-tabs button.on{background:var(--ui-accent);color:var(--ui-ink)}
+.avc-subs{padding-top:4px}.avc-subs button{flex:none;height:32px;padding:0 12px;border-radius:16px;font-size:13px;color:var(--ui-muted);border:1px solid var(--ui-line)}
+.avc-subs button.on{color:var(--ui-text);border-color:var(--ui-accent);background:rgba(232,182,90,.12)}
+.avc-panel{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:6px 12px 14px}
+.avc-sec{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ui-muted);margin:12px 2px 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.avc-note{font-size:13px;color:var(--ui-muted);margin:6px 2px 4px;line-height:1.4}
+.avc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:8px}
+.avc-grid.big{grid-template-columns:repeat(auto-fill,minmax(128px,1fr))}
+.avt{position:relative;display:flex;flex-direction:column;align-items:stretch;text-align:left;padding:5px 5px 7px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--ui-line);overflow:hidden}
+.avt-th{aspect-ratio:1;border-radius:10px;overflow:hidden;background:radial-gradient(circle at 50% 35%,#3a2c26,#140f10)}
+.avt.look .avt-th{aspect-ratio:400/480}
+.avt b{font-size:12.5px;line-height:1.15;margin:6px 2px 2px;font-weight:700}
+.avt small{font-size:11.5px;color:var(--ui-muted);margin:0 2px;line-height:1.25}
+.avt.on{border-color:var(--ui-accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--ui-accent) 50%,transparent)}
+.avt.rr-r{border-color:rgba(74,163,255,.35)}.avt.rr-e{border-color:rgba(180,108,255,.45);background:linear-gradient(160deg,rgba(180,108,255,.12),rgba(255,255,255,.03))}
+.avt.rr-l{border-color:rgba(242,193,78,.6);background:linear-gradient(160deg,rgba(242,193,78,.16),rgba(255,255,255,.02))}
+.avt.rr-l::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,240,190,.28) 50%,transparent 65%);background-size:250% 100%;animation:avsh 3.2s ease-in-out infinite;pointer-events:none}
+@keyframes avsh{0%{background-position:130% 0}60%,100%{background-position:-60% 0}}
+.avt.on.rr-r,.avt.on.rr-e,.avt.on.rr-l{border-color:var(--ui-accent)}
+.avt-tags{display:flex;flex-wrap:wrap;gap:4px;margin:2px 2px 0}
+.avt-r{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--rc)}
+.avt-p{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:1px 7px;border-radius:9px;background:rgba(242,193,78,.16);color:#f6d77a;letter-spacing:0;text-transform:none}
+.avt-own{font-size:10.5px;color:#7fd99a;font-weight:700}
+.avt-lock{position:absolute;top:9px;right:9px;width:22px;height:22px;border-radius:7px;background:rgba(0,0,0,.6) center/14px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f6d77a' stroke-width='2.4'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E")}
+.avt.look .avt-p{position:absolute;top:9px;left:9px}
+.avc-sw{display:flex;flex-wrap:wrap;gap:9px;padding:2px}
+.avc-sw .sw{position:relative;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--c) 50%,var(--c2,var(--c)) 50%);border:2px solid rgba(255,255,255,.15);box-shadow:inset 0 -6px 10px rgba(0,0,0,.25)}
+.avc-sw .sw.on{border-color:var(--ui-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--ui-accent) 40%,transparent)}
+.avc-sw .sw i{font:700 12px var(--sans);color:#3a1a10;font-style:normal}
+.avc-sw .sw em{position:absolute;right:-3px;bottom:-3px;width:17px;height:17px;border-radius:6px;background:#140f10 center/11px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f6d77a' stroke-width='3'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E")}
+.avc-sw .sw.prem::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px dashed rgba(242,193,78,.5)}
+.avc-name{width:100%;height:50px;border-radius:14px;border:1px solid var(--ui-line);background:rgba(0,0,0,.35);color:var(--ui-text);font:600 18px var(--sans);padding:0 14px}
+.avc-name:focus{outline:2px solid var(--ui-accent)}
+.avc-list{display:flex;flex-direction:column;gap:8px}
+.avl{display:flex;align-items:center;gap:10px;min-height:50px;padding:0 14px;border-radius:14px;border:1px solid var(--ui-line);background:rgba(255,255,255,.04);text-align:left}
+.avl b{flex:1;font:700 17px var(--serif)}.avl.on{border-color:var(--ui-accent);background:rgba(232,182,90,.1)}
+.avc-foot{flex:none;padding:8px 12px calc(env(safe-area-inset-bottom) + 12px);border-top:1px solid var(--ui-line);display:flex;flex-direction:column;gap:8px}
+.avc-try{display:flex;align-items:center;gap:10px;padding:8px 8px 8px 12px;border-radius:14px;background:linear-gradient(90deg,rgba(242,193,78,.16),rgba(180,108,255,.12));border:1px solid rgba(242,193,78,.4)}
+.avc-try-tx{flex:1;min-width:0;line-height:1.25}.avc-try-tx b{display:block;font-size:13.5px}.avc-try-tx span{display:block;font-size:12px;color:var(--ui-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.avc-unlock{min-height:42px;padding:0 12px;flex:none;background:linear-gradient(135deg,#f6d77a,#c8902e);color:#2a1a08;border:0;font-size:14px}
+.avc-unlock span{margin-left:4px}
+@media (min-width:900px) and (min-height:560px){
+ .avc-main{flex-direction:row}.avc-stage{flex:1;height:auto;padding:20px}.avc-card{height:auto;width:min(100%,calc((100vh - 140px)*.833));align-self:center}
+ .avc-ctl{flex:none;width:min(520px,46vw);border-radius:22px 0 0 0;border-left:1px solid var(--ui-line)}.avc-dice{right:24px;bottom:24px}}
+/* portrait card */
+.avcard{position:relative;width:100%;height:100%;border-radius:18px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.12)}
+.avcard .avsvg{position:absolute;inset:0}
+.avcard.fr-r{border-color:#4aa3ff}.avcard.fr-e{border-color:#b46cff;box-shadow:0 0 24px rgba(180,108,255,.35),0 14px 40px rgba(0,0,0,.6)}
+.avcard.fr-l,.avcard.fr-pass{border:3px solid #f2c14e;box-shadow:0 0 30px rgba(242,193,78,.45),0 14px 40px rgba(0,0,0,.6)}
+.avcard.fr-pass::after{content:"";position:absolute;inset:0;border-radius:15px;box-shadow:inset 0 0 0 2px rgba(255,240,190,.6);pointer-events:none}
+.avcard-np{position:absolute;left:8px;right:8px;bottom:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(rgba(10,8,10,.55),rgba(10,8,10,.85));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);text-align:center;line-height:1.15}
+.avcard-np b{display:block;font:700 clamp(14px,4.6vw,22px) var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.avcard-np span{display:block;font-size:clamp(9.5px,2.6vw,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--ui-accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.avcard-rk{position:absolute;top:8px;left:8px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:10px;background:rgba(0,0,0,.6)}
+.r-c{color:#c8ccd2}.r-r{color:#7fbfff}.r-e{color:#cf9bff}.r-l{color:#f6d77a}
+/* modal */
+.avm{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .25s}
+.avm.on{opacity:1}
+.avm-box{width:min(100%,520px);max-height:calc(100% - env(safe-area-inset-top) - 30px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#151114;border:1px solid var(--ui-line);border-bottom:0;border-radius:22px 22px 0 0;padding:18px 18px calc(env(safe-area-inset-bottom) + 18px);transform:translateY(30px);transition:transform .3s}
+.avm.on .avm-box{transform:none}.avm-box.wide{width:min(100%,760px)}
+@media (min-width:820px){.avm{align-items:center}.avm-box{border-radius:22px;border-bottom:1px solid var(--ui-line)}}
+.avm-box h3{font:700 26px var(--serif);line-height:1.1;margin:4px 0 8px}
+.avm-head{display:flex;align-items:flex-start;gap:10px}.avm-head>div{flex:1}
+.avm-acts{display:flex;flex-direction:column;gap:8px;margin:14px 0 10px}
+.avm-items{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.avm-it{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04)}.avm-it b{flex:1}.avm-it em{font-style:normal;font-weight:700;color:#f6d77a}
+.avm-row{display:flex;align-items:baseline;gap:10px;padding:8px 2px;border-top:1px solid var(--ui-line)}.avm-row span{flex:1;color:var(--ui-muted)}.avm-row b{font-size:18px}.avm-row small{color:var(--ui-muted);font-size:12px}
+.small.warn{color:#f6b07a;margin:6px 0}
+.btn[disabled]{opacity:.45}
+.avb-pass{display:flex;gap:14px;align-items:center;padding:14px;margin:12px 0;border-radius:18px;background:linear-gradient(135deg,rgba(242,193,78,.22),rgba(180,108,255,.14));border:1px solid rgba(242,193,78,.55)}
+.avb-pass.pulse{animation:avpp 1s ease 2}@keyframes avpp{50%{box-shadow:0 0 0 6px rgba(242,193,78,.35)}}
+.avb-pass .avb-pv{width:120px;flex:none;aspect-ratio:400/480}
+.avb-tx{flex:1;min-width:0}.avb-tx b{display:block;font:700 20px var(--serif);line-height:1.1}.avb-tx p,.avb-tx small{display:block;font-size:12.5px;color:var(--ui-muted);margin:4px 0;line-height:1.35}
+.avb-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2a1a08;background:#f2c14e;padding:2px 8px;border-radius:8px;margin-bottom:4px}
+.avb-pr{display:flex;align-items:baseline;gap:8px;margin:6px 0 8px}.avb-pr s{color:var(--ui-muted);font-size:13px}.avb-pr em{font-style:normal;font-weight:700;font-size:20px;color:#f6d77a}
+.avb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.avb{display:flex;gap:10px;padding:10px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--ui-line)}
+.avb .avb-pv{width:92px;flex:none;aspect-ratio:400/480}
+.avb .avb-pv .avcard-np b{font-size:12px}.avb .avb-pv .avcard-np span{font-size:8px}.avb .avb-pv .avcard-np{padding:4px;left:4px;right:4px;bottom:4px}
+.avb-pass .avcard-np b{font-size:14px}.avb-pass .avcard-np span{font-size:8.5px}
+.avb-acts{display:flex;gap:6px;align-items:center}.avb-acts .btn{min-height:40px;padding:0 14px;font-size:14px}
+/* confetti */
+.avconf{position:absolute;left:50%;top:55%;pointer-events:none}
+.avconf i{position:absolute;width:8px;height:12px;border-radius:2px;animation:avcf 1.4s cubic-bezier(.2,.7,.3,1) var(--d) forwards;opacity:0}
+@keyframes avcf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),calc(var(--y) + 260px)) rotate(var(--r))}}
+/* hub card + crew */
+.avhub{display:flex;gap:14px;align-items:center;width:100%;text-align:left;padding:12px;margin:0 0 12px;border-radius:20px;background:rgba(14,12,18,.88);border:1px solid var(--ui-line);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.avhub.new{border-color:rgba(242,193,78,.6);background:linear-gradient(135deg,rgba(242,193,78,.18),rgba(14,12,18,.9))}
+.avhub-pv{width:min(36vw,150px);flex:none;aspect-ratio:400/480;cursor:pointer}
+.avhub-pv .avcard-np b{font-size:14px}.avhub-pv .avcard-np span{font-size:8.5px}.avhub-pv .avcard-np{padding:5px;left:5px;right:5px;bottom:5px}.avhub-pv .avcard-rk{font-size:8.5px;padding:3px 6px;top:5px;left:5px}
+.avhub-tx{flex:1;min-width:0}.avhub-tx b{display:block;font:700 24px var(--serif);line-height:1.05;margin-top:2px;overflow:hidden;text-overflow:ellipsis}.avhub-tx>span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ui-accent);margin:4px 0 6px}
+.avhub.new .avhub-tx>span{text-transform:none;letter-spacing:0;color:var(--ui-muted);font-size:13.5px;line-height:1.4}
+.avhub-tx em.btn{font-style:normal;margin-top:6px;min-height:42px}
+.avhub-stats{display:flex;flex-wrap:wrap;gap:6px}.avhub-stats>i{font-style:normal;font-size:12px;font-weight:700;padding:4px 9px;border-radius:10px;background:rgba(255,255,255,.07)}
+.avhub-acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.avhub-acts .btn{min-height:42px;padding:0 14px;font-size:14px}
+.avcrew{margin:0 0 14px;padding:12px;border-radius:18px;background:rgba(14,12,18,.85);border:1px solid var(--ui-line)}
+.avcrew .avc-sec{margin-top:0}
+.avcrew-row{display:flex;gap:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}.avcrew-row::-webkit-scrollbar{display:none}
+.avcrew-c{flex:none;width:76px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.avcrew-c b{font-size:13px}.avcrew-c small{font-size:10.5px;color:var(--ui-muted);white-space:nowrap}
+.avd-face{display:block;width:64px;height:64px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,#4a3a30,#140f10);border:2px solid rgba(255,255,255,.18)}
+.avd-face.fr-r{border-color:#4aa3ff}.avd-face.fr-e{border-color:#b46cff}.avd-face.fr-l,.avd-face.fr-pass{border-color:#f2c14e;box-shadow:0 0 12px rgba(242,193,78,.5)}
+.avdock{width:56px;height:56px;border-radius:50%;flex:none;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.avdock .avd-face{width:56px;height:56px}
+.avsheet-card{width:min(100%,300px);aspect-ratio:400/480;margin:0 auto}
+.avend{display:flex;gap:14px;align-items:center;margin:16px 0;padding:12px;border-radius:16px;background:var(--ui-panel2);border:1px solid var(--ui-line);text-align:left}
+.avend-pv{width:96px;flex:none;aspect-ratio:400/480}.avend-pv .avcard-np b{font-size:11px}.avend-pv .avcard-np span{font-size:7px}.avend-pv .avcard-np{padding:3px;left:3px;right:3px;bottom:3px}
+.avend b{display:block;font:700 20px var(--serif)}.avend span{display:block;font-size:13px;color:var(--ui-muted);margin:2px 0 8px}.avend .btn{min-height:40px;font-size:14px;padding:0 14px}
+.scrim{z-index:21}.sheet{z-index:22}
+.avhub-stats span{font-size:12px;font-weight:700;padding:4px 9px;border-radius:10px;background:rgba(255,255,255,.07);white-space:nowrap}
+.avc-t b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.avc-t small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:899px),(max-height:559px){.avc-stage{height:min(34vh,400px);min-height:200px}.avc-t b{font-size:19px}.avc-shop{padding:0 11px}}
+@media (max-width:380px){.avc-shop{font-size:0;gap:0;width:40px;padding:0;justify-content:center}}
+
 </style>
 </head>
 <body data-world="gaslight" data-room="study">
@@ -312,6 +485,7 @@ body[data-world="gaslight"][data-room="bedroom"]{--wall:#4a2a32;--wallpat:#5e354
 </header>
 <div class="progress" id="prog"></div>
 <footer class="dock">
+  <button class="avdock" id="avDock" aria-label="Your detective"></button>
   <button class="nbbtn" id="nbBtn"><svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M9.5 8h6M9.5 12h6"/></svg>Notebook <span class="badge" id="nbCount">0</span></button>
 </footer>
 
@@ -339,7 +513,7 @@ body[data-world="gaslight"][data-room="bedroom"]{--wall:#4a2a32;--wallpat:#5e354
     <div class="kicker">Season 1</div>
     <div class="tmain">THE VAULT</div>
     <div class="tsub">The Halloway Inheritance</div>
-    <div class="tep">Twelve rooms · twelve Fridays · <b>6 rooms open to play now</b></div>
+    <div class="tep">Twelve rooms · twelve Fridays · <b>6 rooms open to play now</b><br>New: create your own detective</div>
     <button class="btn pri block" id="startBtn" style="height:56px;font-size:17px">Enter the house</button>
     <div class="tfine">Free to play. Nothing you can buy ever changes a clue. Sound on for the full effect.</div>
   </div>
@@ -1786,13 +1960,14 @@ function showHub(){
   const slots=Array.from({length:12},(_,i)=>{const id=ORDER[i],e=id&&S.eps[id];return e&&e.saved?`<i class="f">Wk ${i+1}<b>${e.theory}</b></i>`:`<i>Wk ${i+1}</i>`}).join("");
   $("#hubIn").innerHTML=`<div class="kicker">Season 1 · Gray Hollow</div><h1>The Halloway Inheritance</h1><div class="hsub">One room unseals every Friday.</div>
     <div class="hmeta"><span class="chip"><i></i>${S.coins} Vault Coin${S.coins===1?"":"s"}</span><span class="chip">Week ${S.week} of 12</span><span class="chip">${WORLDS.find(w=>w.id===S.world).n}</span></div>
+    ${AVX.hubCard()}
     <div class="eps">${rows.join("")}</div>
     <div class="vaultbox"><h3>Words for the vault</h3><p>Each room hides one word. The ones you've sealed collect here. Nobody tells you whether they're right until you stand at the vault in week 12.</p><div class="slots">${slots}</div></div>
     <div class="demo"><p><b>Preview build.</b> Weeks 1 to 6 are already unsealed for testing. Week 7 isn't written yet; in the real game it would unseal on Friday.</p>
       <div class="row"><button class="btn" id="hubMenu">Worlds and sound</button></div></div>`;
   const hub=$("#hub");hub.hidden=false;hub.scrollTop=0;
   hub.querySelectorAll("[data-room]").forEach(b=>b.onclick=()=>enterRoom(b.dataset.room));
-  $("#hubMenu").onclick=openMenu;
+  $("#hubMenu").onclick=openMenu;AVX.bindHub();
 }
 const R_seen=id=>ROOMS[id].searchable.filter(k=>S.eps[id].seen[k]).length;
 $("#mapBtn").onclick=goHub;
@@ -1841,6 +2016,7 @@ function showEnd(first){
   $("#endInner").innerHTML=`<div class="kicker">Week ${w} · ${R.title}</div><h1>${first?"Theory sealed.":"Theory updated."}</h1>
    <p class="lead">Your word is locked in your notebook: <b>${E().theory}</b>. Nobody will tell you whether it's right until you stand at Ada's vault. Change your mind any time.</p>
    <div class="coin"><div class="c">${S.coins}</div><div><b>${first?"+1 Vault Coin":"Vault Coins: "+S.coins}</b><span>Earned for finishing the room, right or wrong. Coins buy looks, never clues.</span></div></div>
+   ${AVX.endBlock()}
    <div class="sec">Words for the vault</div><div class="slots">${slots}</div>
    <div class="pulse"><div class="kicker">Crowd Pulse · opens Wednesday</div><h3>${q}</h3>
      <p class="small">What the crowd believes, not what's true. The game never says who's right.</p>
@@ -1849,7 +2025,7 @@ function showEnd(first){
    <div class="acts">${nextOpen?`<button class="btn pri block" id="goNext">Go to week ${w+1}: ${next.title}</button>`:next?`<p class="small" style="width:100%">Week ${w+1} unseals ${releaseDate(w+1)} at 6 pm, for everyone at once, in every world.</p>`:""}
      <button class="btn ${nextOpen?"":"pri"} block" id="toMap">Season map</button><button class="btn block" id="backRoom">Back to ${R.title.toLowerCase()}</button></div>
    <p class="small" style="margin-top:16px">Preview build. No accounts, no real coins and no prizes yet. Your notebook is saved only on this device.</p>`;
-  el.hidden=false;el.scrollTop=0;requestAnimationFrame(()=>el.classList.add("on"));
+  el.hidden=false;el.scrollTop=0;requestAnimationFrame(()=>el.classList.add("on"));AVX.bindEnd();
   el.querySelectorAll("[data-poll]").forEach(btn=>btn.onclick=()=>{S.poll[cur]=btn.dataset.poll;save();el.querySelectorAll("[data-poll]").forEach(x=>x.classList.toggle("sel",x===btn));$("#pollNote").textContent="Your vote is in. On Wednesday you'll see how the crowd splits.";AU.sfx("pick")});
   const gn=$("#goNext");if(gn)gn.onclick=()=>{el.classList.remove("on");enterRoom(nextId)};
   $("#toMap").onclick=()=>{el.classList.remove("on");goHub()};
@@ -1862,7 +2038,8 @@ function showEnd(first){
 const WORLDS=[{id:"gaslight",n:"Gaslight Manor",d:"Candlelight, velvet and old wood.",sw:"linear-gradient(135deg,#86592f,#3b2621 60%,#ffb35a)"},{id:"neon",n:"Neon Noir",d:"The same house in a rain-soaked future.",sw:"linear-gradient(135deg,#45f0dc,#131733 55%,#ff3db5)"}];
 function openMenu(){
   const inRoom=!hubOn;
-  openSheet("Menu",`<div class="sec">World · same rooms, same clues</div>
+  openSheet("Menu",`<div class="sec">You</div><button class="opt" id="mAv"><span><b>Your detective</b><span>Wardrobe, boutique and your profile card.</span></span></button>
+   <div class="sec">World · same rooms, same clues</div>
    ${WORLDS.map(w=>`<button class="opt ${S.world===w.id?"sel":""}" data-w="${w.id}"><span class="sw" style="background:${w.sw}"></span><span><b>${w.n}</b><span>${w.d} Free.</span></span></button>`).join("")}
    <p class="small" style="margin:2px 2px 16px">Every world shows the exact same objects, words and numbers in the same places. Friends in different worlds are solving the same rooms.</p>
    ${inRoom?`<div class="sec">This room</div>
@@ -1871,6 +2048,7 @@ function openMenu(){
    <button class="opt" id="mReset"><span><b>Start this room over</b><span>Clears this room's notes and theory and puts it back as you found it.</span></span></button>`:""}
    <p class="small" style="margin-top:8px">Tips: drag or swipe to look around, or use the arrows. Tap anything to search it. The ✦ button lights up places you haven't searched yet. On iPhone, flip the silent switch off to hear sound.</p>`,"The Vault");
   document.querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>{setWorld(b.dataset.w);document.querySelectorAll("[data-w]").forEach(x=>x.classList.toggle("sel",x===b));if(hubOn)showHub()});
+  $("#mAv").onclick=()=>{closeSheet();setTimeout(()=>AVX.open({tab:"outfit",onDone:()=>{if(hubOn)showHub()}}),380)};
   if(!inRoom)return;
   $("#mMap").onclick=()=>goHub();
   $("#mIntro").onclick=()=>{closeSheet();setTimeout(startIntro,400)};
@@ -1901,6 +2079,775 @@ $("#narrNext").onclick=()=>{AU.sfx("paper");const p=$("#narrText");if(p.textCont
 $("#narrSkip").onclick=endIntro;
 
 /* =====================================================================
+   DETECTIVE AVATAR · layered illustrated SVG portrait engine
+   Every look is built from layers (backdrop, hair back, body, outfit,
+   head, face, hair front, eyewear, hat, companion, effects).
+   ===================================================================== */
+const AVA=(function(){
+let UID=0;
+const hx=h=>{h=h.replace("#","");if(h.length===3)h=h.split("").map(c=>c+c).join("");return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
+const toHex=a=>"#"+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0")).join("");
+const mix=(a,b,t)=>{const A=hx(a),B=hx(b);return toHex(A.map((v,i)=>v+(B[i]-v)*t))};
+const dk=(c,t)=>mix(c,"#000000",t),lt=(c,t)=>mix(c,"#ffffff",t);
+const OL='stroke="#140c0a" stroke-opacity=".6" stroke-width="2.2" stroke-linejoin="round"';
+const mir=s=>`<g transform="translate(400 0) scale(-1 1)">${s}</g>`;
+const both=s=>s+mir(s);
+
+/* ---------------- catalogue ---------------- */
+const SKIN=[["Porcelain","#f8e3d6"],["Fair","#f2d0b8"],["Light","#eabf9f"],["Beige","#ddac86"],["Honey","#cf9a6c"],["Golden","#bf8556"],["Olive","#b99366"],["Tan","#a87048"],["Bronze","#93603c"],["Brown","#7c4e30"],["Deep brown","#663e26"],["Espresso","#50301d"],["Ebony","#3c2416"],["Moonlight","#ece4e4"]];
+const HAIRC=[["Jet","#1b1714"],["Dark brown","#3b2619"],["Brown","#5c3a22"],["Chestnut","#7a4524"],["Auburn","#8e3b1e"],["Copper","#b5562a"],["Dark blonde","#a88452"],["Blonde","#d8b66f"],["Platinum","#ece2c9"],["Silver","#a9a6a3"],["White","#eeece8"],
+  ["Rose","#e86aa8",1],["Lilac","#a37ad9",1],["Electric blue","#3e7fd8",1],["Teal","#22b3a3",1],["Toxic green","#6cc63a",1],["Crimson","#c81d2a",1],["Sunset","#ff8a3a",1]];
+const EYEC=[["Brown","#4a2c18"],["Dark","#24160d"],["Hazel","#7f5f2a"],["Green","#4f7a3a"],["Blue","#3f6fa8"],["Grey","#7f8c96"],["Amber","#b07a22"],["Violet","#7a4fd0",1],["Gold","#e8b83a",1],["Ice","#9fe3ff",1]];
+const LIPC=[["Natural",null],["Classic red","#b3122a"],["Berry","#7d1840"],["Nude","#c07a68"],["Coral","#e0604f"],["Plum","#5a1f4a"],["Black","#1d1418"],["Gloss pink","#e2587f"]];
+
+const BODY={
+ slim:{n:"Slim",S:86,N:23,B:104},
+ average:{n:"Average",S:100,N:27,B:120},
+ athletic:{n:"Athletic",S:114,N:31,B:128},
+ curvy:{n:"Curvy",S:98,N:25,B:126,curvy:1},
+ full:{n:"Full figure",S:116,N:32,B:146,soft:1},
+ broad:{n:"Broad",S:128,N:36,B:146},
+};
+const JAW={
+ oval:["Oval","M200 96C246 96 266 128 266 170C266 206 252 232 232 246C220 254 210 258 200 258C190 258 180 254 168 246C148 232 134 206 134 170C134 128 154 96 200 96Z"],
+ round:["Round","M200 98C251 98 270 130 270 172C270 210 257 238 235 250C223 257 211 260 200 260C189 260 177 257 165 250C143 238 130 210 130 172C130 130 149 98 200 98Z"],
+ square:["Square","M200 96C248 96 267 128 267 168C267 198 265 222 255 237C244 251 222 261 200 261C178 261 156 251 145 237C135 222 133 198 133 168C133 128 152 96 200 96Z"],
+ heart:["Heart","M200 96C249 96 269 126 269 166C269 198 251 226 229 244C219 252 209 258 200 260C191 258 181 252 171 244C149 226 131 198 131 166C131 126 151 96 200 96Z"],
+ long:["Long","M200 90C245 90 263 126 263 170C263 210 251 241 231 255C219 263 209 268 200 268C191 268 181 263 169 255C149 241 137 210 137 170C137 126 155 90 200 90Z"],
+};
+const EYES={almond:"Almond",round:"Round",hooded:"Hooded",mono:"Monolid",sultry:"Sultry",wide:"Wide"};
+const BROWS={soft:"Soft",arched:"Arched",straight:"Straight",thick:"Bold",stern:"Stern",thin:"Fine"};
+const NOSE={button:"Button",straight:"Straight",broad:"Broad",roman:"Roman",petite:"Petite"};
+const MOUTH={smirk:"Smirk",smile:"Smile",grin:"Grin",neutral:"Calm",pout:"Full lips",stern:"Stern"};
+const BEARD={none:"None",stubble:"Stubble",pencil:"Pencil mustache",handlebar:"Handlebar",goatee:"Goatee",boxed:"Short beard",full:"Full beard"};
+const MARKS={none:"None",freckles:"Freckles",mole:"Beauty mark",scar:"Brow scar",blush:"Rosy cheeks",vitiligo:"Vitiligo"};
+const MAKEUP={none:"None",liner:"Winged liner",smoky:"Smoky eye",goth:"Goth",glam:"Gold glam",neon:"Neon liner"};
+
+/* outfits/hats carry colourways: [name, main, second, accent] */
+const CW={
+ trench:[["Khaki","#b08d5b","#e7e0d0","#5a1f1f"],["Charcoal","#3b3d42","#e7e3dc","#7a1a22"],["Midnight","#1f2433","#d9d4ca","#9a7a3a"],["Oxblood","#5c1d22","#efe6d6","#1a1a1a"],["Ivory","#e3d8c2","#2a2a2e","#8a2030"]],
+ suit:[["Navy pinstripe","#1f2a44","#f0ece4","#8e1b2b"],["Charcoal","#36383d","#f0ece4","#2f5a8a"],["Tweed","#6b5a42","#efe6d4","#3d5a35"],["Cream","#e2d6bb","#1f1f22","#7a1d26"]],
+ leather:[["Black","#1c1b1d","#d8d4ce","#c0c4c8"],["Brown","#5a3420","#e6dccf","#c99a4a"],["Red","#8e1820","#1b1b1d","#d8d8d8"],["White","#e8e4de","#1b1b1d","#9aa0a6"]],
+ gothcoat:[["Raven","#141216","#e8e2e6","#b8b8c8"],["Plum","#3a1636","#e6dae2","#c9a8c8"],["Blood","#4e0c14","#eadcdc","#d0c0a0"],["Bottle green","#12291f","#e2e8e2","#c8b070"]],
+ corset:[["Black lace","#151216","#3a2a38","#b0a0b0"],["Crimson","#6e0f1d","#1a1012","#d6b46a"],["Violet","#3b1a5a","#160c20","#c0a0e0"],["Emerald","#0f4a36","#081a12","#d6b46a"]],
+ cardigan:[["Mustard","#c8962e","#eef0f2","#2f4f8a"],["Forest","#2f5a3c","#f1eee6","#a82a2a"],["Maroon","#6e2230","#eef0f2","#d1a640"],["Sky","#7aa6cf","#fbfbf6","#d14a4a"]],
+ varsity:[["Vault red","#9a1c24","#f1e9d8","#f1e9d8"],["Royal blue","#1e3f8a","#f2d26a","#f2d26a"],["Forest","#1f4d32","#f1e9d8","#d8b04a"],["Black & gold","#1a1a1c","#e2b240","#e2b240"]],
+ field:[["Olive","#58603a","#3e4428","#c8a850"],["Desert","#b49c70","#86704a","#3a3a2a"],["Camo","#5a6040","#3a3e28","#8a7a50"],["Navy","#24304a","#161e30","#c8a850"]],
+ dress:[["Army green","#3e4a2e","#c8a84a","#8a1a24"],["Navy","#17213a","#d6b04a","#a01c28"],["Air blue","#4f6f94","#d8d8d8","#1a2a4a"],["White","#ecebe6","#d6b04a","#14213a"]],
+ sequin:[["Midnight","#1a1b3a","#6e7cff","#ffffff"],["Ruby","#7a0f22","#ff4a6a","#ffffff"],["Gold","#a07a2a","#ffe08a","#ffffff"],["Silver","#6a6e78","#e8ecf4","#ffffff"],["Emerald","#0d4a3a","#4ae0a8","#ffffff"]],
+ tux:[["Black","#121214","#f5f3ee","#121214"],["White dinner","#ece8de","#f9f8f4","#121214"],["Velvet wine","#4a0f20","#f5f3ee","#121214"],["Midnight blue","#121a3a","#f5f3ee","#121214"]],
+ hoodie:[["Charcoal","#3a3b40","#2a2b2f","#e2e2e2"],["Red","#a8242c","#86181f","#f2f2f2"],["Sage","#7c9478","#627a5e","#f2f2f2"],["Black","#18181a","#0d0d0f","#45f0dc"],["Pink","#e48aae","#c86e92","#ffffff"]],
+ punk:[["Denim","#3e5a80","#1c1b1d","#d0d4d8"],["Black","#1d1c1f","#c81d2a","#d0d4d8"],["Tartan","#7a1a20","#1d1c1f","#e2c84a"]],
+ cyber:[["Cyan/magenta","#0e1024","#45f0dc","#ff3db5"],["Acid","#101410","#b6ff3a","#3affd8"],["Sunset","#160c1e","#ff8a3a","#ff3d7a"],["Ice","#0c1420","#9fe3ff","#ffffff"]],
+ turtle:[["Black/camel","#151417","#b08a5a","#d6b46a"],["Cream/brown","#ece4d4","#5a3a26","#9a7a3a"],["Grey/navy","#6b6e74","#1e2840","#c0c4c8"],["Wine/black","#5a1424","#1a1a1c","#c8a050"]],
+ blouse:[["Ivory","#efe8dc","#1f1f24","#8a1a24"],["Blush","#e8bcb6","#2a1f22","#c8a04a"],["Sky","#bcd2e8","#1f2a44","#8a1a24"],["Black","#1b1a1d","#c8a04a","#8a1a24"]],
+ steam:[["Brass & oxblood","#5a2a1e","#d6a650","#e8dcc6"],["Teal & copper","#1f4a4a","#c87a3e","#e8dcc6"],["Plum & gold","#3a1c3a","#d6b04a","#e8dcc6"]],
+ open:[["White","#f2efe8","#1b1a1d","#c8a050"],["Black silk","#16151a","#c8a050","#c8a050"],["Wine","#6a1628","#1b1a1d","#d8b060"],["Tropical","#1f6a6a","#e8c060","#ff8a6a"]],
+ lab:[["White coat","#f1f2f4","#4a6a8a","#c81d2a"],["Black coat","#1c1d22","#45f0dc","#45f0dc"]],
+ tee:[["Black","#1c1b1d","#e8e4de","#c81d2a"],["White","#efede8","#1c1b1d","#c81d2a"],["Heather","#8a8c90","#1c1b1d","#e2b240"]],
+ cape:[["Inverness check","#6a5a44","#4a3e2e","#c8b48a"],["Black","#1a1a1e","#101014","#a03030"],["Bottle green","#1e3a2c","#12261c","#c8b070"]],
+};
+const HCW={
+ fedora:[["Charcoal","#2e2f33","#141416"],["Brown","#5a3e2a","#1c140e"],["Cream","#d9ccb0","#2a2420"],["Black","#151416","#7a1a22"],["Grey","#7a7a7e","#1c1c1e"]],
+ beret:[["Black","#18171a"],["Red","#9a1c24"],["Olive","#4e5634"],["Camel","#b08a5a"],["Plum","#4a1a4a"]],
+ beanie:[["Charcoal","#3a3b40"],["Mustard","#c8962e"],["Red","#a8242c"],["Navy","#24304a"],["Pink","#e48aae"]],
+ cap:[["Vault red","#9a1c24","#f1e9d8"],["Navy","#1e2a4a","#f2d26a"],["Black","#18181a","#45f0dc"],["White","#eeece6","#9a1c24"]],
+ hijab:[["Black","#1c1a1e"],["Plum","#5a2a4a"],["Rose","#c88a90"],["Sand","#c8b090"],["Teal","#2a6a6a"],["Navy","#24304a"],["Burgundy","#6a1a2a"]],
+ turban:[["Saffron","#d88a1e"],["Navy","#24304a"],["White","#efede8"],["Maroon","#6a1a2a"],["Black","#1c1a1e"]],
+ bandana:[["Red paisley","#a8202a"],["Black","#1a1a1c"],["Navy","#1e2a4a"]],
+};
+
+/* items: id, name, rarity c/r/e/l, price: number=coins, "$x.xx"=premium */
+const HAIR={
+ slick:["Slicked back","c"],sidepart:["Side part","c"],pomp:["Pompadour","r",3],buzz:["Buzz cut","c"],afro:["Afro","c"],curly:["Curly top","c"],
+ braids:["Box braids","c"],locs:["Locs","c"],long:["Long & straight","c"],waves:["Hollywood waves","e",6],bob:["Sharp bob","c"],pixie:["Pixie","c"],
+ mohawk:["Mohawk","r",3],bun:["Top knot","c"],pony:["Ponytail","c"],undercut:["Undercut","r",3],rolls:["Victory rolls","e",6],shag:["Rock shag","r",3],
+ spacebuns:["Space buns","r",3],bald:["Bald","c"],
+};
+const OUTFIT={
+ trench:["Trench coat","c"],suit:["Three-piece suit","c"],turtle:["Turtleneck & blazer","c"],blouse:["Bow blouse","c"],tee:["Band tee","c"],hoodie:["Hoodie","c"],
+ cardigan:["Cardigan & bow tie","c"],varsity:["Letterman jacket","r",4],field:["Field jacket","r",4],leather:["Biker leather","r",4],punk:["Studded punk vest","r",5],
+ lab:["Forensics coat","r",4],gothcoat:["Victorian frock coat","e",7],steam:["Brass waistcoat","e",7],open:["Open silk shirt","e",6],cape:["Inverness cape coat","e",8],
+ corset:["Midnight corset gown","l","$2.99"],sequin:["Sequin gown","l","$3.99"],tux:["Velvet tuxedo","l","$3.99"],dress:["Dress uniform","l","$2.99"],cyber:["Neon runner jacket","l","$3.99"],
+};
+const HAT={
+ none:["No hat","c"],fedora:["Fedora","c"],trilby:["Trilby","c"],deer:["Deerstalker","r",3],beret:["Beret","c"],beanie:["Beanie","c"],cap:["Ball cap","c"],
+ flat:["Newsboy cap","c"],hijab:["Hijab","c"],turban:["Turban","c"],bandana:["Bandana","c"],phones:["Headphones","r",3],military:["Officer's cap","r",4],
+ goggles:["Brass goggles","e",6],catears:["Cat ears","r",3],pillbox:["Veiled pillbox","e",6],tophat:["Top hat","l","$1.99"],crown:["Raven crown","l","$2.99"],
+};
+const EYEWEAR={
+ none:["None","c"],round:["Round specs","c"],horn:["Horn-rims","c"],aviator:["Aviators","r",3],cateye:["Cat-eye frames","r",3],lennon:["Tinted rounds","r",3],
+ monocle:["Monocle","e",5],patch:["Eyepatch","r",3],visor:["Neon visor","l","$1.99"],
+};
+const NECK={none:["None","c"],scarf:["Wool scarf","c"],pearls:["Pearls","r",3],choker:["Spiked choker","r",3],chain:["Gold chain","r",3],tags:["Dog tags","c"],locket:["Ada's locket","e",5],bolo:["Bolo tie","c"]};
+const EARS={none:["None","c"],studs:["Studs","c"],hoops:["Gold hoops","c"],cross:["Silver cross","r",2],cuffs:["Ear cuffs","r",2],diamonds:["Diamond drops","l","$0.99"]};
+const PROP={none:["None","c"],magnifier:["Magnifying glass","c"],watch:["Pocket watch","r",3],lantern:["Storm lantern","r",3],rose:["Red rose","r",3],file:["Case file","c"],dagger:["Letter opener","e",5]};
+const PET={none:["None","c"],raven:["Raven","l","$2.99"],cat:["Black cat","l","$2.99"],owl:["Barn owl","l","$2.99"],fox:["Fox kit","l","$2.99"]};
+const BACK={study:["The study","c"],alley:["Rainy alley","c"],cliffs:["Gray Hollow cliffs","c"],library:["Library","r",2],graveyard:["Moonlit graveyard","r",3],stage:["Rock stage","r",3],
+ stadium:["Stadium lights","r",3],warroom:["War room","r",3],neon:["Neon city","e",5],deco:["Art deco gold","l","$1.99"],vault:["The vault door","l","$1.99"]};
+const FX={none:["None","c"],rain:["Rain","r",2],fog:["Noir fog","r",3],sparks:["Fire sparks","e",5],sparkle:["Gold sparkle","e",5],petals:["Rose petals","e",5],bats:["Bats","e",5],neonglow:["Neon pulse","l","$1.49"],lightning:["Storm flash","l","$1.49"]};
+
+/* ---------------- low-level helpers ---------------- */
+function mk(u){const defs=[];let k=0;
+  const id=n=>`${u}${n}${k++}`;
+  return{defs,
+   lg(stops,x1=0,y1=0,x2=0,y2=1,units){const i=id("g");defs.push(`<linearGradient id="${i}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"${units?` gradientUnits="userSpaceOnUse"`:""}>${stops.map(s=>`<stop offset="${s[0]}" stop-color="${s[1]}"${s[2]!=null?` stop-opacity="${s[2]}"`:""}/>`).join("")}</linearGradient>`);return`url(#${i})`},
+   rg(stops,cx=.5,cy=.5,r=.5,fx,fy,units){const i=id("r");defs.push(`<radialGradient id="${i}" cx="${cx}" cy="${cy}" r="${r}"${fx!=null?` fx="${fx}" fy="${fy}"`:""}${units?` gradientUnits="userSpaceOnUse"`:""}>${stops.map(s=>`<stop offset="${s[0]}" stop-color="${s[1]}"${s[2]!=null?` stop-opacity="${s[2]}"`:""}/>`).join("")}</radialGradient>`);return`url(#${i})`},
+   clip(d){const i=id("c");defs.push(`<clipPath id="${i}"><path d="${d}"/></clipPath>`);return`url(#${i})`},
+   clipR(x,y,w,h){const i=id("c");defs.push(`<clipPath id="${i}"><rect x="${x}" y="${y}" width="${w}" height="${h}"/></clipPath>`);return`url(#${i})`},
+   pat(w,h,inner,tf=""){const i=id("p");defs.push(`<pattern id="${i}" width="${w}" height="${h}" patternUnits="userSpaceOnUse"${tf?` patternTransform="${tf}"`:""}>${inner}</pattern>`);return`url(#${i})`},
+   blur(sd){const i=id("f");defs.push(`<filter id="${i}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${sd}"/></filter>`);return`url(#${i})`},
+   raw(s){defs.push(s)}};
+}
+const rnd=seed=>()=>((seed=Math.imul(seed^seed>>>15,2246822507)+1013904223>>>0)/4294967296);
+function blob(cx,cy,rx,ry,n,amp,ph=0){let d="";for(let i=0;i<=n*2;i++){const a=i/(n*2)*Math.PI*2+ph,r=i%2?1+amp:1;const x=cx+Math.cos(a)*rx*r,y=cy+Math.sin(a)*ry*r;
+  if(i===0)d+=`M${x.toFixed(1)} ${y.toFixed(1)}`;else{const a0=(i-.5)/(n*2)*Math.PI*2+ph,r0=1+amp*1.25;d+=`Q${(cx+Math.cos(a0)*rx*r0).toFixed(1)} ${(cy+Math.sin(a0)*ry*r0).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`}}return d+"Z"}
+
+/* ---------------- body silhouette ---------------- */
+function bodyPath(b){const{S,N,B}=b,L=200-S,R=200+S;
+  return`M${200-N} 228L${200-N} 270C${200-N} 284 ${L+34} 286 ${L+16} 292C${L-4} 298 ${L-14} 318 ${L-17} 352L${200-B} 482L${200+B} 482L${R+17} 352C${R+14} 318 ${R+4} 298 ${R-16} 292C${R-34} 286 ${200+N} 284 ${200+N} 270L${200+N} 228Z`}
+
+/* ---------------- HAIR ---------------- */
+// each style: back (behind body/head), top (crown/fringe, clipped by hats), fore (strands over shoulders)
+function hairLayers(st){
+ const H={
+  slick:{top:`M133 172C126 112 160 72 204 72C248 72 276 108 267 172C263 142 254 122 238 110C216 96 182 98 160 112C146 122 137 142 133 172Z`,
+   lines:`M150 128C170 102 214 92 250 112M146 146C166 116 210 104 258 124M168 104C190 90 226 90 246 104`,side:1},
+  sidepart:{top:`M131 176C122 108 160 70 208 72C254 74 278 112 268 172C265 148 259 132 249 120C231 127 205 124 184 116C168 128 150 134 140 152C136 160 133 168 131 176Z`,
+   lines:`M184 116C200 96 236 92 262 118M184 116C168 104 150 112 140 136M196 110C214 94 240 98 256 112`,side:1},
+  pomp:{top:`M133 168C124 118 138 70 186 56C224 44 272 64 274 104C275 126 271 148 266 168C262 140 254 124 240 116C220 110 196 112 176 118C156 124 141 140 133 168Z`,
+   lines:`M150 120C160 86 196 64 240 70M160 116C172 90 204 74 250 84M176 112C194 92 232 88 262 104`,side:1},
+  buzz:{top:`M137 164C134 116 160 90 200 90C240 90 266 116 263 164C256 132 236 113 200 111C164 113 144 132 137 164Z`,stip:1,side:1},
+  afro:{back:"afro",top:`M134 172C134 128 160 110 200 110C240 110 266 128 266 172C266 128 250 100 200 100C150 100 134 128 134 172Z`},
+  curly:{top:"curly",stip:1,side:1},
+  braids:{back:`M138 140C114 214 106 330 116 430L172 430C162 346 158 262 166 196ZM262 140C286 214 294 330 284 430L228 430C238 346 242 262 234 196Z`,top:`M134 170C130 116 160 86 200 86C240 86 270 116 266 170C258 134 236 112 200 110C164 112 142 134 134 170Z`,braid:1,fore:"braids"},
+  locs:{back:`M136 150C118 210 114 280 124 344L176 344C166 290 164 240 168 196ZM264 150C282 210 286 280 276 344L224 344C234 290 236 240 232 196Z`,top:`M132 172C126 114 160 84 200 84C240 84 274 114 268 172C262 140 244 116 222 108C214 120 186 120 178 108C156 116 138 140 132 172Z`,locs:1,fore:"locs"},
+  long:{back:`M200 76C262 76 290 122 290 192C290 262 294 340 286 412L114 412C106 340 110 262 110 192C110 122 138 76 200 76Z`,top:`M131 196C122 118 158 78 200 78C242 78 278 118 269 196C264 150 246 116 206 104L200 110L194 104C154 116 136 150 131 196Z`,fore:"long",sheen:1},
+  waves:{back:`M200 72C270 72 298 124 294 196C292 244 302 290 282 318C262 330 138 330 118 318C98 290 108 244 106 196C102 124 130 72 200 72Z`,top:`M129 200C116 120 156 74 212 76C260 76 284 118 271 200C269 164 259 134 236 118C200 112 168 124 150 152C140 168 134 182 129 200Z`,
+   lines:`M150 150C170 124 210 114 236 120M228 120C252 128 262 150 266 178`,curl:1,fore:"waves",sheen:1},
+  bob:{back:`M200 76C262 76 285 124 283 190C282 230 285 256 277 272C250 280 150 280 123 272C115 256 118 230 117 190C115 124 138 76 200 76Z`,top:`M134 162C130 110 160 82 200 82C240 82 270 110 266 162L266 156C246 151 223 150 200 150C177 150 154 151 134 156Z`,sheen:1,bangs:1},
+  pixie:{top:`M133 174C125 116 156 80 200 80C246 80 275 112 267 170C259 152 249 142 237 136C227 150 208 154 190 147C177 158 157 160 147 154C141 160 137 166 133 174Z`,lines:`M156 112C180 96 222 94 250 116M172 100C190 118 214 126 236 134`,side:1},
+  mohawk:{top:`M182 122C174 84 182 40 200 16C218 40 226 84 218 122C210 114 190 114 182 122Z`,stip:1,spikes:1},
+  bun:{back:"bun",top:`M134 168C130 116 160 86 200 86C240 86 270 116 266 168C258 134 236 112 200 110C164 112 142 134 134 168Z`,lines:`M152 128C170 104 230 104 248 128M160 112C180 96 220 96 240 112`,side:1},
+  pony:{back:"pony",top:`M134 168C130 116 160 86 200 86C240 86 270 116 266 168C258 134 236 112 200 110C164 112 142 134 134 168Z`,lines:`M150 130C172 104 228 102 252 126`,side:1},
+  undercut:{top:`M140 152C140 100 170 68 214 68C258 70 284 100 278 134C268 122 256 118 240 118C212 120 180 128 160 150C152 158 146 162 140 152Z`,lines:`M156 120C180 92 230 82 268 110M170 110C196 90 236 88 262 100`,stip:1,side:1},
+  rolls:{back:`M200 80C262 80 290 124 288 190C286 230 296 258 282 276C262 290 138 290 118 276C104 258 114 230 112 190C110 124 138 80 200 80Z`,top:"rolls",curl:1},
+  shag:{back:`M200 78C264 78 290 124 290 190C292 236 300 270 292 300L276 290L272 306L258 294L250 300C246 270 248 240 242 220L158 220C152 240 154 270 150 300L142 294L128 306L124 290L108 300C100 270 108 236 110 190C110 124 136 78 200 78Z`,
+   top:`M132 180C122 116 158 78 202 78C248 78 280 116 268 180L262 160L254 176L248 152L236 168L230 144L216 160L206 138L196 158L184 140L174 162L164 146L154 170L146 154Z`,fore:"shag"},
+  spacebuns:{back:"spacebuns",top:`M134 168C130 116 160 86 200 86C240 86 270 116 266 168C258 134 236 112 200 110C164 112 142 134 134 168Z`,lines:`M200 88L200 110`,side:1},
+  bald:{bald:1},
+ };return H[st]||H.slick}
+
+function hairDraw(cfg,g,part,clipY){
+ const st=hairLayers(cfg.hair),c=cfg.hairColor,cd=dk(c,.35),cl=lt(c,.28);
+ const fill=g.lg([[0,cl],[.45,c],[1,cd]],0,0,0,1);
+ const clip=clipY!=null?` clip-path="${g.clipR(-50,clipY,500,600)}"`:"";
+ let s="";
+ if(part==="back"){
+  if(!st.back)return"";
+  if(st.back==="afro"){const d=blob(200,150,124,112,22,.06);s=`<path d="${d}" fill="${fill}" ${OL}/><path d="${blob(200,150,112,100,26,.05,.3)}" fill="none" stroke="${cl}" stroke-opacity=".25" stroke-width="3"/>`+
+    Array.from({length:60},(_,i)=>{const r=rnd(i*7+3);const a=r()*6.283,rr=r()*.92;return`<circle cx="${(200+Math.cos(a)*112*rr).toFixed(1)}" cy="${(150+Math.sin(a)*100*rr).toFixed(1)}" r="${(3+r()*4).toFixed(1)}" fill="none" stroke="${r()>.5?cl:cd}" stroke-opacity=".35" stroke-width="1.6"/>`}).join("")}
+  else if(st.back==="bun")s=`<circle cx="200" cy="66" r="32" fill="${fill}" ${OL}/><path d="M176 60C186 44 214 44 224 60M178 74C190 60 212 60 222 74" fill="none" stroke="${cd}" stroke-width="2" opacity=".6"/>`;
+  else if(st.back==="spacebuns")s=both(`<circle cx="150" cy="86" r="30" fill="${fill}" ${OL}/><path d="M130 82C138 68 160 66 170 80M134 96C144 86 160 86 168 94" fill="none" stroke="${cd}" stroke-width="2" opacity=".6"/>`);
+  else if(st.back==="pony")s=`<path d="M246 108C300 124 314 210 298 300C292 330 270 336 266 312C278 250 276 170 236 128Z" fill="${fill}" ${OL}/><path d="M262 140C286 180 292 240 282 300M252 132C272 170 280 230 274 290" fill="none" stroke="${cd}" stroke-width="2" opacity=".5"/><rect x="240" y="114" width="16" height="12" rx="4" transform="rotate(30 248 120)" fill="${dk(c,.6)}"/>`;
+  else{s=`<path d="${st.back}" fill="${fill}" ${OL}/>`;
+   if(st.braid)s+=Array.from({length:7},(_,i)=>{const x=124+i*8;return`<path d="M${x} 210${Array.from({length:12},(_,j)=>`L${x+(j%2?5:-1)} ${214+j*18}`).join("")}" fill="none" stroke="${cd}" stroke-width="2" opacity=".55"/>`}).join("")+Array.from({length:7},(_,i)=>{const x=232+i*8;return`<path d="M${x} 210${Array.from({length:12},(_,j)=>`L${x+(j%2?5:-1)} ${214+j*18}`).join("")}" fill="none" stroke="${cd}" stroke-width="2" opacity=".55"/>`}).join("");
+   if(st.locs)s+=[130,142,154,246,258,270].map(x=>`<path d="M${x} 200L${x+(x<200?-4:4)} 340" stroke="${cd}" stroke-width="2" opacity=".5"/>`).join("");
+   if(st.curl)s+=`<path d="M120 250C130 270 150 270 156 290M280 250C270 270 250 270 244 290M116 210C128 226 140 224 146 240M284 210C272 226 260 224 254 240" fill="none" stroke="${cd}" stroke-width="2.4" opacity=".5"/>`;
+   if(st.sheen)s+=`<path d="M128 200C124 260 128 330 134 390" stroke="${cl}" stroke-width="6" opacity=".25" fill="none" stroke-linecap="round"/><path d="M272 200C276 260 272 330 266 390" stroke="${cl}" stroke-width="6" opacity=".18" fill="none" stroke-linecap="round"/>`;
+  }
+  return`<g${clip}>${s}</g>`}
+ if(part==="top"){
+  if(st.bald)return`<path d="M160 112C176 102 214 100 236 112" stroke="#fff" stroke-opacity=".18" stroke-width="8" fill="none" stroke-linecap="round"/>`;
+  let d=st.top;
+  if(d==="curly"){s=`<path d="${blob(200,106,74,34,14,.12)}" fill="${fill}" ${OL}/>`+Array.from({length:22},(_,i)=>{const r=rnd(i*13+5);return`<circle cx="${(140+r()*120).toFixed(1)}" cy="${(84+r()*40).toFixed(1)}" r="${(4+r()*4).toFixed(1)}" fill="none" stroke="${r()>.5?cl:cd}" stroke-opacity=".45" stroke-width="1.8"/>`}).join("");
+   s=`<path d="M137 164C134 120 160 100 200 100C240 100 266 120 263 164C256 136 236 120 200 118C164 120 144 136 137 164Z" fill="${cd}" opacity=".9"/>`+s}
+  else if(d==="rolls"){s=`<path d="M133 176C126 120 160 92 200 92C240 92 274 120 267 176C260 146 240 128 200 126C160 128 140 146 133 176Z" fill="${fill}" ${OL}/>`+
+    [[166,98],[234,98]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="27" fill="${fill}" ${OL}/><path d="M${x-14} ${y+4}C${x-16} ${y-14} ${x+12} ${y-18} ${x+14} ${y-2}C${x+14} ${y+10} ${x-2} ${y+12} ${x-4} ${y+2}" fill="none" stroke="${cd}" stroke-width="2.4" opacity=".7"/>`).join("")}
+  else s=`<path d="${d}" fill="${fill}" ${OL}/>`;
+  if(st.lines)s+=`<path d="${st.lines}" fill="none" stroke="${cd}" stroke-width="2" opacity=".55" stroke-linecap="round"/><path d="${st.lines}" fill="none" stroke="${cl}" stroke-width="1.2" opacity=".35" transform="translate(2 -3)" stroke-linecap="round"/>`;
+  if(st.bangs)s+=`<path d="M150 154L154 100M172 152L176 92M196 150L198 88M220 151L222 90M246 153L244 98" stroke="${cd}" stroke-width="2" opacity=".45"/><path d="M150 108C176 92 226 92 252 108" stroke="${cl}" stroke-width="5" opacity=".3" fill="none" stroke-linecap="round"/>`;
+  if(st.spikes)s+=`<path d="M186 118L178 96L188 100L182 70L194 78L192 44L202 60L206 30L210 62L218 52L216 86L226 82L216 116" fill="${fill}" ${OL}/>`;
+  if(st.stip){const p=g.pat(5,5,`<circle cx="1.5" cy="1.5" r="1" fill="${cd}"/><circle cx="4" cy="3.8" r=".8" fill="${cd}"/>`);s+=`<path d="M137 176C134 116 160 90 200 90C240 90 266 116 263 176C256 140 236 118 200 116C164 118 144 140 137 176Z" fill="${p}" opacity=".7"/>`}
+  if(st.side)s+=both(`<path d="M134 150C132 170 133 190 137 205L141 203C140 186 140 168 143 150Z" fill="${fill}"/>`);
+  if(st.sheen&&!st.bangs)s+=`<path d="M156 118C176 100 214 98 238 110" stroke="${cl}" stroke-width="5" opacity=".3" fill="none" stroke-linecap="round"/>`;
+  return`<g${clip}>${s}</g>`}
+ if(part==="fore"){
+  if(!st.fore)return"";
+  const f={
+   long:`M133 168C124 226 128 300 146 380C158 372 166 352 168 330C160 286 152 232 150 192Z`,
+   waves:`M130 180C116 220 130 250 122 290C118 312 136 324 150 316C162 296 150 272 158 246C162 226 152 204 148 188Z`,
+   braids:`M140 190C132 240 130 300 136 380L156 380C152 310 154 250 160 200Z`,
+   locs:`M140 186C132 230 132 280 138 330L158 330C154 282 156 234 160 196Z`,
+   shag:`M132 176C126 220 130 260 140 296L150 284L154 300L162 280C158 250 156 220 154 196Z`,
+  }[st.fore];
+  s=both(`<path d="${f}" fill="${fill}" ${OL}/>`);
+  if(st.fore==="braids")s+=both(`<path d="M146 200${Array.from({length:10},(_,j)=>`L${146+(j%2?6:0)} ${206+j*17}`).join("")}" fill="none" stroke="${cd}" stroke-width="2" opacity=".6"/>`);
+  if(st.fore==="long"||st.fore==="waves")s+=both(`<path d="M142 210C140 260 146 320 154 360" stroke="${cl}" stroke-width="3" opacity=".3" fill="none"/>`);
+  return s}
+ return""}
+
+/* ---------------- FACE ---------------- */
+function eyeShape(t){return{
+  almond:"M-20 1C-12 -10 10 -12 20 -2C12 8 -10 9 -20 1Z",round:"M-18 0C-14 -12 12 -13 18 -1C14 10 -12 11 -18 0Z",hooded:"M-20 1C-12 -9 10 -10 20 -1C12 8 -10 9 -20 1Z",
+  mono:"M-20 1C-11 -7 10 -8 20 -2C11 6 -10 6 -20 1Z",sultry:"M-20 1C-12 -9 10 -11 21 -4C12 7 -10 8 -20 1Z",wide:"M-21 0C-14 -13 13 -14 21 -1C14 11 -13 12 -21 0Z"}[t]}
+function eyeDraw(cfg,g,skin){
+ const t=cfg.eyes,shape=eyeShape(t),ic=cfg.eyeColor,sh=mix(skin,"#5a2a1e",.32);
+ const mk1=(cx,flip)=>{const cy=182;const tr=`translate(${cx} ${cy})${flip?" scale(-1 1)":""}`;const cl=g.clip(shape);
+  const mu=cfg.makeup;let shadow="";
+  if(mu==="smoky"||mu==="goth")shadow=`<path d="M-23 2C-17 -17 17 -18 24 -3C14 -10 -12 -10 -23 2Z" fill="${mu==="goth"?"#1a0f1a":"#3a2a32"}" opacity="${mu==="goth"?.85:.55}"/>`;
+  if(mu==="glam")shadow=`<path d="M-22 1C-16 -16 16 -17 23 -3C14 -10 -12 -10 -22 1Z" fill="#d8a83a" opacity=".55"/>`;
+  const crease=t==="mono"?"":t==="hooded"?`<path d="M-21 -2C-10 -12 10 -13 21 -4" fill="none" stroke="${sh}" stroke-width="3" opacity=".7"/>`:`<path d="M-17 -9C-8 -18 10 -18 19 -9" fill="none" stroke="${sh}" stroke-width="1.6" opacity=".6"/>`;
+  const lid=t==="sultry"?`<path d="M-21 1C-12 -10 10 -12 21 -3L21 -1C10 -5 -10 -4 -21 3Z" fill="${skin}"/>`:t==="hooded"?`<path d="M-21 1C-12 -10 10 -12 21 -2L21 0C10 -6 -10 -6 -21 2Z" fill="${mix(skin,"#5a2a1e",.12)}"/>`:"";
+  const liner=(mu==="liner"||mu==="goth"||mu==="neon"||mu==="glam")?`<path d="M-15 -3L-29 -12L-20 2Z" fill="${mu==="neon"?"#45f0dc":"#120a0a"}"/>`:"";
+  const lash=`<path d="${t==="mono"?"M-21 1C-11 -8 10 -9 21 -2":"M-21 1C-12 -11 10 -13 21 -2"}" fill="none" stroke="${mu==="neon"?"#ff3db5":"#120a0a"}" stroke-width="${mu&&mu!=="none"?3.4:2.6}" stroke-linecap="round"/>`;
+  return`<g transform="${tr}">${shadow}${crease}<g class="avblink"><path d="${shape}" fill="#f6f1ea"/><g clip-path="${cl}"><circle cx="1" cy="0" r="9.5" fill="${g.rg([[0,lt(ic,.35)],[.6,ic],[1,dk(ic,.5)]])}"/><circle cx="1" cy="0" r="4.2" fill="#0b0705"/><path d="M-22 -14H22V-5C10 -9 -10 -9 -22 -5Z" fill="#000" opacity=".12"/></g>${lid}${lash}<path d="M-18 4C-8 9 8 9 18 2" fill="none" stroke="${sh}" stroke-width="1" opacity=".6"/>${liner}</g></g>`};
+ const hl=(cx)=>`<g class="avblink2"><circle cx="${cx-3}" cy="178" r="2.6" fill="#fff"/><circle cx="${cx+4}" cy="184" r="1.2" fill="#fff" opacity=".8"/></g>`;
+ return mk1(174,0)+mk1(226,1)+hl(175)+hl(227)}
+function browDraw(cfg){const t=cfg.brows,c=dk(cfg.hairColor==="#eeece8"||cfg.hairColor==="#ece2c9"?"#9a8a70":cfg.hairColor,.15);
+ const P={soft:"M-20 -19C-10 -27 8 -28 21 -22C9 -23 -8 -22 -20 -15Z",arched:"M-21 -17C-12 -30 4 -31 21 -21C6 -26 -10 -24 -21 -13Z",straight:"M-21 -21L19 -24C22 -24 22 -19 19 -19L-20 -16C-23 -16 -23 -21 -21 -21Z",
+  thick:"M-22 -17C-12 -29 8 -30 22 -22L21 -15C8 -21 -10 -20 -21 -11Z",stern:"M-21 -25C-8 -27 8 -23 21 -15L20 -10C8 -16 -8 -19 -21 -19Z",thin:"M-20 -19C-10 -27 8 -28 20 -21C8 -24 -8 -23 -20 -17Z"}[t];
+ return`<path d="${P}" fill="${c}" transform="translate(174 182)"/><path d="${P}" fill="${c}" transform="translate(226 182) scale(-1 1)"/>`}
+function noseDraw(cfg,skin){const sh=mix(skin,"#5a2a1e",.35),hl=lt(skin,.3);const t=cfg.nose;
+ const P={button:`<path d="M191 214C194 221 206 221 209 214" fill="none" stroke="${sh}" stroke-width="2.4" stroke-linecap="round"/><circle cx="194" cy="215" r="2" fill="${sh}" opacity=".6"/><circle cx="206" cy="215" r="2" fill="${sh}" opacity=".6"/>`,
+  straight:`<path d="M205 186C207 198 210 206 210 212" fill="none" stroke="${sh}" stroke-width="2" opacity=".55" stroke-linecap="round"/><path d="M190 214C194 222 206 223 211 214" fill="none" stroke="${sh}" stroke-width="2.4" stroke-linecap="round"/>`,
+  broad:`<path d="M186 212C186 222 196 223 200 221C204 223 214 222 214 212" fill="none" stroke="${sh}" stroke-width="2.6" stroke-linecap="round"/><path d="M190 204C186 208 186 214 190 216M210 204C214 208 214 214 210 216" fill="none" stroke="${sh}" stroke-width="1.8" opacity=".6"/>`,
+  roman:`<path d="M203 184C211 196 212 206 209 213" fill="none" stroke="${sh}" stroke-width="2.2" opacity=".6" stroke-linecap="round"/><path d="M191 215C195 222 205 223 210 215" fill="none" stroke="${sh}" stroke-width="2.4" stroke-linecap="round"/>`,
+  petite:`<path d="M194 213C197 218 203 218 206 213" fill="none" stroke="${sh}" stroke-width="2.2" stroke-linecap="round"/>`}[t];
+ return`<ellipse cx="201" cy="200" rx="4" ry="12" fill="${hl}" opacity=".35"/>${P}`}
+function mouthDraw(cfg,g,skin){const lc=cfg.lips?cfg.lips:mix(mix(skin,"#b0504a",.45),"#000",.08);const dkl=dk(lc,.35),hi=lt(lc,.35);const t=cfg.mouth;
+ const fill=g.lg([[0,lc],[1,dk(lc,.2)]]);
+ const P={smirk:`<path d="M182 237C190 231 196 232 200 234C205 231 212 230 220 232C214 242 206 244 199 244C191 244 186 241 182 237Z" fill="${fill}"/><path d="M182 237C192 239 206 238 221 231" fill="none" stroke="${dkl}" stroke-width="2.2" stroke-linecap="round"/>`,
+  smile:`<path d="M180 233C190 239 210 239 220 233C215 247 206 250 200 250C194 250 185 247 180 233Z" fill="${dk(lc,.45)}"/><path d="M184 235C192 239 208 239 216 235L214 239C206 242 194 242 186 239Z" fill="#fbf8f2"/><path d="M180 233C190 240 210 240 220 233" fill="none" stroke="${dkl}" stroke-width="2" stroke-linecap="round"/><path d="M188 246C196 251 204 251 212 246" fill="none" stroke="${lc}" stroke-width="4" stroke-linecap="round"/>`,
+  grin:`<path d="M178 232C190 236 210 236 222 232C218 248 208 254 200 254C192 254 182 248 178 232Z" fill="${dk(lc,.5)}"/><path d="M181 233C192 237 208 237 219 233L217 240C206 243 194 243 183 240Z" fill="#fbf8f2"/><path d="M178 232C190 237 210 237 222 232" fill="none" stroke="${dkl}" stroke-width="2"/><path d="M186 249C195 255 205 255 214 249" fill="none" stroke="${lc}" stroke-width="4" stroke-linecap="round"/><path d="M176 229C178 232 179 233 178 236M224 229C222 232 221 233 222 236" stroke="${mix(skin,"#5a2a1e",.35)}" stroke-width="1.6" fill="none"/>`,
+  neutral:`<path d="M184 236C192 232 196 233 200 234C204 233 208 232 216 236C210 242 205 243 200 243C195 243 190 242 184 236Z" fill="${fill}"/><path d="M184 236C194 238 206 238 216 236" fill="none" stroke="${dkl}" stroke-width="2" stroke-linecap="round"/>`,
+  pout:`<path d="M180 236C188 228 196 229 200 232C204 229 212 228 220 236C214 246 206 249 200 249C194 249 186 246 180 236Z" fill="${fill}"/><path d="M180 236C192 239 208 239 220 236" fill="none" stroke="${dkl}" stroke-width="2" stroke-linecap="round"/><ellipse cx="204" cy="243" rx="6" ry="2" fill="${hi}" opacity=".7"/>`,
+  stern:`<path d="M184 238C194 236 206 236 216 238C210 241 205 242 200 242C195 242 190 241 184 238Z" fill="${fill}"/><path d="M183 238C194 235 206 235 217 238" fill="none" stroke="${dkl}" stroke-width="2.2" stroke-linecap="round"/>`}[t];
+ return P}
+function beardDraw(cfg,g){const t=cfg.beard;if(t==="none")return"";const c=cfg.hairColor,cd=dk(c,.3);
+ const p=g.pat(4,4,`<circle cx="1" cy="1" r=".9" fill="${cd}"/><circle cx="3" cy="3" r=".8" fill="${cd}"/>`);
+ const jaw=`M146 206C152 238 176 262 200 263C224 262 248 238 254 206C246 224 232 232 216 230C210 228 205 226 200 226C195 226 190 228 184 230C168 232 154 224 146 206Z`;
+ const mous=`M180 229C186 222 194 222 200 225C206 222 214 222 220 229C214 233 208 232 200 230C192 232 186 233 180 229Z`;
+ const fill=g.lg([[0,lt(c,.1)],[1,cd]]);
+ const D={stubble:`<path d="${jaw}" fill="${p}" opacity=".55"/><path d="${mous}" fill="${p}" opacity=".6"/>`,
+  pencil:`<path d="M184 228C190 225 196 226 200 227C204 226 210 225 216 228" fill="none" stroke="${c}" stroke-width="2.6" stroke-linecap="round"/>`,
+  handlebar:`<path d="M178 230C184 220 194 221 200 225C206 221 216 220 222 230C228 232 234 228 236 220C238 232 228 240 216 233C210 231 204 231 200 230C196 231 190 231 184 233C172 240 162 232 164 220C166 228 172 232 178 230Z" fill="${fill}" ${OL}/>`,
+  goatee:`<path d="${mous}" fill="${fill}"/><path d="M188 246C190 260 196 266 200 266C204 266 210 260 212 246C206 250 194 250 188 246Z" fill="${fill}"/>`,
+  boxed:`<path d="M140 190C142 238 170 268 200 268C230 268 258 238 260 190C254 214 242 226 226 230C216 226 210 226 200 226C190 226 184 226 174 230C158 226 146 214 140 190ZM186 242C194 247 206 247 214 242C212 250 206 252 200 252C194 252 188 250 186 242Z" fill="${fill}" fill-rule="evenodd" opacity=".95"/><path d="${mous}" fill="${fill}"/>`,
+  full:`<path d="M136 180C134 246 164 284 200 286C236 284 266 246 264 180C258 210 244 226 228 230C216 224 210 224 200 224C190 224 184 224 172 230C156 226 142 210 136 180ZM184 240C194 246 206 246 216 240C212 252 206 254 200 254C194 254 188 252 184 240Z" fill="${fill}" fill-rule="evenodd" ${OL}/><path d="${mous}" fill="${fill}"/><path d="M170 258C180 272 190 276 200 278M230 258C220 272 210 276 200 278M156 236C162 250 168 258 176 264M244 236C238 250 232 258 224 264" stroke="${lt(c,.25)}" stroke-width="1.6" opacity=".4" fill="none"/>`}[t];
+ return D||""}
+function marksDraw(cfg,skin){const t=cfg.marks,sh=mix(skin,"#5a2a1e",.4);
+ if(t==="freckles")return Array.from({length:22},(_,i)=>{const r=rnd(i*31+7);const side=i%2?1:-1;return`<circle cx="${(200+side*(10+r()*34)).toFixed(1)}" cy="${(200+r()*20).toFixed(1)}" r="${(1+r()*1.1).toFixed(1)}" fill="${sh}" opacity=".7"/>`}).join("");
+ if(t==="mole")return`<circle cx="226" cy="230" r="2.4" fill="#2a160e"/>`;
+ if(t==="scar")return`<path d="M224 148L236 176" stroke="${lt(skin,.35)}" stroke-width="3" stroke-linecap="round"/><path d="M226 154L232 151M229 162L235 159M232 170L238 167" stroke="${lt(skin,.3)}" stroke-width="1.6"/>`;
+ if(t==="blush")return`<ellipse cx="162" cy="210" rx="16" ry="9" fill="#e85a6a" opacity=".28"/><ellipse cx="238" cy="210" rx="16" ry="9" fill="#e85a6a" opacity=".28"/>`;
+ if(t==="vitiligo")return`<path d="M228 120C246 118 262 134 262 156C256 170 242 166 236 154C226 146 218 130 228 120Z" fill="${lt(skin,.55)}" opacity=".85"/><path d="M150 222C160 220 168 232 164 244C156 248 146 240 150 222Z" fill="${lt(skin,.55)}" opacity=".8"/>`;
+ return""}
+
+/* ---------------- OUTFITS (clipped to body) ---------------- */
+function outfitDraw(cfg,g,b,skin){
+ const id=cfg.outfit,cw=(CW[id]||CW.trench)[cfg.outfitColor%(CW[id]||CW.trench).length],[,A,Bc,C]=cw;
+ const{S,N}=b,L=200-S,R=200+S;const bp=bodyPath(b);
+ const main=g.lg([[0,lt(A,.12)],[.55,A],[1,dk(A,.35)]],0,0,1,1);
+ const sideSh=`<path d="M${L-20} 330L${L+18} 340L${L+12} 482L${200-b.B} 482Z" fill="#000" opacity=".22"/><path d="M${R+20} 330L${R-18} 340L${R-12} 482L${200+b.B} 482Z" fill="#000" opacity=".3"/>`;
+ const armLine=`<path d="M${L+20} 336C${L+16} 380 ${L+14} 430 ${L+12} 482M${R-20} 336C${R-16} 380 ${R-14} 430 ${R-12} 482" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="2.4"/>`;
+ const base=`<path d="${bp}" fill="${main}"/>`;
+ const skinV=(d,depth=330,w=26)=>`<path d="M${200-w} 262L200 ${depth}L${200+w} 262Z" fill="${skin}"/>`;
+ const shirtV=(col,depth,w)=>`<path d="M${200-w} 266L200 ${depth}L${200+w} 266Z" fill="${col}"/>`;
+ const lapel=(col,top,low,wid,notch=1)=>both(`<path d="M${200-N-4} 268L${200-wid} ${top+50}L${200-wid+14} ${top+58}L${200-wid+4} ${top+70}L200 ${low}L${200-14} ${low-40}Z" fill="${col}" ${OL}/>`);
+ const tie=(col)=>`<path d="M194 276L206 276L203 288L210 360L200 374L190 360L197 288Z" fill="${col}" ${OL}/><path d="M194 276L206 276L203 288L197 288Z" fill="${dk(col,.3)}"/>`;
+ const btns=(x,ys,col)=>ys.map(y=>`<circle cx="${x}" cy="${y}" r="4.2" fill="${col}" ${OL}/>`).join("");
+ const collarShirt=(col)=>`<path d="M${200-N-2} 262L200 292L${200-N-14} 302Z" fill="${col}" ${OL}/><path d="M${200+N+2} 262L200 292L${200+N+14} 302Z" fill="${col}" ${OL}/>`;
+ const bust=b.curvy||b.soft?`<path d="M${200-S*.62} 372Q${200-S*.32} 398 200 384Q${200+S*.32} 398 ${200+S*.62} 372" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="2.4"/>`:"";
+ let s="";
+ switch(id){
+  case"trench":s=base+shirtV(Bc,350,30)+tie(C)+collarShirt(Bc)+lapel(dk(A,.12),262,400,S*.86)+
+    `<path d="M${200-S*.98} 330L${200-S*.62} 360L${200-S*.54} 320Z" fill="${dk(A,.2)}" opacity=".8"/><path d="M${L-8} 430L${R+8} 430L${R+8} 452L${L-8} 452Z" fill="${dk(A,.15)}" ${OL}/><rect x="186" y="428" width="28" height="26" rx="3" fill="none" stroke="${lt(A,.4)}" stroke-width="4"/>`+
+    btns(200-S*.42,[392,470],dk(A,.4))+btns(200+S*.42,[392,470],dk(A,.4))+`<path d="M${L+8} 300L${L+40} 296L${L+44} 312L${L+10} 318Z" fill="${dk(A,.1)}" ${OL}/><path d="M${R-8} 300L${R-40} 296L${R-44} 312L${R-10} 318Z" fill="${dk(A,.1)}" ${OL}/>`;break;
+  case"suit":{const pin=g.pat(10,10,`<path d="M0 0V10" stroke="${lt(A,.25)}" stroke-width=".8"/>`);s=base+`<path d="${bp}" fill="${pin}" opacity="${cw[0].includes("pin")?.5:0}"/>`+shirtV(Bc,370,30)+tie(C)+collarShirt(Bc)+
+    `<path d="M${200-S*.5} 300L200 372L${200+S*.5} 300L${200+S*.5} 482L${200-S*.5} 482Z" fill="${dk(A,.08)}"/>`+shirtV(Bc,350,22)+tie(C)+btns(200,[392,418,444],dk(A,.4))+
+    lapel(dk(A,.18),262,410,S*.84)+`<path d="M${200-S*.7} 360L${200-S*.4} 356" stroke="#fff" stroke-width="5" stroke-opacity=".8"/><path d="M${200-S*.72} 352L${200-S*.62} 340L${200-S*.52} 352Z" fill="${C}"/>`;break}
+  case"turtle":s=base+`<path d="M${200-N-4} 228L${200+N+4} 228L${200+N+8} 280L${200-N-8} 280Z" fill="${A}" ${OL}/><path d="M${200-N-4} 240H${200+N+4}M${200-N-5} 252H${200+N+5}M${200-N-6} 264H${200+N+6}" stroke="${dk(A,.35)}" stroke-width="2"/>`+
+    `<path d="M${200-S*.5} 290L200 300L${200+S*.5} 290L${200+S*.4} 482L${200-S*.4} 482Z" fill="${A}"/>`+both(`<path d="M${L-18} 352C${L-14} 318 ${L-4} 298 ${L+16} 292L${200-N-6} 278L${200-S*.4} 380L${200-S*.4} 482L${200-b.B} 482Z" fill="${g.lg([[0,lt(Bc,.12)],[1,dk(Bc,.3)]],0,0,1,1)}" ${OL}/><path d="M${200-N-6} 278L${200-S*.5} 320L${200-S*.62} 316L${200-S*.4} 380" fill="${dk(Bc,.15)}" ${OL}/>`)+btns(200-S*.32,[420],C);break;
+  case"blouse":s=base+`<path d="${bp}" fill="${g.lg([[0,lt(A,.2)],[1,dk(A,.18)]],0,0,1,1)}"/>`+`<path d="M200 270C186 272 176 290 182 302C190 304 198 292 200 282C202 292 210 304 218 302C224 290 214 272 200 270Z" fill="${Bc}" ${OL}/><path d="M196 284L184 344L192 346L200 290ZM204 284L216 344L208 346L200 290Z" fill="${Bc}" ${OL}/>`+
+    `<path d="M${L+14} 330C${L+40} 340 ${L+50} 400 ${L+40} 482M${R-14} 330C${R-40} 340 ${R-50} 400 ${R-40} 482" stroke="${dk(A,.25)}" stroke-width="2" fill="none" opacity=".6"/>`+`<path d="M${L-30} 450H${R+30}V482H${L-30}Z" fill="${C}"/><rect x="190" y="448" width="20" height="18" rx="3" fill="#d8b060" ${OL}/>`;break;
+  case"tee":s=base+`<path d="M${200-N-4} 262C${200-N} 284 ${200+N} 284 ${200+N+4} 262" fill="${skin}" stroke="${dk(A,.3)}" stroke-width="5"/>`+
+    `<circle cx="200" cy="376" r="${S*.42}" fill="none" stroke="${Bc}" stroke-width="5"/><path d="M${200-S*.3} 392L200 336L${200+S*.3} 392Z" fill="${C}"/><text x="200" y="${376+S*.42+26}" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="22" fill="${Bc}" letter-spacing="3">THE VAULT</text>`;break;
+  case"hoodie":s=base+`<path d="M${200-N-26} 248C${200-N-30} 290 ${200+N+30} 290 ${200+N+26} 248C${200+N+40} 262 ${200+N+44} 300 200 312C${200-N-44} 300 ${200-N-40} 262 ${200-N-26} 248Z" fill="${Bc}" ${OL}/>`+
+    `<path d="M${200-N} 256C${200-N} 280 ${200+N} 280 ${200+N} 256" fill="${skin}"/><path d="M186 300L184 360M214 300L216 360" stroke="${C}" stroke-width="3" stroke-linecap="round"/><circle cx="184" cy="362" r="3" fill="${C}"/><circle cx="216" cy="362" r="3" fill="${C}"/>`+
+    `<path d="M${200-S*.5} 420H${200+S*.5}L${200+S*.56} 470H${200-S*.56}Z" fill="${dk(A,.12)}" ${OL}/>`;break;
+  case"cardigan":s=base+shirtV(Bc,482,S*.5)+`<path d="M${200-S*.5} 300L200 300L${200+S*.5} 300L${200+S*.5} 482H${200-S*.5}Z" fill="${Bc}"/>`+collarShirt(Bc)+
+    `<path d="M186 274L200 282L214 274L214 292L200 284L186 292Z" fill="${C}" ${OL}/><circle cx="200" cy="283" r="4" fill="${dk(C,.3)}"/>`+btns(200,[330,364,398,432],dk(Bc,.15))+
+    both(`<path d="M${200-N-10} 272L${200-S*.48} 482L${200-S*.3} 482L${200-14} 292Z" fill="${dk(A,.12)}" ${OL}/>`)+btns(200-S*.44,[350,400,450],lt(A,.4))+
+    `<rect x="${200+S*.5}" y="350" width="26" height="30" fill="${dk(A,.15)}" ${OL}/><path d="M${200+S*.5+6} 352V336M${200+S*.5+13} 352V332M${200+S*.5+20} 352V338" stroke-width="4" stroke="${C}"/>`;break;
+  case"varsity":s=base+`<path d="M${L-17} 352C${L-14} 318 ${L-4} 298 ${L+16} 292L${L+30} 300L${L+18} 482L${200-b.B} 482Z" fill="${Bc}" ${OL}/><path d="M${R+17} 352C${R+14} 318 ${R+4} 298 ${R-16} 292L${R-30} 300L${R-18} 482L${200+b.B} 482Z" fill="${Bc}" ${OL}/>`+
+    `<path d="M${200-N-8} 268C${200-N} 290 ${200+N} 290 ${200+N+8} 268L${200+N+16} 272C${200+N+6} 302 ${200-N-6} 302 ${200-N-16} 272Z" fill="${A}" stroke="${Bc}" stroke-width="5"/><path d="M200 292V482" stroke="${dk(A,.4)}" stroke-width="3"/>`+btns(200,[320,356,392,428,464],Bc)+
+    `<text x="${200-S*.5}" y="400" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="64" fill="${C}" stroke="${dk(A,.4)}" stroke-width="3" paint-order="stroke">V</text><path d="M${L-30} 462H${R+30}" stroke="${Bc}" stroke-width="10"/><path d="M${L-30} 474H${R+30}" stroke="${A}" stroke-width="4"/>`;break;
+  case"field":{const camo=cw[0]==="Camo"?g.pat(60,60,`<path d="M0 10C10 0 26 6 30 16C36 30 14 34 6 26Z" fill="${dk(A,.3)}"/><path d="M36 40C46 30 60 38 58 50C54 60 38 58 36 40Z" fill="${lt(A,.18)}"/><path d="M14 44C22 38 30 46 26 54C20 58 10 52 14 44Z" fill="#2a2a1a"/>`):null;
+    s=base+(camo?`<path d="${bp}" fill="${camo}"/>`:"")+`<path d="M${200-N-8} 260L200 300L${200+N+8} 260L${200+N+20} 276L200 314L${200-N-20} 276Z" fill="${dk(A,.15)}" ${OL}/><path d="M200 300V482" stroke="${dk(A,.45)}" stroke-width="3"/>`+
+    both(`<path d="M${200-S*.78} 336H${200-S*.22}V380H${200-S*.78}Z" fill="${dk(A,.08)}" ${OL}/><path d="M${200-S*.8} 330H${200-S*.2}L${200-S*.24} 348H${200-S*.76}Z" fill="${dk(A,.18)}" ${OL}/>`)+
+    `<rect x="${200-S*.7}" y="304" width="${S*.4}" height="14" fill="#1a1a14"/><text x="${200-S*.5}" y="315" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="10" fill="${C}">SLEUTH</text><path d="M${R+6} 310L${R+18} 304L${R+24} 330L${R+10} 334Z" fill="${C}"/>`;break}
+  case"leather":s=base+`<path d="M${200-N} 266L${200-6} 340L${200+18} 482L${200-S*.2} 482Z" fill="${Bc}"/><path d="M${200-N+8} 266C${200} 292 ${200+N} 280 ${200+N} 266" fill="${skin}"/>`+
+    both(`<path d="M${200-N-6} 266L${200-S*.86} 330L${200-S*.6} 342L${200-S*.4} 300Z" fill="${dk(A,.08)}" ${OL}/>`)+`<path d="M${200+N} 266L${200-4} 352L${200+10} 482" fill="none" stroke="${C}" stroke-width="3"/><path d="M${200+N} 266L${200-4} 352L${200+10} 482" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="2 3" opacity=".6"/>`+
+    `<path d="M${200-S*.82} 400L${200-S*.34} 392" stroke="${C}" stroke-width="3"/><path d="M${200+S*.36} 410L${200+S*.8} 404" stroke="${C}" stroke-width="3"/><circle cx="${200-S*.7}" cy="320" r="3" fill="${C}"/><circle cx="${200+S*.7}" cy="320" r="3" fill="${C}"/>`+
+    `<path d="M${L-4} 300C${L+20} 320 ${L+30} 360 ${L+24} 420" stroke="#fff" stroke-opacity=".16" stroke-width="10" fill="none" stroke-linecap="round"/>`;break;
+  case"punk":s=base.replace(main,g.lg([[0,lt(Bc,.08)],[1,dk(Bc,.25)]]))+`<path d="M${200-N} 262C${200-N} 284 ${200+N} 284 ${200+N} 262" fill="${skin}" stroke="${dk(Bc,.3)}" stroke-width="4"/>`+
+    `<path d="M${L+12} 300L${200-30} 290L${200-24} 482L${L+6} 482Z" fill="${A}" ${OL}/><path d="M${R-12} 300L${200+30} 290L${200+24} 482L${R-6} 482Z" fill="${A}" ${OL}/>`+
+    (cw[0]==="Tartan"?`<path d="${bp}" fill="${g.pat(28,28,`<path d="M0 6H28M0 20H28M6 0V28M20 0V28" stroke="#1d1c1f" stroke-width="3" opacity=".6"/><path d="M0 13H28M13 0V28" stroke="${C}" stroke-width="1.2"/>`)}" clip-path="${g.clip(`M${L+12} 300L${200-30} 290L${200-24} 482L${L+6} 482ZM${R-12} 300L${200+30} 290L${200+24} 482L${R-6} 482Z`)}"/>`:"")+
+    Array.from({length:6},(_,i)=>`<path d="M${L+20+(i%2)*14} ${310+i*24}l5 -8 5 8z" fill="${C}" stroke="#000" stroke-width=".8"/>`).join("")+Array.from({length:6},(_,i)=>`<path d="M${R-34+(i%2)*14} ${310+i*24}l5 -8 5 8z" fill="${C}" stroke="#000" stroke-width=".8"/>`).join("")+
+    `<path d="M200 340L194 372L206 372Z" fill="#e8e4de"/><text x="200" y="420" text-anchor="middle" font-family="Impact,sans-serif" font-size="20" fill="#e8e4de" transform="rotate(-6 200 410)">NO CLUE</text><path d="M${200-S*.6} 360l0 22M${200-S*.6-4} 364h8" stroke="#ccc" stroke-width="2.4"/><circle cx="${200+S*.62}" cy="370" r="9" fill="${C}" ${OL}/>`;break;
+  case"lab":s=base.replace(main,g.lg([[0,"#ffffff"],[1,dk(A,.18)]],0,0,1,1))+shirtV(Bc,340,26)+tie(dk(Bc,.4))+collarShirt("#e8eef4")+lapel(dk(A,.06),262,390,S*.7)+
+    `<rect x="${200+S*.32}" y="350" width="${S*.48}" height="40" fill="none" stroke="${dk(A,.25)}" stroke-width="2.4"/><path d="M${200+S*.4} 352V330M${200+S*.5} 352V326" stroke="${C}" stroke-width="4"/><g transform="translate(${200-S*.82} 360) rotate(-4)"><rect width="44" height="56" rx="4" fill="#fff" ${OL}/><rect x="6" y="6" width="32" height="24" fill="${Bc}"/><circle cx="22" cy="18" r="7" fill="${skin}"/><path d="M6 38H38M6 46H30" stroke="#666" stroke-width="3"/></g><path d="M${200-S*.6} 330L${200-S*.6} 360" stroke="${C}" stroke-width="2"/>`;break;
+  case"gothcoat":s=base+`<path d="M${200-N-10} 240L${200+N+10} 240L${200+N+18} 292L${200-N-18} 292Z" fill="${A}" ${OL}/>`+
+    `<path d="M200 262C182 268 176 290 186 300C178 314 186 330 200 334C214 330 222 314 214 300C224 290 218 268 200 262Z" fill="${Bc}" ${OL}/><path d="M186 296C194 304 206 304 214 296M184 316C194 322 206 322 216 316" fill="none" stroke="${dk(Bc,.25)}" stroke-width="2"/><circle cx="200" cy="290" r="7" fill="${C}" ${OL}/><circle cx="200" cy="290" r="3" fill="#7a1020"/>`+
+    btns(200-S*.26,[352,384,416,448],C)+btns(200+S*.26,[352,384,416,448],C)+`<path d="M${200-S*.18} 340V482M${200+S*.18} 340V482" stroke="${dk(A,.5)}" stroke-width="2"/>`+
+    both(`<path d="M${L-17} 352C${L-14} 318 ${L-4} 298 ${L+16} 292L${L+30} 300C${L+20} 330 ${L+2} 340 ${L-14} 360Z" fill="${dk(A,.2)}" ${OL}/>`)+`<path d="M${200-N-10} 240L${200-N-26} 210L${200-N-14} 284ZM${200+N+10} 240L${200+N+26} 210L${200+N+14} 284Z" fill="${dk(A,.1)}" ${OL}/>`;break;
+  case"steam":s=base.replace(main,g.lg([[0,"#e8dcc6"],[1,"#b8a88e"]]))+collarShirt(C)+`<path d="M186 270L214 270L210 292L190 292Z" fill="${Bc}" ${OL}/>`+
+    `<path d="M${L+6} 300L${200-18} 290L200 320L${200+18} 290L${R-6} 300L${R-2} 482L${L+2} 482Z" fill="${main}" ${OL}/><path d="M200 320V482" stroke="${dk(A,.4)}" stroke-width="2"/>`+btns(200-10,[344,376,408,440],Bc)+
+    `<path d="M${200-10} 376C${200-S*.3} 390 ${200-S*.5} 384 ${200-S*.58} 372" fill="none" stroke="${Bc}" stroke-width="2.4"/><circle cx="${200-S*.6}" cy="370" r="9" fill="${Bc}" ${OL}/>`+
+    (()=>{const gx=200+S*.5,gy=400;let t="";for(let i=0;i<10;i++){const a=i/10*Math.PI*2;t+=`<rect x="${gx-4}" y="${gy-24}" width="8" height="10" fill="${Bc}" transform="rotate(${i*36} ${gx} ${gy})"/>`}return t+`<circle cx="${gx}" cy="${gy}" r="17" fill="${Bc}" ${OL}/><circle cx="${gx}" cy="${gy}" r="6" fill="${dk(A,.2)}"/>`})()+`<path d="M${L-17} 352L${L-6} 300L${L+10} 300L${L+4} 482L${200-b.B} 482Z" fill="#e8dcc6"/><path d="M${R+17} 352L${R+6} 300L${R-10} 300L${R-4} 482L${200+b.B} 482Z" fill="#e8dcc6"/>`;break;
+  case"open":s=base.replace(main,g.lg([[0,lt(A,.1)],[.6,A],[1,dk(A,.3)]],0,0,1,1))+`<path d="M${200-N-4} 262L200 360L${200+N+4} 262Z" fill="${g.lg([[0,skin],[1,mix(skin,"#5a2a1e",.25)]])}"/>`+
+    `<path d="M186 300C192 306 196 306 200 304M214 300C208 306 204 306 200 304" stroke="${mix(skin,"#5a2a1e",.35)}" stroke-width="2" fill="none" opacity=".6"/>`+
+    both(`<path d="M${200-N-4} 262L${200-N-30} 300L${200-24} 330L200 360L${200-N+4} 270Z" fill="${dk(A,.1)}" ${OL}/>`)+btns(200,[372,410,448],Bc)+
+    (cw[0]==="Tropical"?`<path d="${bp}" fill="${g.pat(50,50,`<path d="M10 30C20 10 30 10 40 20C30 24 24 30 10 30Z" fill="${Bc}" opacity=".7"/><circle cx="38" cy="40" r="5" fill="${C}" opacity=".8"/>`)}" opacity=".9" clip-path="${g.clip(`M${L-30} 300H${200-14}L200 360V482H${L-30}ZM${R+30} 300H${200+14}L200 360V482H${R+30}Z`)}"/>`:"")+
+    `<path d="M${L+10} 310C${L+40} 340 ${L+44} 420 ${L+30} 482" stroke="#fff" stroke-opacity=".18" stroke-width="12" fill="none"/>`;break;
+  case"cape":s=base+shirtV("#efe8dc",360,24)+tie(C)+collarShirt("#efe8dc")+lapel(dk(A,.15),262,380,S*.6)+
+    `<path d="M${L-30} 300C${L+10} 280 ${R-10} 280 ${R+30} 300L${R+44} 410C${R} 430 ${L} 430 ${L-44} 410Z" fill="${g.pat(26,26,`<rect width="26" height="26" fill="${A}"/><path d="M0 6H26M0 19H26M6 0V26M19 0V26" stroke="${Bc}" stroke-width="3"/><path d="M0 13H26M13 0V26" stroke="${C}" stroke-width=".8"/>`)}" ${OL}/>`+
+    `<path d="M${L-36} 400C${L+10} 420 ${R-10} 420 ${R+36} 400" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="3"/><path d="M${200-N-14} 270L${200-N-40} 236L${200-N-10} 300ZM${200+N+14} 270L${200+N+40} 236L${200+N+10} 300Z" fill="${dk(A,.2)}" ${OL}/>`;break;
+  case"corset":{const lace=g.pat(14,14,`<circle cx="7" cy="7" r="5" fill="none" stroke="${C}" stroke-width=".9" opacity=".6"/><circle cx="0" cy="0" r="3" fill="none" stroke="${C}" stroke-width=".7" opacity=".5"/>`);
+    s=`<path d="${bp}" fill="${g.lg([[0,lt(skin,.05)],[1,mix(skin,"#5a2a1e",.2)]])}"/><path d="M${200-N-4} 262L${200-S*.9} 300L${200-S*.98} 340L${200-S*.4} 336L${200-N-2} 270Z" fill="${lace}" opacity=".9"/>`+mir(`<path d="M${200-N-4} 262L${200-S*.9} 300L${200-S*.98} 340L${200-S*.4} 336L${200-N-2} 270Z" fill="${lace}" opacity=".9"/>`)+
+    `<path d="M${L-20} 350C${L+10} 330 ${200-S*.4} 330 200 352C${200+S*.4} 330 ${R-10} 330 ${R+20} 350L${200+b.B} 482H${200-b.B}Z" fill="${main}" ${OL}/>`+
+    Array.from({length:5},(_,i)=>`<path d="M${194} ${370+i*22}L${206} ${382+i*22}M${206} ${370+i*22}L${194} ${382+i*22}" stroke="${C}" stroke-width="2"/>`).join("")+`<path d="M${200-S*.5} 356L${200-S*.48} 482M${200+S*.5} 356L${200+S*.48} 482" stroke="${Bc}" stroke-width="3"/>`+
+    `<path d="M${L-20} 350C${L+10} 330 ${200-S*.4} 330 200 352C${200+S*.4} 330 ${R-10} 330 ${R+20} 350" fill="none" stroke="${C}" stroke-width="3" stroke-dasharray="1 5" stroke-linecap="round"/>`;break}
+  case"sequin":{const sq=g.pat(9,9,`<circle cx="4.5" cy="4.5" r="3.6" fill="${Bc}" opacity=".55"/><circle cx="3.4" cy="3.4" r="1.2" fill="#fff" opacity=".7"/>`,"rotate(45)");
+    s=`<path d="${bp}" fill="${g.lg([[0,lt(skin,.05)],[1,mix(skin,"#5a2a1e",.2)]])}"/><path d="M${200-N+6} 262L${200-S*.5} 350L${200-S*.2} 482H${200+S*.2}L${200+S*.5} 350L${200+N-6} 262L${200+16} 262L200 330L${200-16} 262Z" fill="${main}" ${OL}/>`+
+    `<path d="M${200-N+6} 262L${200-S*.5} 350L${200-S*.2} 482H${200+S*.2}L${200+S*.5} 350L${200+N-6} 262L${200+16} 262L200 330L${200-16} 262Z" fill="${sq}"/>`+
+    `<path d="M${L-17} 400C${L+20} 370 ${L+40} 380 ${200-S*.4} 420M${R+17} 400C${R-20} 370 ${R-40} 380 ${200+S*.4} 420" fill="none" stroke="${lt(Bc,.4)}" stroke-width="5" opacity=".5"/>`+
+    Array.from({length:14},(_,i)=>{const r=rnd(i*17+9);return`<path class="avtw" style="animation-delay:${(r()*3).toFixed(2)}s" d="M${(200-S*.4+r()*S*.8).toFixed(0)} ${(290+r()*180).toFixed(0)}m0 -6l1.6 4.4 4.4 1.6 -4.4 1.6 -1.6 4.4 -1.6 -4.4 -4.4 -1.6 4.4 -1.6z" fill="#fff"/>`}).join("");break}
+  case"tux":{const vel=g.lg([[0,lt(A,.18)],[.5,A],[1,dk(A,.5)]],0,0,1,1);s=`<path d="${bp}" fill="${vel}"/>`+shirtV(Bc,420,34)+`<path d="M200 300V420" stroke="${dk(Bc,.15)}" stroke-width="1.4"/>`+btns(200,[330,360,390],"#1a1a1c")+
+    `<path d="M182 272L200 280L218 272L218 292L200 284L182 292Z" fill="#121214" ${OL}/><rect x="195" y="277" width="10" height="10" rx="2" fill="#000"/>`+collarShirt("#fff")+
+    both(`<path d="M${200-N-4} 268L${200-S*.74} 340L200 430L${200-34} 360Z" fill="${cw[0]==="White dinner"?"#e2ddd0":"#0e0e10"}" ${OL}/><path d="M${200-N-2} 270L${200-S*.7} 340" stroke="#fff" stroke-opacity=".25" stroke-width="3"/>`)+
+    `<path d="M${200-S*.72} 356L${200-S*.62} 342L${200-S*.52} 356Z" fill="#fff"/><circle cx="${200-S*.56}" cy="330" r="7" fill="#c81d2a"/><circle cx="${200-S*.56}" cy="330" r="3" fill="#7a0d18"/>`;break}
+  case"dress":s=base+collarShirt("#f0ece4")+tie("#121214")+lapel(dk(A,.1),262,404,S*.8)+btns(200-S*.22,[404,446],Bc)+btns(200+S*.22,[404,446],Bc)+
+    both(`<path d="M${L-6} 296L${L+40} 290L${L+42} 306L${L-8} 314Z" fill="${Bc}" ${OL}/><path d="M${L-4} 312L${L-2} 326M${L+6} 312L${L+8} 326M${L+16} 312L${L+18} 326M${L+26} 312L${L+28} 326" stroke="${Bc}" stroke-width="2"/>`)+
+    `<g transform="translate(${200-S*.62} 348)">${[C,"#1a3a8a","#e8d8a0",C].map((c,i)=>`<rect x="${i*13}" y="0" width="12" height="9" fill="${c}" stroke="#000" stroke-width=".6"/>`).join("")}${[0,1].map(i=>`<rect x="${i*13+6}" y="11" width="12" height="9" fill="${i?"#2a6a3a":"#8a1a24"}" stroke="#000" stroke-width=".6"/>`).join("")}<path d="M10 26L14 40L18 26M32 26L36 40L40 26" stroke="${C}" stroke-width="4"/><circle cx="14" cy="44" r="6" fill="${Bc}" ${OL}/><circle cx="36" cy="44" r="6" fill="${Bc}" ${OL}/></g>`+
+    `<path d="M${R-40} 330C${R-60} 360 ${R-30} 380 ${R-50} 410" stroke="${Bc}" stroke-width="4" fill="none"/>`;break;
+  case"cyber":s=base.replace(main,g.lg([[0,lt(A,.15)],[1,A]]))+`<path d="M${200-N-8} 236L${200+N+8} 236L${200+N+16} 290L${200-N-16} 290Z" fill="${dk(A,.2)}" ${OL}/><path d="M${200-N-8} 250H${200+N+8}" stroke="${Bc}" stroke-width="3" class="avglow"/>`+
+    `<path d="M${200-N-16} 290L${200-S*.7} 482M${200+N+16} 290L${200+S*.3} 482" stroke="${Bc}" stroke-width="4" class="avglow" fill="none"/><path d="M${L-17} 352L${L-6} 330L${L+20} 340" stroke="${C}" stroke-width="4" class="avglow" fill="none"/><path d="M${R+17} 352L${R+6} 330L${R-20} 340" stroke="${C}" stroke-width="4" class="avglow" fill="none"/>`+
+    `<path d="M${200-S*.5} 380H${200-S*.2}L${200-S*.1} 400H${200-S*.6}Z" fill="${C}" opacity=".9" class="avglow"/><path d="M${200+S*.1} 300L${200+S*.5} 330L${200+S*.5} 420" fill="none" stroke="${Bc}" stroke-width="2" stroke-dasharray="6 4"/><text x="${200+S*.36}" y="450" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="12" fill="${Bc}" letter-spacing="2">VLT-07</text>`;break;
+ }
+ return`<g clip-path="${g.clip(bp)}">${s}${sideSh}${armLine}${bust}</g>`}
+
+/* ---------------- NECK & EARS ---------------- */
+function neckDraw(cfg,g,b){const t=cfg.neck,N=b.N;
+ switch(t){
+  case"scarf":{const c="#8a1a24",f=g.lg([[0,lt(c,.15)],[1,dk(c,.3)]]);return`<path d="M${200-N-14} 256C${200-N-10} 290 ${200+N+10} 290 ${200+N+14} 256L${200+N+18} 278C${200+N} 304 ${200-N} 304 ${200-N-18} 278Z" fill="${f}" ${OL}/><path d="M${200+N-6} 288L${200+N+20} 400L${200+N-4} 404L${200+N-24} 294Z" fill="${f}" ${OL}/><path d="M${200+N+12} 390L${200+N+14} 404M${200+N+4} 392L${200+N+6} 406M${200+N-4} 392L${200+N-2} 406" stroke="${c}" stroke-width="2"/><path d="M${200-N} 268C${200} 284 ${200+N} 268 ${200+N} 268" stroke="#fff" stroke-opacity=".2" stroke-width="2" fill="none"/>`}
+  case"pearls":return Array.from({length:17},(_,i)=>{const a=Math.PI*(i/16);const x=200-Math.cos(a)*(N+10),y=262+Math.sin(a)*28;return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.6" fill="${g.rg([[0,"#ffffff"],[.6,"#ece6dc"],[1,"#a8a094"]],.35,.35,.6)}"/>`}).join("");
+  case"choker":return`<path d="M${200-N+2} 250C${200-N+6} 262 ${200+N-6} 262 ${200+N-2} 250L${200+N-2} 258C${200+N-6} 270 ${200-N+6} 270 ${200-N+2} 258Z" fill="#141216" ${OL}/>`+Array.from({length:7},(_,i)=>{const x=200-N+8+i*((2*N-16)/6);return`<path d="M${x-3} 262L${x} 272L${x+3} 262Z" fill="#c8ccd2"/>`}).join("");
+  case"chain":return`<path d="M${200-N-6} 268C${200-N+6} 300 ${200+N-6} 300 ${200+N+6} 268" fill="none" stroke="#e2b240" stroke-width="4.5" stroke-dasharray="6 2"/><path d="M${200-N-6} 268C${200-N+6} 300 ${200+N-6} 300 ${200+N+6} 268" fill="none" stroke="#fff6c8" stroke-width="1.2" stroke-dasharray="3 5" opacity=".7"/>`;
+  case"tags":return`<path d="M${200-N+2} 262L196 318M${200+N-2} 262L204 318" stroke="#9aa0a6" stroke-width="1.6" stroke-dasharray="2 1.5"/><rect x="186" y="316" width="18" height="28" rx="6" fill="#b8bec4" ${OL} transform="rotate(-8 195 330)"/><rect x="198" y="320" width="18" height="28" rx="6" fill="#d0d6dc" ${OL} transform="rotate(6 207 334)"/>`;
+  case"locket":return`<path d="M${200-N+2} 262L200 322L${200+N-2} 262" fill="none" stroke="#d6b04a" stroke-width="2"/><ellipse cx="200" cy="334" rx="12" ry="15" fill="${g.rg([[0,"#fff2b8"],[.6,"#d6b04a"],[1,"#7a5a1a"]],.35,.3,.7)}" ${OL}/><path d="M200 326l2 5 5 .5 -4 3 1.5 5 -4.5 -3 -4.5 3 1.5 -5 -4 -3 5 -.5z" fill="#7a5a1a"/>`;
+  case"bolo":return`<path d="M${200-N+4} 264L198 330L196 380M${200+N-4} 264L202 330L204 380" stroke="#2a1a10" stroke-width="2.4" fill="none"/><circle cx="200" cy="320" r="10" fill="#3ab0a8" stroke="#c8ccd2" stroke-width="3"/>`;
+ }return""}
+function earsDraw(cfg){const t=cfg.ears;if(t==="none")return"";
+ const one=x=>({studs:`<circle cx="${x}" cy="198" r="3.2" fill="#e8ecf4" stroke="#9aa" stroke-width=".8"/>`,hoops:`<circle cx="${x}" cy="208" r="9" fill="none" stroke="#e2b240" stroke-width="2.8"/>`,
+  cross:`<path d="M${x} 198V222M${x-5} 206H${x+5}" stroke="#c8ccd2" stroke-width="2.6"/>`,cuffs:`<path d="M${x-5} 168C${x-9} 176 ${x-9} 186 ${x-5} 192" stroke="#c8ccd2" stroke-width="3" fill="none"/><circle cx="${x}" cy="198" r="2.6" fill="#c8ccd2"/>`,
+  diamonds:`<path d="M${x} 198V206" stroke="#e8ecf4" stroke-width="1.4"/><path d="M${x} 205L${x+6} 213L${x} 225L${x-6} 213Z" fill="#dff4ff" stroke="#9ac" stroke-width=".8"/><path class="avtw" d="M${x+4} 210l1 3 3 1 -3 1 -1 3 -1 -3 -3 -1 3 -1z" fill="#fff"/>`}[t]||"");
+ return one(134)+one(266)}
+
+/* ---------------- HATS ---------------- */
+function hatInfo(id){return{none:{},fedora:{clip:134},trilby:{clip:136},deer:{clip:130},beret:{clip:118},beanie:{clip:138},cap:{clip:128},flat:{clip:126},hijab:{hideAll:1},turban:{hideTop:1,clip:150},
+ bandana:{clip:134},phones:{},military:{clip:124},goggles:{},catears:{},pillbox:{},tophat:{clip:120},crown:{}}[id]||{}}
+function hatDraw(cfg,g,part){const id=cfg.hat;if(id==="none")return"";const cw=(HCW[id==="trilby"?"fedora":id]||HCW.fedora||[["","#333"]]);const col=cw[cfg.hatColor%cw.length];const A=col[1],B2=col[2]||dk(col[1],.45);
+ const f=g.lg([[0,lt(A,.18)],[1,dk(A,.35)]]);
+ if(part==="back"){
+  if(id==="hijab")return`<path d="M200 80C264 80 292 130 292 198C292 250 304 296 326 340L74 340C96 296 108 250 108 198C108 130 136 80 200 80Z" fill="${f}" ${OL}/>`;
+  if(id==="phones")return`<path d="M128 176C124 100 160 66 200 66C240 66 276 100 272 176" fill="none" stroke="#1b1b1e" stroke-width="12"/><path d="M128 176C124 100 160 66 200 66C240 66 276 100 272 176" fill="none" stroke="#45f0dc" stroke-width="2.4" opacity=".7"/>`;
+  return""}
+ if(part==="neck"){ // drape that sits over the outfit, under the face
+  if(id==="hijab")return`<path d="M132 186C136 244 168 272 200 274C232 272 264 244 268 186L300 300C266 344 134 344 100 300Z" fill="${f}" ${OL}/><path d="M150 260C170 290 230 290 250 260M130 290C170 320 230 320 270 290" fill="none" stroke="${dk(A,.35)}" stroke-width="2" opacity=".6"/>`;
+  return""}
+ switch(id){
+  case"fedora":case"trilby":{const t=id==="trilby";const w=t?78:100;
+   return`<g transform="translate(200 132) scale(1.14 1.1) translate(-200 -124)"><path d="M${200-w} ${t?124:128}C${200-w+10} ${t?110:110} ${200+w-10} ${t?108:106} ${200+w} ${t?118:120}C${200+w+6} ${t?128:132} ${200+w-30} 140 200 142C${200-w+24} 142 ${200-w-6} ${t?134:138} ${200-w} ${t?124:128}Z" fill="${f}" ${OL}/>`+
+    `<path d="M142 ${t?124:122}C138 ${t?92:86} 150 ${t?66:58} 172 ${t?62:54}C186 ${t?58:50} 194 ${t?66:58} 200 ${t?64:56}C206 ${t?62:54} 216 ${t?56:50} 230 ${t?60:54}C252 ${t?66:60} 262 ${t?92:86} 258 ${t?122:120}Z" fill="${f}" ${OL}/>`+
+    `<path d="M${t?144:142} ${t?108:104}C180 ${t?112:108} 220 ${t?110:106} ${t?257:258} ${t?104:100}L258 ${t?120:118}C220 ${t?126:124} 180 ${t?126:124} 142 ${t?122:120}Z" fill="${B2}"/><path d="M176 64C186 80 188 96 186 ${t?108:104}" stroke="${dk(A,.45)}" stroke-width="2.4" fill="none"/><path d="M152 100C150 84 156 70 168 64" stroke="#fff" stroke-opacity=".2" stroke-width="5" fill="none" stroke-linecap="round"/>`+
+    (t?"":`<path d="M232 106l10 -2 -2 12z" fill="${lt(B2,.3)}"/>`)+"</g>"}
+  case"deer":{const chk=g.pat(16,16,`<rect width="16" height="16" fill="#8a7454"/><path d="M0 4H16M0 12H16M4 0V16M12 0V16" stroke="#5a4a32" stroke-width="2.6"/><path d="M0 8H16M8 0V16" stroke="#b8a070" stroke-width=".8"/>`);
+   return`<path d="M130 136C126 82 160 56 200 56C240 56 274 82 270 136C240 128 160 128 130 136Z" fill="${chk}" ${OL}/><path d="M150 132C170 150 230 150 250 132L244 146C220 160 180 160 156 146Z" fill="${chk}" ${OL}/><path d="M200 56V130M166 62C176 90 178 110 176 130M234 62C224 90 222 110 224 130" stroke="#3a2e1e" stroke-width="2" fill="none"/><circle cx="200" cy="56" r="5" fill="#5a4a32" ${OL}/><path d="M134 110C122 104 118 92 130 86M266 110C278 104 282 92 270 86" fill="none" stroke="#3a2e1e" stroke-width="3"/>`}
+  case"beret":return`<path d="M134 124C126 90 170 64 232 70C282 76 296 104 268 120C236 132 168 134 134 124Z" fill="${f}" ${OL}/><path d="M136 118C170 126 234 126 264 116L266 124C236 134 168 134 136 126Z" fill="${dk(A,.4)}"/><path d="M196 64L200 54L206 64Z" fill="${dk(A,.2)}" ${OL}/><path d="M156 96C176 80 214 76 240 82" stroke="#fff" stroke-opacity=".18" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  case"beanie":return`<path d="M134 138C130 84 162 62 200 62C238 62 270 84 266 138Z" fill="${f}" ${OL}/>`+Array.from({length:9},(_,i)=>`<path d="M${150+i*12.5} 74C${150+i*12.5} 100 ${148+i*13} 120 ${146+i*13.5} 136" stroke="${dk(A,.25)}" stroke-width="2" fill="none"/>`).join("")+`<rect x="128" y="124" width="144" height="24" rx="8" fill="${dk(A,.08)}" ${OL}/>`+Array.from({length:18},(_,i)=>`<path d="M${134+i*7.6} 128V144" stroke="${dk(A,.3)}" stroke-width="1.6"/>`).join("")+`<circle cx="200" cy="56" r="13" fill="${lt(A,.2)}" ${OL}/>`;
+  case"cap":return`<path d="M136 132C132 82 164 62 200 62C236 62 268 82 264 132Z" fill="${f}" ${OL}/><path d="M136 128C150 150 250 150 264 128C268 136 262 146 250 150C220 160 180 160 150 150C138 146 132 136 136 128Z" fill="${dk(A,.2)}" ${OL}/><path d="M200 62V128" stroke="${dk(A,.35)}" stroke-width="2"/><circle cx="200" cy="64" r="4" fill="${dk(A,.3)}"/><text x="200" y="118" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="34" fill="${B2}">V</text>`;
+  case"flat":{const tw=g.pat(8,8,`<rect width="8" height="8" fill="#6a5e4e"/><path d="M0 8L8 0" stroke="#4e4436" stroke-width="2"/>`);return`<path d="M132 132C120 90 150 66 204 66C254 66 286 88 276 120C262 132 160 138 132 132Z" fill="${tw}" ${OL}/><path d="M140 126C170 150 236 148 262 124C258 140 236 150 200 150C170 150 148 142 140 126Z" fill="#4e4436" ${OL}/><path d="M204 66V128M170 70C174 90 176 110 176 132M238 70C234 90 234 110 236 128" stroke="#3a3228" stroke-width="2" fill="none"/><circle cx="204" cy="70" r="5" fill="#4e4436"/>`}
+  case"hijab":return`<path d="M134 176C132 120 162 96 200 96C238 96 268 120 266 176C260 136 238 112 200 112C162 112 140 136 134 176Z" fill="${f}" ${OL}/><path d="M146 130C164 108 236 108 254 130" stroke="${lt(A,.3)}" stroke-width="2" opacity=".5" fill="none"/>`;
+  case"turban":return`<path d="M134 152C122 96 156 60 200 60C244 60 278 96 266 152C240 140 160 140 134 152Z" fill="${f}" ${OL}/><path d="M138 132C170 90 236 80 262 104M136 118C170 110 230 120 264 136M150 92C180 86 226 104 246 132" stroke="${dk(A,.35)}" stroke-width="3" fill="none"/><path d="M200 140C190 120 196 100 210 96C218 110 212 128 200 140Z" fill="${dk(A,.15)}" ${OL}/>`;
+  case"bandana":return`<path d="M134 136C134 110 160 96 200 96C240 96 266 110 266 136C240 128 160 128 134 136Z" fill="${f}" ${OL}/><path d="M134 136C160 126 240 126 266 136L266 148C240 138 160 138 134 148Z" fill="${dk(A,.2)}" ${OL}/>`+Array.from({length:8},(_,i)=>`<circle cx="${150+i*14}" cy="118" r="3" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/>`).join("")+`<path d="M266 140L292 150L286 168L262 150ZM266 140L290 136L292 154Z" fill="${f}" ${OL}/>`;
+  case"military":return`<path d="M128 126C114 104 136 78 200 76C264 78 286 104 272 126Z" fill="${g.lg([[0,"#55603a"],[1,"#2e3420"]])}" ${OL}/><path d="M136 120H264V140H136Z" fill="#1a1a14" ${OL}/><path d="M138 138C160 160 240 160 262 138C258 150 240 160 200 160C160 160 142 150 138 138Z" fill="#0e0e0c" ${OL}/><path d="M140 140H260" stroke="#d6b04a" stroke-width="3"/><path d="M200 92l6 10h11l-9 7 3 11-11-7-11 7 3-11-9-7h11z" fill="#e2c060" ${OL}/>`;
+  case"goggles":return`<path d="M132 136C160 128 240 128 268 136" stroke="#4a2a18" stroke-width="10" fill="none"/>`+[170,230].map(x=>`<circle cx="${x}" cy="124" r="20" fill="${g.lg([[0,"#e8c070"],[1,"#8a5a20"]])}" ${OL}/><circle cx="${x}" cy="124" r="13" fill="${g.rg([[0,"#bff0ff"],[1,"#2a6a7a"]],.35,.35)}"/><path d="M${x-8} 118C${x-4} 112 ${x+2} 112 ${x+6} 114" stroke="#fff" stroke-width="2.4" fill="none" opacity=".8"/>`).join("")+`<rect x="188" y="118" width="24" height="10" fill="#8a5a20"/>`;
+  case"catears":return`<path d="M134 116C150 88 196 84 200 84C204 84 250 88 266 116" stroke="#1b1b1e" stroke-width="7" fill="none"/>`+both(`<path d="M140 106L146 58L182 92Z" fill="#1b1b1e" ${OL}/><path d="M148 96L151 70L172 90Z" fill="#e48aae"/>`);
+  case"pillbox":{const net=g.pat(7,7,`<path d="M0 0L7 7M7 0L0 7" stroke="#000" stroke-width=".7"/>`);return`<path d="M200 108C202 86 214 76 244 76C270 76 280 90 276 108C258 116 216 116 200 108Z" fill="${g.lg([[0,"#2a2a2e"],[1,"#0c0c0e"]])}" ${OL}/><path d="M196 104C220 120 262 118 280 104L286 200C252 210 210 206 186 196Z" fill="${net}" opacity=".8"/><path d="M262 76C276 60 292 64 290 78C284 84 272 84 262 76Z" fill="#7a1020" ${OL}/>`}
+  case"tophat":return`<path d="M110 124C130 108 270 108 290 124C296 136 270 140 200 142C130 140 104 136 110 124Z" fill="${g.lg([[0,"#3a3a3e"],[1,"#0c0c0e"]])}" ${OL}/><path d="M150 122L146 20C170 10 230 10 254 20L250 122C220 128 180 128 150 122Z" fill="${g.lg([[0,"#2a2a2e"],[.3,"#4a4a50"],[.6,"#18181a"],[1,"#0a0a0c"]],0,0,1,0)}" ${OL}/><path d="M149 100C180 106 220 106 251 100L250 120C220 126 180 126 150 120Z" fill="#7a1020"/><path d="M162 26C160 50 160 80 162 96" stroke="#fff" stroke-opacity=".2" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  case"crown":return`<path d="M146 112L140 66L168 92L184 54L200 86L216 54L232 92L260 66L254 112C226 120 174 120 146 112Z" fill="${g.lg([[0,"#3a3a44"],[.5,"#141418"],[1,"#050506"]])}" ${OL}/><path d="M146 112C174 120 226 120 254 112" stroke="#c8ccd8" stroke-width="2" fill="none"/>`+[[168,92],[200,86],[232,92]].map(([x,y])=>`<circle cx="${x}" cy="${y+12}" r="5" fill="#9a1028" stroke="#fff" stroke-width=".8"/>`).join("")+`<path d="M200 58l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1z" fill="#c8ccd8" class="avtw"/>`;
+ }return""}
+
+/* ---------------- EYEWEAR ---------------- */
+function eyewearDraw(cfg,g){const id=cfg.eyewear;
+ const temples=`<path d="M154 180L136 178M246 180L264 178" stroke="#1a1410" stroke-width="2.4"/>`;
+ switch(id){
+  case"round":return temples+`<circle cx="174" cy="182" r="18" fill="#cfe6ff" fill-opacity=".14" stroke="#c8a050" stroke-width="2.4"/><circle cx="226" cy="182" r="18" fill="#cfe6ff" fill-opacity=".14" stroke="#c8a050" stroke-width="2.4"/><path d="M192 180C196 176 204 176 208 180" stroke="#c8a050" stroke-width="2.4" fill="none"/><path d="M164 174L172 168M216 174L224 168" stroke="#fff" stroke-width="2" opacity=".7"/>`;
+  case"horn":return temples+`<rect x="150" y="168" width="44" height="30" rx="9" fill="#cfe6ff" fill-opacity=".12" stroke="#2a1a10" stroke-width="5.5"/><rect x="206" y="168" width="44" height="30" rx="9" fill="#cfe6ff" fill-opacity=".12" stroke="#2a1a10" stroke-width="5.5"/><path d="M194 178C198 174 202 174 206 178" stroke="#2a1a10" stroke-width="4" fill="none"/><path d="M152 170H192M208 170H248" stroke="#6a4a2a" stroke-width="1.4"/><path d="M160 176L168 170M216 176L224 170" stroke="#fff" stroke-width="2" opacity=".6"/>`;
+  case"aviator":{const lens=g.lg([[0,"#2a3a4a",.95],[.6,"#5a6e80",.85],[1,"#c8a070",.8]]);return temples+`<path d="M150 172H196C198 196 186 206 172 206C156 206 148 192 150 172Z" fill="${lens}" stroke="#c8ccd2" stroke-width="2"/><path d="M204 172H250C252 192 244 206 228 206C214 206 202 196 204 172Z" fill="${lens}" stroke="#c8ccd2" stroke-width="2"/><path d="M196 174H204M190 168C196 164 204 164 210 168" stroke="#c8ccd2" stroke-width="2" fill="none"/><path d="M158 178L176 190M212 178L230 190" stroke="#fff" stroke-width="3" opacity=".35"/>`}
+  case"cateye":return temples+`<path d="M146 172C160 162 186 166 196 172C196 190 186 198 172 198C158 198 150 188 146 172Z" fill="#ffd8e6" fill-opacity=".14" stroke="#9a1028" stroke-width="5" stroke-linejoin="round"/><path d="M254 172C240 162 214 166 204 172C204 190 214 198 228 198C242 198 250 188 254 172Z" fill="#ffd8e6" fill-opacity=".14" stroke="#9a1028" stroke-width="5" stroke-linejoin="round"/><path d="M146 172L140 162M254 172L260 162" stroke="#9a1028" stroke-width="5" stroke-linecap="round"/><path d="M196 176C198 173 202 173 204 176" stroke="#9a1028" stroke-width="3" fill="none"/><circle cx="142" cy="164" r="2" fill="#fff"/><circle cx="258" cy="164" r="2" fill="#fff"/>`;
+  case"lennon":return temples+`<circle cx="174" cy="182" r="17" fill="#7a3aa8" fill-opacity=".6" stroke="#c8ccd2" stroke-width="2"/><circle cx="226" cy="182" r="17" fill="#7a3aa8" fill-opacity=".6" stroke="#c8ccd2" stroke-width="2"/><path d="M191 180C195 176 205 176 209 180" stroke="#c8ccd2" stroke-width="2" fill="none"/><path d="M164 174C166 170 170 168 174 168M216 174C218 170 222 168 226 168" stroke="#fff" stroke-width="2.4" opacity=".6" fill="none"/>`;
+  case"monocle":return`<circle cx="226" cy="182" r="19" fill="#cfe6ff" fill-opacity=".16" stroke="#d6b04a" stroke-width="3.4"/><path d="M216 172L224 166" stroke="#fff" stroke-width="2" opacity=".7"/><path d="M244 192C256 230 250 270 236 300" stroke="#d6b04a" stroke-width="1.6" fill="none" stroke-dasharray="3 2"/>`;
+  case"patch":return`<path d="M134 152L268 200" stroke="#121012" stroke-width="3.4"/><path d="M206 168C214 164 238 164 246 170C248 186 240 198 226 198C212 198 204 186 206 168Z" fill="#141216" ${OL}/><path d="M214 172C222 170 234 170 240 174" stroke="#fff" stroke-opacity=".2" stroke-width="2" fill="none"/>`;
+  case"visor":return`<path d="M138 170C160 162 240 162 262 170L258 196C240 202 160 202 142 196Z" fill="${g.lg([[0,"#45f0dc",.9],[.5,"#7a3aff",.85],[1,"#ff3db5",.9]],0,0,1,0)}" stroke="#0a0a14" stroke-width="2.4" class="avglow"/><path d="M146 176H254" stroke="#fff" stroke-width="2" opacity=".7"/><path d="M150 190H186" stroke="#fff" stroke-width="1.4" opacity=".5"/>`;
+ }return""}
+
+/* ---------------- PROPS & COMPANIONS ---------------- */
+function handAt(x,y,skin,rot=0){const sh=mix(skin,"#5a2a1e",.3);return`<g transform="translate(${x} ${y}) rotate(${rot})"><path d="M-22 -10C-22 -24 22 -24 24 -10L26 18C26 30 -22 30 -22 18Z" fill="${skin}" ${OL}/><path d="M-12 -18V2M0 -20V2M12 -18V2" stroke="${sh}" stroke-width="1.8"/><path d="M-22 4C-34 0 -36 -14 -26 -18C-18 -16 -16 -6 -14 0" fill="${skin}" ${OL}/></g>`}
+function propDraw(cfg,g,skin){const id=cfg.prop;
+ switch(id){
+  case"magnifier":return`<path d="M300 452L330 360" stroke="${g.lg([[0,"#5a3420"],[1,"#2a160c"]],0,0,1,0)}" stroke-width="12" stroke-linecap="round"/><circle cx="340" cy="320" r="40" fill="${g.rg([[0,"#e8f6ff",.35],[.8,"#9fc8e0",.2],[1,"#5a8aa8",.4]],.4,.35,.6)}" stroke="${g.lg([[0,"#fff0b8"],[1,"#8a6526"]])}" stroke-width="8"/><path d="M318 300C326 290 340 286 352 290" stroke="#fff" stroke-width="5" fill="none" opacity=".8" stroke-linecap="round"/>`+handAt(300,450,skin,-18);
+  case"watch":return`<path d="M296 430C310 380 330 360 340 340" stroke="#d6b04a" stroke-width="2" fill="none" stroke-dasharray="3 2"/><circle cx="340" cy="330" r="26" fill="${g.rg([[0,"#fff2b8"],[.7,"#d6b04a"],[1,"#7a5a1a"]],.35,.3,.7)}" ${OL}/><circle cx="340" cy="330" r="19" fill="#f6f0e0"/><path d="M340 318V330L348 336" stroke="#1a120c" stroke-width="2.4" fill="none"/><text x="340" y="317" text-anchor="middle" font-size="6" font-family="Georgia">XII</text><circle cx="340" cy="302" r="5" fill="#d6b04a" ${OL}/>`+handAt(300,448,skin,-10);
+  case"lantern":return`<path d="M320 300C320 284 344 284 344 300" stroke="#2a2a2a" stroke-width="4" fill="none"/><rect x="314" y="300" width="36" height="10" fill="#2a2a2a"/><rect x="316" y="310" width="32" height="50" rx="4" fill="${g.rg([[0,"#fff6c8"],[.5,"#ffb34a"],[1,"#c85a10",.6]])}" stroke="#2a2a2a" stroke-width="3"/><path d="M332 340C326 332 332 322 332 318C338 326 340 332 332 340Z" fill="#fff" class="avflick"/><rect x="314" y="360" width="36" height="10" fill="#2a2a2a"/><circle cx="332" cy="335" r="60" fill="${g.rg([[0,"#ffb34a",.35],[1,"#ffb34a",0]])}" class="avflick"/>`+handAt(330,300,skin,0).replace("rotate(0)","rotate(0) scale(.8)");
+  case"rose":return`<path d="M310 452C318 410 326 380 336 350" stroke="#2a5a2a" stroke-width="5" fill="none"/><path d="M322 400C334 392 344 396 346 404C336 408 328 406 322 400Z" fill="#3a7a3a"/><circle cx="338" cy="338" r="18" fill="${g.rg([[0,"#e83a4a"],[1,"#7a0a18"]])}" ${OL}/><path d="M330 334C334 326 346 328 346 338C344 346 334 346 332 340C332 334 340 334 340 338" fill="none" stroke="#5a0610" stroke-width="2"/>`+handAt(308,452,skin,-12);
+  case"file":return`<g transform="translate(282 352) rotate(8)"><rect width="92" height="120" rx="4" fill="#c8a870" ${OL}/><rect x="0" y="-8" width="40" height="12" rx="3" fill="#c8a870" ${OL}/><rect x="10" y="20" width="72" height="22" fill="#9a1c24"/><text x="46" y="36" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="11" fill="#f2e8d0">CLASSIFIED</text><path d="M12 56H80M12 68H72M12 80H78" stroke="#6a5432" stroke-width="2.4"/><rect x="54" y="88" width="28" height="22" fill="#e8e0c8" transform="rotate(-8 68 99)"/></g>`+handAt(296,446,skin,-6);
+  case"dagger":return`<path d="M314 440L344 330L352 332L326 444Z" fill="${g.lg([[0,"#f2f4f8"],[1,"#8a9098"]],0,0,1,0)}" ${OL}/><path d="M300 440H340" stroke="#d6b04a" stroke-width="8" stroke-linecap="round"/>`+handAt(320,456,skin,-12);
+ }return""}
+function petDraw(cfg,g,b){const id=cfg.pet,L=200-b.S;
+ switch(id){
+  case"raven":return`<g class="avbob" transform="translate(${L+6} 250)"><path d="M-6 44C-30 50 -44 70 -50 92L-28 80L-20 96L-8 70Z" fill="#0e0e14" ${OL}/><ellipse cx="0" cy="30" rx="30" ry="24" fill="${g.lg([[0,"#3a3e5a"],[1,"#07070c"]])}" ${OL}/><path d="M-20 26C-6 16 14 18 26 30C12 40 -8 42 -20 26Z" fill="#20223a"/><g class="avtilt"><circle cx="18" cy="2" r="17" fill="#121420" ${OL}/><path d="M30 0L52 6L30 10Z" fill="#2a2a30" ${OL}/><circle cx="24" cy="-2" r="4" fill="#e8b83a"/><circle cx="25" cy="-2" r="1.8" fill="#000"/></g><path d="M-4 54L-8 64M6 54L4 64" stroke="#3a3020" stroke-width="3"/></g>`;
+  case"owl":return`<g class="avbob" transform="translate(${L+4} 248)"><ellipse cx="0" cy="34" rx="28" ry="32" fill="${g.lg([[0,"#e8d0a8"],[1,"#a87a4a"]])}" ${OL}/><path d="M-14 40C-8 46 8 46 14 40M-12 52C-6 56 6 56 12 52" stroke="#8a5a2a" stroke-width="2" fill="none"/><g class="avtilt"><path d="M-26 0C-26 -22 26 -22 26 0C26 18 -26 18 -26 0Z" fill="#c8a070" ${OL}/><path d="M0 -6C-12 -18 -24 -12 -22 2C-20 14 -4 14 0 6C4 14 20 14 22 2C24 -12 12 -18 0 -6Z" fill="#fbf2e2"/><circle cx="-10" cy="0" r="6" fill="#1a120c"/><circle cx="10" cy="0" r="6" fill="#1a120c"/><circle cx="-8" cy="-2" r="2" fill="#fff"/><circle cx="12" cy="-2" r="2" fill="#fff"/><path d="M-3 6L0 13L3 6Z" fill="#c88a3a"/></g></g>`;
+  case"cat":return`<g transform="translate(70 404)"><path d="M-40 80C-40 30 40 30 40 80Z" fill="#141418" ${OL}/><g class="avtilt"><path d="M-30 6L-34 -30L-10 -14ZM30 6L34 -30L10 -14Z" fill="#141418" ${OL}/><path d="M-26 -2L-28 -22L-14 -12ZM26 -2L28 -22L14 -12Z" fill="#5a2a3a"/><ellipse cx="0" cy="8" rx="34" ry="28" fill="${g.rg([[0,"#2a2a32"],[1,"#0a0a0e"]])}" ${OL}/><g class="avblink"><ellipse cx="-12" cy="4" rx="7" ry="8" fill="#c8e83a"/><ellipse cx="12" cy="4" rx="7" ry="8" fill="#c8e83a"/><ellipse cx="-12" cy="4" rx="2" ry="7" fill="#000"/><ellipse cx="12" cy="4" rx="2" ry="7" fill="#000"/></g><path d="M-3 16L3 16L0 20Z" fill="#e48aae"/><path d="M-10 20L-36 16M-10 22L-36 26M10 20L36 16M10 22L36 26" stroke="#888" stroke-width="1" opacity=".7"/></g></g>`;
+  case"fox":return`<g transform="translate(72 410)"><path d="M-36 76C-40 30 40 30 36 76Z" fill="${g.lg([[0,"#e8742a"],[1,"#a8481a"]])}" ${OL}/><path d="M-10 40C-6 60 6 60 10 40Z" fill="#fbf2e2"/><g class="avtilt"><path d="M-30 4L-30 -30L-8 -12ZM30 4L30 -30L8 -12Z" fill="#e8742a" ${OL}/><path d="M-26 -4L-26 -22L-14 -12ZM26 -4L26 -22L14 -12Z" fill="#2a1a12"/><path d="M-32 0C-32 -18 32 -18 32 0C32 16 14 30 0 30C-14 30 -32 16 -32 0Z" fill="#e8742a" ${OL}/><path d="M-32 4C-20 8 -10 18 0 30C10 18 20 8 32 4C26 22 14 32 0 32C-14 32 -26 22 -32 4Z" fill="#fbf2e2"/><g class="avblink"><ellipse cx="-12" cy="2" rx="4" ry="5" fill="#1a120c"/><ellipse cx="12" cy="2" rx="4" ry="5" fill="#1a120c"/></g><ellipse cx="0" cy="24" rx="4" ry="3" fill="#1a120c"/></g></g>`;
+ }return""}
+
+/* ---------------- BACKDROPS ---------------- */
+function backDraw(cfg,g){const id=cfg.back;
+ const sky=(a,b2)=>`<rect width="400" height="480" fill="${g.lg([[0,a],[1,b2]])}"/>`;
+ switch(id){
+  case"study":return sky("#2a1810","#120a06")+Array.from({length:4},(_,i)=>`<rect x="${10+i*100}" y="30" width="86" height="300" fill="#1a0f08" stroke="#3a2414" stroke-width="4"/>`+Array.from({length:4},(_,j)=>{const r=rnd(i*9+j);let x=16+i*100,s="";while(x<90+i*100){const w=6+r()*8,h=40+r()*24;s+=`<rect x="${x.toFixed(0)}" y="${(30+j*74+70-h).toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" fill="${["#4a1a1a","#1a3a2a","#2a2a4a","#5a4220","#3a1a2a"][Math.floor(r()*5)]}"/>`;x+=w+1}return s+`<rect x="${10+i*100}" y="${100+j*74}" width="86" height="6" fill="#3a2414"/>`}).join("")).join("")+
+   `<rect y="340" width="400" height="140" fill="#24140a"/><circle cx="330" cy="120" r="140" fill="${g.rg([[0,"#ffb35a",.45],[1,"#ffb35a",0]])}"/>`;
+  case"alley":return sky("#0c1420","#05070c")+Array.from({length:12},(_,j)=>Array.from({length:9},(_,i)=>`<rect x="${(j%2?-20:0)+i*50}" y="${j*28}" width="46" height="24" fill="#2a1a18" opacity="${.5+((i*7+j*3)%5)/10}"/>`).join("")).join("")+
+   `<rect width="400" height="480" fill="${g.lg([[0,"#0a1020",.3],[1,"#000",.75]])}"/><path d="M320 0V220" stroke="#111" stroke-width="8"/><path d="M300 220H340L330 236H310Z" fill="#222"/><path d="M310 236L230 480H410L330 236Z" fill="${g.lg([[0,"#ffe0a0",.45],[1,"#ffe0a0",0]])}"/><circle cx="320" cy="236" r="40" fill="${g.rg([[0,"#ffe8b0",.8],[1,"#ffe8b0",0]])}"/>`;
+  case"cliffs":return sky("#081428","#1a2a48")+Array.from({length:40},(_,i)=>{const r=rnd(i+40);return`<circle cx="${(r()*400).toFixed(0)}" cy="${(r()*200).toFixed(0)}" r="${(r()*1.4+.3).toFixed(1)}" fill="#fff" opacity="${(.4+r()*.6).toFixed(2)}"/>`}).join("")+
+   `<circle cx="300" cy="80" r="26" fill="#f2ecd8"/><circle cx="300" cy="80" r="70" fill="${g.rg([[0,"#f2ecd8",.3],[1,"#f2ecd8",0]])}"/><rect y="300" width="400" height="180" fill="#0a1626"/><path d="M0 300C60 280 100 290 140 296C120 360 60 420 0 440Z" fill="#05080e"/><path d="M340 300L346 220H358L364 300Z" fill="#1a1e26"/><path d="M352 222L40 160L40 260Z" fill="#fff4c0" opacity=".12" class="avbeam"/><circle cx="352" cy="222" r="8" fill="#fff4c0"/>`+Array.from({length:6},(_,i)=>`<path d="M${i*70} ${320+i*24}h50" stroke="#8aa8c8" stroke-opacity=".25" stroke-width="2"/>`).join("");
+  case"library":return sky("#1a2420","#0a100e")+Array.from({length:5},(_,j)=>{const r=rnd(j*3+77);let x=0,s="";while(x<400){const w=10+r()*12,h=60+r()*24;s+=`<rect x="${x.toFixed(0)}" y="${(j*92+88-h).toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" fill="${["#5a2a1a","#2a4a3a","#3a3a5a","#7a5a2a","#4a1a2a","#2a3a4a"][Math.floor(r()*6)]}"/><rect x="${x.toFixed(0)}" y="${(j*92+88-h+10).toFixed(0)}" width="${w.toFixed(0)}" height="3" fill="#d6b04a" opacity=".5"/>`;x+=w+1.5}return s+`<rect y="${j*92+88}" width="400" height="8" fill="#2a1a0e"/>`}).join("")+`<rect width="400" height="480" fill="${g.rg([[0,"#000",0],[1,"#000",.6]],.5,.4,.7)}"/>`;
+  case"graveyard":return sky("#1a1430","#3a2a4a")+`<circle cx="290" cy="110" r="60" fill="#f4eee0"/><circle cx="290" cy="110" r="130" fill="${g.rg([[0,"#e8e0ff",.3],[1,"#e8e0ff",0]])}"/><path d="M40 480V240C40 200 30 160 50 130M50 180C30 160 20 150 10 120M48 200C70 180 90 180 100 160" stroke="#08060c" stroke-width="10" fill="none" stroke-linecap="round"/>`+
+   [[80,380,50],[180,400,40],[300,390,46],[350,410,36]].map(([x,y,w])=>`<path d="M${x-w/2} 480V${y}C${x-w/2} ${y-w*.8} ${x+w/2} ${y-w*.8} ${x+w/2} ${y}V480Z" fill="#2a2638" stroke="#0a0810" stroke-width="2"/>`).join("")+`<rect y="430" width="400" height="50" fill="#0a0810"/><ellipse cx="200" cy="440" rx="260" ry="40" fill="#c8c0e0" opacity=".18"/>`;
+  case"stage":return sky("#120818","#05030a")+[[60,"#ff3db5"],[200,"#45f0dc"],[340,"#ffd84a"]].map(([x,c])=>`<path d="M${x} 0L${x-90} 480H${x+90}Z" fill="${g.lg([[0,c,.55],[1,c,0]])}" class="avsweep"/>`).join("")+`<rect y="420" width="400" height="60" fill="#05030a"/>`+Array.from({length:20},(_,i)=>`<circle cx="${i*21+5}" cy="${452+(i%3)*6}" r="14" fill="#000"/>`).join("")+Array.from({length:6},(_,i)=>`<path d="M${30+i*68} 440l8 -40" stroke="#000" stroke-width="7" stroke-linecap="round"/>`).join("");
+  case"stadium":return sky("#0a1230","#1a3a5a")+[[40,30],[360,30]].map(([x,y])=>`<rect x="${x-30}" y="${y}" width="60" height="30" fill="#e8f0ff"/><circle cx="${x}" cy="${y+15}" r="110" fill="${g.rg([[0,"#e8f0ff",.6],[1,"#e8f0ff",0]])}"/>`).join("")+`<rect y="250" width="400" height="80" fill="#121a2a"/>`+Array.from({length:60},(_,i)=>`<circle cx="${(i*7)%400}" cy="${260+(i%5)*12}" r="3" fill="${["#9a1c24","#e8e4de","#1e3f8a"][i%3]}" opacity=".6"/>`).join("")+`<rect y="330" width="400" height="150" fill="${g.lg([[0,"#2a6a2a"],[1,"#123a12"]])}"/><path d="M0 380H400M0 430H400" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>`;
+  case"warroom":return sky("#1e2216","#0a0c08")+`<rect x="30" y="40" width="340" height="230" fill="#c8b888" stroke="#3a2a1a" stroke-width="8"/><path d="M60 80C120 60 160 120 220 100C270 84 300 140 340 120M80 200C130 180 160 230 220 210C260 196 300 230 340 220" stroke="#7a6a4a" stroke-width="3" fill="none"/>`+[[110,110],[230,150],[300,90],[160,220]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="7" fill="#9a1c24" stroke="#000"/>`).join("")+`<path d="M110 110L230 150L300 90M230 150L160 220" stroke="#9a1c24" stroke-width="2" stroke-dasharray="5 4"/><rect y="300" width="400" height="180" fill="#2a2416"/><circle cx="200" cy="0" r="200" fill="${g.rg([[0,"#ffe0a0",.3],[1,"#ffe0a0",0]])}"/>`;
+  case"neon":return sky("#14062a","#04020c")+Array.from({length:12},(_,i)=>{const r=rnd(i+99),w=24+r()*40,h=100+r()*220,x=i*36-10;return`<rect x="${x.toFixed(0)}" y="${(480-h-60).toFixed(0)}" width="${w.toFixed(0)}" height="${(h+60).toFixed(0)}" fill="#0a0618"/>`+Array.from({length:8},(_,k)=>`<rect x="${(x+4+(k%2)*12).toFixed(0)}" y="${(480-h-50+k*18).toFixed(0)}" width="6" height="8" fill="${r()>.5?"#45f0dc":"#ff3db5"}" opacity="${(.2+r()*.6).toFixed(2)}"/>`).join("")}).join("")+
+   `<text x="90" y="150" font-family="Arial Black,sans-serif" font-size="30" fill="none" stroke="#ff3db5" stroke-width="2.4" class="avglow">CLUES</text><text x="270" y="110" font-family="Georgia,serif" font-style="italic" font-size="32" fill="none" stroke="#45f0dc" stroke-width="2.2" class="avglow">noir</text><rect y="420" width="400" height="60" fill="${g.lg([[0,"#ff3db5",.25],[1,"#04020c",1]])}"/>`;
+  case"deco":return sky("#141008","#060402")+Array.from({length:24},(_,i)=>{const a=-Math.PI+i/23*Math.PI;return`<path d="M200 480L${(200+Math.cos(a)*600).toFixed(0)} ${(480+Math.sin(a)*600).toFixed(0)}" stroke="${i%2?"#d6b04a":"#8a6a2a"}" stroke-width="${i%2?3:1.4}" opacity=".7"/>`}).join("")+
+   [120,180,240].map((r,i)=>`<path d="M${200-r} 480A${r} ${r} 0 0 1 ${200+r} 480" fill="none" stroke="#e8c870" stroke-width="${3-i*.6}" opacity=".8"/>`).join("")+`<rect x="12" y="12" width="376" height="456" fill="none" stroke="#d6b04a" stroke-width="3"/><rect x="22" y="22" width="356" height="436" fill="none" stroke="#d6b04a" stroke-width="1"/>`+both(`<path d="M12 60L60 12M12 90L90 12M12 120L120 12" stroke="#d6b04a" stroke-width="1.4" opacity=".6"/>`);
+  case"vault":{const steel=g.rg([[0,"#9aa4b0"],[.6,"#5a6470"],[1,"#2a3038"]],.4,.4,.7);return sky("#14181e","#060809")+`<circle cx="200" cy="200" r="190" fill="${steel}" stroke="#0a0c10" stroke-width="6"/><circle cx="200" cy="200" r="150" fill="none" stroke="#2a3038" stroke-width="10"/>`+Array.from({length:24},(_,i)=>{const a=i/24*Math.PI*2;return`<circle cx="${(200+Math.cos(a)*170).toFixed(1)}" cy="${(200+Math.sin(a)*170).toFixed(1)}" r="6" fill="#c8d0d8" stroke="#2a3038"/>`}).join("")+
+   `<g class="avspin" style="transform-origin:200px 200px">${Array.from({length:6},(_,i)=>`<rect x="196" y="90" width="8" height="220" rx="4" fill="#c8a050" transform="rotate(${i*30} 200 200)"/>`).join("")}<circle cx="200" cy="200" r="34" fill="#d6b04a" stroke="#5a4210" stroke-width="4"/></g><rect y="400" width="400" height="80" fill="#060809"/>`}
+ }return sky("#1a1420","#07060a")}
+
+/* ---------------- EFFECTS ---------------- */
+function fxDraw(cfg,g,layer){const id=cfg.fx;if(id==="none")return"";
+ if(layer==="back"){
+  if(id==="neonglow")return`<ellipse cx="200" cy="300" rx="190" ry="220" fill="${g.rg([[0,"#ff3db5",.5],[.6,"#7a3aff",.25],[1,"#45f0dc",0]])}" class="avpulse"/>`;
+  if(id==="fog")return"";
+  return""}
+ switch(id){
+  case"rain":return`<g class="avrain">${Array.from({length:60},(_,i)=>{const r=rnd(i*5+1);const x=r()*440-20,y=r()*480;return`<path d="M${x.toFixed(0)} ${y.toFixed(0)}l-6 22" stroke="#bcd8f0" stroke-opacity="${(.25+r()*.4).toFixed(2)}" stroke-width="1.6"/><path d="M${x.toFixed(0)} ${(y-480).toFixed(0)}l-6 22" stroke="#bcd8f0" stroke-opacity="${(.25+r()*.4).toFixed(2)}" stroke-width="1.6"/>`}).join("")}</g>`;
+  case"fog":{const bl=g.blur(14);return`<g filter="${bl}" opacity=".7"><ellipse class="avdrift" cx="100" cy="440" rx="180" ry="40" fill="#d8d8e8" opacity=".5"/><ellipse class="avdrift2" cx="320" cy="400" rx="160" ry="36" fill="#d8d8e8" opacity=".4"/><ellipse class="avdrift" cx="240" cy="470" rx="220" ry="30" fill="#e8e8f8" opacity=".5"/></g>`}
+  case"sparks":return Array.from({length:22},(_,i)=>{const r=rnd(i*11+3);return`<circle class="avrise" style="animation-delay:-${(r()*6).toFixed(2)}s;animation-duration:${(4+r()*4).toFixed(1)}s" cx="${(r()*400).toFixed(0)}" cy="480" r="${(1.5+r()*2.5).toFixed(1)}" fill="${r()>.5?"#ffb34a":"#ff6a2a"}"/>`}).join("");
+  case"sparkle":return Array.from({length:18},(_,i)=>{const r=rnd(i*19+2);let x=r()*400,y=r()*480;const s=4+r()*8;if(Math.abs(x-200)<90&&y<300)x=x<200?x-90:x+90;return`<path class="avtw" style="animation-delay:${(r()*3).toFixed(2)}s" d="M${x.toFixed(0)} ${(y-s).toFixed(0)}L${(x+s*.25).toFixed(1)} ${(y-s*.25).toFixed(1)}L${(x+s).toFixed(0)} ${y.toFixed(0)}L${(x+s*.25).toFixed(1)} ${(y+s*.25).toFixed(1)}L${x.toFixed(0)} ${(y+s).toFixed(0)}L${(x-s*.25).toFixed(1)} ${(y+s*.25).toFixed(1)}L${(x-s).toFixed(0)} ${y.toFixed(0)}L${(x-s*.25).toFixed(1)} ${(y-s*.25).toFixed(1)}Z" fill="#ffe08a"/>`}).join("");
+  case"petals":return Array.from({length:14},(_,i)=>{const r=rnd(i*23+4);return`<path class="avfall" style="animation-delay:-${(r()*8).toFixed(2)}s;animation-duration:${(6+r()*4).toFixed(1)}s" d="M${(r()*400).toFixed(0)} -20c6 -6 14 -2 12 6c-2 6 -10 8 -12 -6z" fill="#c81d3a" opacity=".85"/>`}).join("");
+  case"bats":return Array.from({length:5},(_,i)=>{const r=rnd(i*29+6);const x=(i%2?290:30)+r()*80,y=24+r()*80;return`<path class="avflap" style="animation-delay:${(r()*2).toFixed(2)}s;transform-origin:${x.toFixed(0)}px ${y.toFixed(0)}px" d="M${x} ${y}c-6 -8 -14 -8 -20 -2c6 0 8 4 8 6c4 -2 8 -2 12 4c4 -6 8 -6 12 -4c0 -2 2 -6 8 -6c-6 -6 -14 -6 -20 2z" fill="#0a0810"/>`}).join("");
+  case"neonglow":return`<rect x="4" y="4" width="392" height="472" rx="20" fill="none" stroke="#45f0dc" stroke-width="3" class="avglow"/>`;
+  case"lightning":return`<rect width="400" height="480" fill="#dfe8ff" class="avflash"/><path class="avflash2" d="M300 0L270 90L300 92L250 200L320 80L290 78L320 0Z" fill="#fff"/>`;
+ }return""}
+
+/* ---------------- full portrait ---------------- */
+function render(cfg,o={}){
+ cfg=Object.assign({},DEFAULT,cfg);
+ const u="av"+(++UID)+"_",g=mk(u),b=BODY[cfg.body]||BODY.average,skin=SKIN[cfg.skin%SKIN.length][1],sh=mix(skin,"#5a2a1e",.3);
+ const hi=hatInfo(cfg.hat),hideHair=hi.hideAll,clipY=hi.clip;
+ const faceD=(JAW[cfg.jaw]||JAW.oval)[1];
+ const faceF=g.rg([[0,lt(skin,.14)],[.55,skin],[1,mix(skin,"#5a2a1e",.22)]],.42,.36,.72);
+ const neckF=g.lg([[0,mix(skin,"#5a2a1e",.35)],[.4,sh],[1,skin]]);
+ const L=[];
+ if(!o.lite){L.push(backDraw(cfg,g));L.push(fxDraw(cfg,g,"back"))}
+ L.push(`<g class="avbreath">`);
+ if(!hideHair)L.push(hairDraw(cfg,g,"back",hi.hideTop?clipY+60:clipY));
+ L.push(hatDraw(cfg,g,"back"));
+ // body: skin silhouette (neck + shoulders)
+ L.push(`<path d="${bodyPath(b)}" fill="${g.lg([[0,skin],[1,sh]])}" ${OL}/><path d="M${200-b.N} 228H${200+b.N}V290H${200-b.N}Z" fill="${neckF}"/>`);
+ L.push(`<path d="M${200-b.N} 268C${200-b.N+10} 280 ${200+b.N-10} 280 ${200+b.N} 268" fill="none" stroke="${sh}" stroke-width="2" opacity=".6"/>`);
+ L.push(outfitDraw(cfg,g,b,skin));
+ L.push(neckDraw(cfg,g,b));
+ if(!hideHair)L.push(hairDraw(cfg,g,"fore",null));
+ L.push(hatDraw(cfg,g,"neck"));
+ // head
+ L.push(both(`<ellipse cx="134" cy="184" rx="11" ry="18" fill="${skin}" ${OL}/><path d="M132 176C128 182 130 192 136 194" fill="none" stroke="${sh}" stroke-width="2.4"/>`));
+ L.push(`<path d="${faceD}" fill="${faceF}" ${OL}/>`);
+ L.push(`<path d="${faceD}" fill="none" stroke="${mix(skin,"#5a2a1e",.45)}" stroke-opacity=".25" stroke-width="10" clip-path="${g.clip(faceD)}"/>`);
+ L.push(`<path d="M250 120C268 150 268 200 246 236" fill="none" stroke="${lt(skin,.5)}" stroke-opacity=".35" stroke-width="5" stroke-linecap="round" clip-path="${g.clip(faceD)}"/><path d="M150 228C164 246 184 256 200 257" fill="none" stroke="${mix(skin,"#5a2a1e",.4)}" stroke-opacity=".3" stroke-width="4" stroke-linecap="round"/>`);
+ L.push(marksDraw(cfg,skin));
+ L.push(`<ellipse cx="160" cy="212" rx="18" ry="10" fill="#e8706a" opacity=".12"/><ellipse cx="240" cy="212" rx="18" ry="10" fill="#e8706a" opacity=".12"/>`);
+ L.push(eyeDraw(cfg,g,skin));L.push(browDraw(cfg));L.push(noseDraw(cfg,skin));L.push(mouthDraw(cfg,g,skin));L.push(beardDraw(cfg,g));
+ L.push(earsDraw(cfg));
+ if(!hideHair)L.push(hairDraw(cfg,g,"top",hi.hideTop?999:clipY));
+ L.push(eyewearDraw(cfg,g));
+ L.push(hatDraw(cfg,g,"front"));
+ L.push(`</g>`);
+ if(!o.lite){L.push(propDraw(cfg,g,skin));L.push(petDraw(cfg,g,b));L.push(fxDraw(cfg,g,"front"));
+  L.push(`<rect width="400" height="480" fill="${g.rg([[0,"#000",0],[.7,"#000",0],[1,"#000",.45]],.5,.42,.75)}" pointer-events="none"/>`)}
+ return`<svg class="avsvg${o.cls?" "+o.cls:""}" viewBox="${o.vb||"0 0 400 480"}" xmlns="http://www.w3.org/2000/svg" ${o.label?`role="img" aria-label="${o.label}"`:`aria-hidden="true"`}><defs>${g.defs.join("")}</defs>${L.join("")}</svg>`}
+
+const DEFAULT={body:"average",skin:4,jaw:"oval",eyes:"almond",eyeColor:"#4a2c18",brows:"soft",nose:"straight",mouth:"smirk",lips:null,beard:"none",marks:"none",makeup:"none",
+ hair:"sidepart",hairColor:"#3b2619",outfit:"trench",outfitColor:0,hat:"fedora",hatColor:0,eyewear:"none",neck:"none",ears:"none",prop:"none",pet:"none",back:"study",fx:"none"};
+
+return{render,DEFAULT,SKIN,HAIRC,EYEC,LIPC,BODY,JAW,EYES,BROWS,NOSE,MOUTH,BEARD,MARKS,MAKEUP,CW,HCW,HAIR,OUTFIT,HAT,EYEWEAR,NECK,EARS,PROP,PET,BACK,FX,rnd};
+})();
+
+/* =====================================================================
+   DETECTIVE CREATOR · wardrobe, mock boutique, profile card, crew
+   Preview build: no real payments. Coins are earned by finishing rooms.
+   Cosmetics never change a clue (L-rules: no pay-to-win).
+   ===================================================================== */
+const AVX=(function(){
+const A=AVA;
+const RAR={c:["Common","#9aa0a8"],r:["Rare","#4aa3ff"],e:["Epic","#b46cff"],l:["Legendary","#f2c14e"]};
+const COIN='<i class="avcoin"></i>';
+const TITLES={rookie:["Rookie Sleuth","c"],pi:["Private Eye","c"],owl:["Night Owl","c"],arm:["Armchair Detective","c"],code:["Code Breaker","c"],skeptic:["Professional Skeptic","c"],
+ raven:["The Raven of Gray Hollow","e",5],shadow:["Penrose's Shadow","e",5],storm:["Storm Chaser","r",3],cipher:["Master of Ciphers","l","$0.99"],heir:["Heir of Halloway","l","pass"]};
+const BAD=atob("ZnVja3xzaGl0fGN1bnR8Yml0Y2h8ZGlja3xjb2NrfHB1c3N5fHdob3JlfHNsdXR8bmlnZ3xmYWdnfHJhcGV8bmF6aXxwb3JufHRpdHN8a2lrZXxzcGljfGNoaW5rfHJldGFyZHx3YW5rfHR3YXR8Y29vbnxoaXRsZXI=").split("|");
+const cleanName=v=>{const t=v.toLowerCase().replace(/[^a-z]/g,"").replace(/0/g,"o").replace(/1/g,"i").replace(/3/g,"e").replace(/4/g,"a").replace(/5/g,"s");return!BAD.some(w=>t.includes(w))};
+
+/* catalogue tabs → sections. key = config field, list = item table */
+const SEC={
+ skin:{n:"Skin tone",key:"skin",sw:A.SKIN.map((s,i)=>[i,s[0],s[1]])},
+ body:{n:"Body type",key:"body",items:Object.fromEntries(Object.entries(A.BODY).map(([k,v])=>[k,[v.n,"c"]])),vb:"40 220 320 260"},
+ jaw:{n:"Face shape",key:"jaw",items:Object.fromEntries(Object.entries(A.JAW).map(([k,v])=>[k,[v[0],"c"]])),vb:"110 70 180 210",nob:1},
+ eyes:{n:"Eyes",key:"eyes",items:Object.fromEntries(Object.entries(A.EYES).map(([k,v])=>[k,[v,"c"]])),vb:"140 150 120 70",nob:1,sw2:{n:"Eye colour",key:"eyeColor",list:A.EYEC,pack:"eyes:special",packN:"Rare lenses",packP:3}},
+ brows:{n:"Brows",key:"brows",items:Object.fromEntries(Object.entries(A.BROWS).map(([k,v])=>[k,[v,"c"]])),vb:"140 140 120 70",nob:1},
+ nose:{n:"Nose",key:"nose",items:Object.fromEntries(Object.entries(A.NOSE).map(([k,v])=>[k,[v,"c"]])),vb:"160 170 80 80",nob:1},
+ mouth:{n:"Mouth",key:"mouth",items:Object.fromEntries(Object.entries(A.MOUTH).map(([k,v])=>[k,[v,"c"]])),vb:"160 200 80 70",nob:1,sw2:{n:"Lip colour",key:"lips",list:A.LIPC.map(l=>[l[0],l[1]])}},
+ beard:{n:"Facial hair",key:"beard",items:Object.fromEntries(Object.entries(A.BEARD).map(([k,v])=>[k,[v,"c"]])),vb:"120 150 160 150",nob:1},
+ marks:{n:"Details",key:"marks",items:Object.fromEntries(Object.entries(A.MARKS).map(([k,v])=>[k,[v,"c"]])),vb:"120 110 160 160",nob:1},
+ makeup:{n:"Makeup",key:"makeup",items:Object.fromEntries(Object.entries(A.MAKEUP).map(([k,v])=>[k,[v,k==="glam"||k==="neon"?"r":"c",k==="glam"||k==="neon"?2:0]])),vb:"140 140 120 80",nob:1},
+ hair:{n:"Hair",key:"hair",items:A.HAIR,vb:"70 10 260 300",nob:1,sw2:{n:"Hair colour",key:"hairColor",list:A.HAIRC,pack:"dye:pack",packN:"Neon dye pack",packP:4},hatless:1},
+ outfit:{n:"Outfit",key:"outfit",items:A.OUTFIT,vb:"20 210 360 270",cw:"outfitColor"},
+ hat:{n:"Headwear",key:"hat",items:A.HAT,vb:"80 0 240 230",nob:1,cw:"hatColor"},
+ eyewear:{n:"Eyewear",key:"eyewear",items:A.EYEWEAR,vb:"120 130 160 110",nob:1},
+ neck:{n:"Neck",key:"neck",items:A.NECK,vb:"110 220 180 160"},
+ ears:{n:"Earrings",key:"ears",items:A.EARS,vb:"110 140 180 120",nob:1},
+ prop:{n:"In hand",key:"prop",items:A.PROP,full:1},
+ pet:{n:"Companion",key:"pet",items:A.PET,full:1},
+ back:{n:"Backdrop",key:"back",items:A.BACK,full:1},
+ fx:{n:"Effect",key:"fx",items:A.FX,full:1},
+};
+const TABS=[["looks","Styles",["looks"]],["body","Body",["skin","body"]],["face","Face",["jaw","eyes","brows","nose","mouth","beard","marks","makeup"]],["hair","Hair",["hair"]],["outfit","Outfit",["outfit"]],
+ ["hat","Headwear",["hat"]],["eyewear","Eyewear",["eyewear"]],["extras","Extras",["neck","ears","prop"]],["pet","Companion",["pet"]],["scene","Scene",["back","fx"]],["id","Name",["id"]]];
+
+/* quick-start styles: each is a full look. Locked pieces show as try-ons. */
+const LOOKS=[
+ ["Classic noir","Trench, fedora, rain on the window",{hair:"sidepart",outfit:"trench",outfitColor:0,hat:"fedora",hatColor:0,eyewear:"none",neck:"none",prop:"magnifier",back:"alley",fx:"rain",makeup:"none",beard:"stubble",mouth:"smirk"}],
+ ["Femme fatale","Veil, red lips, fog",{hair:"rolls",hairColor:"#1b1714",outfit:"trench",outfitColor:3,hat:"pillbox",lips:"#b3122a",makeup:"liner",eyes:"sultry",back:"alley",fx:"fog",beard:"none",prop:"rose",mouth:"pout"}],
+ ["Goth","Black lace, silver, bats",{hair:"long",hairColor:"#1b1714",outfit:"gothcoat",outfitColor:0,hat:"none",makeup:"goth",lips:"#1d1418",neck:"choker",ears:"cross",back:"graveyard",fx:"bats",beard:"none",eyes:"sultry",skin:13}],
+ ["Rock star","Leather, shades, stage lights",{hair:"shag",hairColor:"#1b1714",outfit:"leather",outfitColor:0,hat:"none",eyewear:"aviator",neck:"chain",ears:"hoops",back:"stage",fx:"sparks",mouth:"grin"}],
+ ["Punk","Mohawk, studs, attitude",{hair:"mohawk",hairColor:"#c81d2a",outfit:"punk",outfitColor:1,hat:"none",eyewear:"none",neck:"choker",ears:"cuffs",back:"alley",fx:"rain",makeup:"smoky"}],
+ ["Nerd","Horn-rims, cardigan, the library",{hair:"curly",outfit:"cardigan",outfitColor:0,hat:"phones",eyewear:"horn",neck:"none",back:"library",fx:"none",mouth:"smile",prop:"file"}],
+ ["Jock","Letterman, ball cap, big game",{hair:"buzz",outfit:"varsity",outfitColor:0,hat:"cap",hatColor:0,eyewear:"none",neck:"none",back:"stadium",fx:"none",mouth:"grin",body:"athletic"}],
+ ["Military","Field jacket, dog tags, war room",{hair:"buzz",outfit:"field",outfitColor:2,hat:"military",eyewear:"none",neck:"tags",back:"warroom",fx:"none",brows:"stern",mouth:"stern"}],
+ ["Red carpet","Sequins, diamonds, gold",{hair:"waves",hairColor:"#d8b66f",outfit:"sequin",outfitColor:1,hat:"none",eyewear:"none",neck:"pearls",ears:"diamonds",makeup:"glam",lips:"#b3122a",back:"deco",fx:"sparkle",prop:"rose",beard:"none",eyes:"sultry"}],
+ ["Heartthrob","Open silk shirt, gold chain",{hair:"undercut",outfit:"open",outfitColor:1,hat:"none",eyewear:"none",neck:"chain",back:"deco",fx:"sparkle",beard:"stubble",mouth:"smirk"}],
+ ["Velvet tux","Black tie, crimson velvet",{hair:"slick",outfit:"tux",outfitColor:2,hat:"none",eyewear:"none",neck:"none",back:"vault",fx:"none",mouth:"smirk"}],
+ ["Neon runner","Visor, glowing jacket, the city",{hair:"bob",hairColor:"#3e7fd8",outfit:"cyber",outfitColor:0,hat:"none",eyewear:"visor",neck:"none",back:"neon",fx:"neonglow",makeup:"neon",pet:"cat"}],
+ ["Steampunk","Brass, gears and goggles",{hair:"braids",outfit:"steam",outfitColor:0,hat:"goggles",eyewear:"none",neck:"locket",back:"vault",fx:"sparks",prop:"watch"}],
+ ["Consulting detective","Cape coat, deerstalker, owl",{hair:"shag",hairColor:"#5c3a22",outfit:"cape",outfitColor:0,hat:"deer",eyewear:"monocle",beard:"none",back:"study",fx:"fog",prop:"magnifier",pet:"owl"}],
+ ["Forensics","Lab coat, cat-eyes, evidence",{hair:"pixie",hairColor:"#b5562a",outfit:"lab",outfitColor:0,hat:"none",eyewear:"cateye",back:"library",fx:"none",marks:"freckles",prop:"file"}],
+ ["Alt kid","Space buns, cat ears, neon",{hair:"spacebuns",hairColor:"#a37ad9",outfit:"hoodie",outfitColor:3,hat:"catears",eyewear:"none",makeup:"neon",ears:"cuffs",back:"neon",fx:"none"}],
+];
+
+/* boutique bundles (mock prices, preview only) */
+const BUNDLES=[
+ {id:"goth",n:"Goth Royalty",tag:"New",price:"$3.99",was:"$7.97",items:["outfit:corset","hat:crown","pet:raven","fx:bats"],look:{hair:"long",hairColor:"#1b1714",outfit:"corset",outfitColor:0,hat:"crown",makeup:"goth",lips:"#1d1418",neck:"choker",ears:"cross",back:"graveyard",fx:"bats",pet:"raven",eyes:"sultry",beard:"none",skin:13,body:"curvy"}},
+ {id:"carpet",n:"Red Carpet",tag:"Popular",price:"$4.99",was:"$8.46",items:["outfit:sequin","ears:diamonds","back:deco","fx:sparkle"],look:{hair:"waves",hairColor:"#d8b66f",outfit:"sequin",outfitColor:1,hat:"none",makeup:"glam",lips:"#b3122a",neck:"pearls",ears:"diamonds",back:"deco",fx:"sparkle",prop:"rose",eyes:"sultry",beard:"none",marks:"mole",skin:7,body:"curvy"}},
+ {id:"neon",n:"Neon Runner",tag:"Neon Noir",price:"$3.99",was:"$9.46",items:["outfit:cyber","eyewear:visor","pet:cat","fx:neonglow"],look:{hair:"bob",hairColor:"#3e7fd8",outfit:"cyber",outfitColor:0,hat:"none",eyewear:"visor",back:"neon",fx:"neonglow",pet:"cat",makeup:"neon",skin:5,beard:"none"}},
+ {id:"tux",n:"Midnight Tuxedo",tag:"Black tie",price:"$3.99",was:"$7.47",items:["outfit:tux","hat:tophat","back:vault"],look:{hair:"slick",hairColor:"#1b1714",outfit:"tux",outfitColor:2,hat:"tophat",back:"vault",fx:"none",beard:"pencil",skin:10,body:"athletic",mouth:"smirk",eyewear:"none"}},
+ {id:"officer",n:"Officer's Honour",tag:"Military",price:"$2.99",was:"$5.47",items:["outfit:dress","hat:military","back:warroom"],look:{hair:"buzz",outfit:"dress",outfitColor:1,hat:"military",neck:"none",back:"warroom",fx:"none",brows:"stern",mouth:"stern",skin:3,eyewear:"aviator"}},
+ {id:"fox",n:"Woodland Sleuth",tag:"Companion",price:"$2.99",was:"$4.48",items:["pet:fox","pet:owl"],look:{hair:"braids",outfit:"cape",outfitColor:2,hat:"beret",hatColor:3,pet:"fox",back:"cliffs",fx:"none",skin:9,prop:"lantern"}},
+];
+const PASS={id:"pass",n:"Halloway Season Pass",price:"$9.99",was:"$41.80",desc:"Every Legendary item in Season 1, the exclusive title “Heir of Halloway”, a gold card frame and Ada's locket."};
+
+/* crew: seeded friends so testers can see how looks are shown off */
+const CREW=[["Mara","Neon Noir",BUNDLES[2].look],["Dev","Gaslight Manor",Object.assign({},LOOKS[3][2],{skin:9})],["Jules","Gaslight Manor",BUNDLES[1].look],["Kofi","Neon Noir",Object.assign({},BUNDLES[3].look,{skin:12,beard:"boxed"})],["Ines","Gaslight Manor",Object.assign({},LOOKS[1][2],{skin:2})]];
+
+/* ---------------- state ---------------- */
+function st(){if(!S.av)S.av={cfg:Object.assign({},A.DEFAULT),owned:{},name:"",title:"rookie",made:false};S.av.owned=S.av.owned||{};return S.av}
+const priceOf=(cat,id)=>{if(cat==="title"){const t=TITLES[id];return t?{r:t[1],p:t[2]}:{r:"c"}}
+ const sec=SEC[cat];if(!sec||!sec.items)return{r:"c"};const it=sec.items[id];if(!it)return{r:"c"};return{r:it[1],p:it[2]}};
+const isFree=(cat,id)=>{const p=priceOf(cat,id);return!p.p};
+const owns=(cat,id)=>isFree(cat,id)||!!st().owned[cat+":"+id]||(priceOf(cat,id).r==="l"&&st().owned["pass:pass"]);
+const swLocked=(sec2,val)=>{if(!sec2.pack)return false;const e=sec2.list.find(x=>x[1]===val);return e&&e[2]&&!st().owned[sec2.pack]&&!st().owned["pass:pass"]};
+function unowned(cfg){const out=[];
+ for(const k in SEC){const sec=SEC[k];if(!sec.items)continue;const v=cfg[sec.key];if(v!=null&&!owns(k,v))out.push([k,v])}
+ for(const k of["eyes","hair"]){const s2=SEC[k].sw2;if(s2&&swLocked(s2,cfg[s2.key])&&!out.some(o=>o[0]==="pack"&&o[1]===s2.pack))out.push(["pack",s2.pack])}
+ return out}
+const itemName=(cat,id)=>cat==="pack"?(id==="dye:pack"?"Neon dye pack":"Rare lenses"):cat==="title"?TITLES[id][0]:(SEC[cat].items[id]||[id])[0];
+const itemPrice=(cat,id)=>cat==="pack"?{r:"r",p:id==="dye:pack"?4:3}:priceOf(cat,id);
+const fmtP=p=>typeof p==="number"?`${COIN}${p}`:p==="pass"?"Pass":p;
+function styleScore(cfg){let n=0;for(const k in SEC){const sec=SEC[k];if(!sec.items)continue;const r=priceOf(k,cfg[sec.key]).r;n+={c:0,r:1,e:2,l:4}[r]||0}return n}
+const styleRank=n=>n>=14?["Icon","l"]:n>=8?["Head-turner","e"]:n>=3?["Sharp","r"]:["Fresh face","c"];
+const frameRar=cfg=>{if(st().owned["pass:pass"])return"pass";let best="c";for(const k in SEC){const sec=SEC[k];if(!sec.items)continue;const r=priceOf(k,cfg[sec.key]).r;if("crel".indexOf(r)>"crel".indexOf(best))best=r}return best};
+
+/* ---------------- creator ---------------- */
+let draft=null,tab="looks",sub={},onDone=null,firstRun=false,el=null;
+function open(o={}){const s=st();draft=Object.assign({},A.DEFAULT,s.cfg);onDone=o.onDone||null;firstRun=!!o.first;tab=o.tab||(firstRun?"looks":"outfit");
+ if(!el){el=document.createElement("div");el.id="avc";el.className="avc";document.body.appendChild(el)}
+ el.innerHTML=`<div class="avc-in">
+  <header class="avc-h"><button class="ibtn" id="avX" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+   <div class="avc-t"><small>${firstRun?"Before you enter":"The wardrobe"}</small><b>Your detective</b></div>
+   <span class="chip avc-coins" id="avCoins"></span><button class="avc-shop" id="avShop"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>Boutique</button></header>
+  <div class="avc-main">
+   <div class="avc-stage"><div class="avc-card" id="avCard"></div>
+    <button class="avc-dice" id="avDice" aria-label="Random look"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.3"/><circle cx="15" cy="15" r="1.3"/><circle cx="15" cy="9" r="1.3"/><circle cx="9" cy="15" r="1.3"/></svg></button></div>
+   <div class="avc-ctl">
+    <nav class="avc-tabs" id="avTabs">${TABS.map(t=>`<button data-tab="${t[0]}">${t[1]}</button>`).join("")}</nav>
+    <div class="avc-subs" id="avSubs"></div>
+    <div class="avc-panel" id="avPanel"></div>
+    <div class="avc-foot"><div class="avc-try" id="avTry" hidden></div><button class="btn pri block" id="avDone">${firstRun?"This is me. Enter the house":"Save my look"}</button></div>
+   </div></div></div><div class="avm" id="avm" hidden><div class="avm-box" id="avmBox"></div></div>`;
+ el.hidden=false;requestAnimationFrame(()=>el.classList.add("on"));
+ $("#avX").onclick=()=>close(false);$("#avDone").onclick=done;$("#avShop").onclick=()=>shop();$("#avDice").onclick=dice;
+ el.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;AU.sfx("click");paintTabs();paintPanel()});
+ paintAll();if(firstRun)setTimeout(()=>toast("Pick a style to start, then make it yours. Tap anything to try it on.",4200),500);
+}
+function close(saveIt){if(!el)return;el.classList.remove("on");setTimeout(()=>{el.hidden=true;el.innerHTML=""},350);paintDock();if(onDone){const f=onDone;onDone=null;f(saveIt)}}
+function paintAll(){paintCard();paintTabs();paintPanel();paintTry();paintCoins()}
+function paintCoins(){const c=$("#avCoins");if(c)c.innerHTML=`${COIN}<b>${S.coins}</b>`}
+function cardHTML(cfg,o={}){const s=st();const nm=o.name!=null?o.name:(s.name||"Your name");const tt=o.title!=null?o.title:(TITLES[s.title]||TITLES.rookie)[0];const fr=o.frame||frameRar(cfg);const rk=styleRank(styleScore(cfg));
+ return`<div class="avcard fr-${fr}">${A.render(cfg,{label:`Detective portrait of ${nm}`})}<div class="avcard-np"><b>${esc(nm)}</b><span>${esc(tt)}</span></div>${o.noRank?"":`<div class="avcard-rk r-${rk[1]}">${rk[0]}</div>`}</div>`}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function paintCard(pop){const c=$("#avCard");if(!c)return;c.innerHTML=cardHTML(draft,{name:st().name||(firstRun?"Your name here":"Detective"),title:(TITLES[st().title]||TITLES.rookie)[0]});if(pop){c.classList.remove("pop");void c.offsetWidth;c.classList.add("pop")}}
+function paintTabs(){el.querySelectorAll("[data-tab]").forEach(b=>{b.classList.toggle("on",b.dataset.tab===tab);if(b.dataset.tab===tab)b.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})});
+ const t=TABS.find(x=>x[0]===tab),subs=t[2],cur=sub[tab]||subs[0];const sb=$("#avSubs");
+ sb.hidden=subs.length<2;sb.innerHTML=subs.length<2?"":subs.map(k=>`<button data-sub="${k}" class="${k===cur?"on":""}">${SEC[k].n}</button>`).join("");
+ sb.querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{sub[tab]=b.dataset.sub;AU.sfx("click");paintTabs();paintPanel()})}
+function tag(cat,id){const p=priceOf(cat,id),o=owns(cat,id),r=RAR[p.r];
+ return`<span class="avt-r" style="--rc:${r[1]}">${r[0]}</span>${p.p&&!o?`<span class="avt-p">${fmtP(p.p)}</span>`:p.p?`<span class="avt-own">Owned</span>`:""}`}
+function thumb(cfg,sec){const o={lite:!sec.full,vb:sec.vb||"0 0 400 480"};return A.render(cfg,o)}
+function paintPanel(){const p=$("#avPanel");p.scrollTop=0;
+ if(tab==="looks"){p.innerHTML=`<p class="avc-note">Start from a style, then change anything. Pieces you don't own yet are free to try on.</p><div class="avc-grid big">${LOOKS.map((l,i)=>{const cfg=Object.assign({},draft,l[2]);const lock=unowned(cfg).length;
+   return`<button class="avt look" data-look="${i}"><div class="avt-th">${A.render(cfg,{vb:"0 0 400 480"})}</div><b>${l[0]}</b><small>${l[1]}</small>${lock?`<span class="avt-p">${lock} premium</span>`:""}</button>`}).join("")}</div>`;
+  p.querySelectorAll("[data-look]").forEach(b=>b.onclick=()=>{const l=LOOKS[+b.dataset.look];Object.assign(draft,l[2]);AU.sfx("pick");paintCard(1);paintTry();toast(`${l[0]}. Now make it yours.`)});return}
+ if(tab==="id"){const s=st();p.innerHTML=`<div class="avc-sec">Detective name</div><input class="avc-name" id="avName" maxlength="18" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" placeholder="e.g. Sam Marlowe" value="${esc(s.name||"")}" aria-label="Detective name">
+   <p class="avc-note">Shown to your crew. Offensive names are blocked.</p><div class="avc-sec">Title</div><div class="avc-list">${Object.entries(TITLES).map(([k,t])=>{const o=owns("title",k)||(k==="heir"&&s.owned["pass:pass"]);const r=RAR[t[1]];
+   return`<button class="avl ${s.title===k?"on":""}" data-title="${k}"><b>${t[0]}</b><span class="avt-r" style="--rc:${r[1]}">${r[0]}</span>${t[2]&&!o?`<span class="avt-p">${t[2]==="pass"?"Season Pass":fmtP(t[2])}</span>`:""}</button>`}).join("")}</div>`;
+  const inp=$("#avName");inp.oninput=()=>{const v=inp.value.replace(/[^\p{L}\p{N} .'\-]/gu,"").slice(0,18);if(v!==inp.value)inp.value=v};
+  inp.onchange=inp.onblur=()=>{const v=inp.value.trim();if(v&&!cleanName(v)){toast("Let's pick a different name. That one isn't allowed.");inp.value=s.name||"";return}s.name=v;save();paintCard()};
+  inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();inp.blur()}};
+  p.querySelectorAll("[data-title]").forEach(b=>b.onclick=()=>{const k=b.dataset.title,t=TITLES[k];const o=owns("title",k)||(k==="heir"&&s.owned["pass:pass"]);
+   if(!o){if(t[2]==="pass"){shop("pass");return}checkout([["title",k]]);return}s.title=k;save();AU.sfx("pick");paintCard(1);paintPanel()});return}
+ const t=TABS.find(x=>x[0]===tab),k=sub[tab]||t[2][0],sec=SEC[k];let h="";
+ if(sec.sw){h+=`<div class="avc-sw">${sec.sw.map(([i,n,c])=>`<button class="sw ${draft.skin===i?"on":""}" data-skin="${i}" style="--c:${c}" aria-label="${n}"></button>`).join("")}</div><p class="avc-note">Every tone is free, always.</p>`}
+ if(sec.cw&&draft[sec.key]&&draft[sec.key]!=="none"){const list=sec.key==="outfit"?A.CW[draft.outfit]:A.HCW[draft.hat==="trilby"?"fedora":draft.hat];
+  if(list)h+=`<div class="avc-sec">Colourway</div><div class="avc-sw">${list.map((c,i)=>`<button class="sw ${draft[sec.cw]%list.length===i?"on":""}" data-cw="${i}" style="--c:${c[1]};--c2:${c[2]||c[1]}" aria-label="${c[0]}"></button>`).join("")}</div>`}
+ if(sec.sw2){const s2=sec.sw2;h+=`<div class="avc-sec">${s2.n}${s2.pack&&!st().owned[s2.pack]?` <span class="avt-p">${COIN}${s2.packP} unlocks ${s2.packN.toLowerCase()}</span>`:""}</div><div class="avc-sw">${s2.list.map((c)=>`<button class="sw ${draft[s2.key]===c[1]?"on":""} ${c[2]?"prem":""}" data-sw2="${c[1]==null?"":c[1]}" style="--c:${c[1]||"#c98a7a"}" aria-label="${c[0]}">${c[1]==null?"<i>N</i>":""}${c[2]&&swLocked(s2,c[1])?'<em></em>':""}</button>`).join("")}</div>`}
+ if(sec.items){h+=`<div class="avc-sec">${sec.n}</div><div class="avc-grid">${Object.entries(sec.items).map(([id,it])=>{const cfg=Object.assign({},draft,{[sec.key]:id});if(sec.hatless)cfg.hat="none";if(k==="beard"||k==="marks"||k==="makeup"||k==="eyes"||k==="brows"||k==="nose"||k==="mouth"){cfg.eyewear="none";cfg.hat="none"}
+   const p=priceOf(k,id),o=owns(k,id);return`<button class="avt ${draft[sec.key]===id?"on":""} rr-${p.r}" data-item="${id}"><div class="avt-th">${thumb(cfg,sec)}</div><b>${it[0]}</b><div class="avt-tags">${tag(k,id)}</div>${!o?'<span class="avt-lock"></span>':""}</button>`}).join("")}</div>`}
+ p.innerHTML=h;
+ p.querySelectorAll("[data-skin]").forEach(b=>b.onclick=()=>{draft.skin=+b.dataset.skin;AU.sfx("pick");paintCard(1);paintPanel()});
+ p.querySelectorAll("[data-cw]").forEach(b=>b.onclick=()=>{draft[sec.cw]=+b.dataset.cw;AU.sfx("pick");paintCard(1);paintPanel()});
+ p.querySelectorAll("[data-sw2]").forEach(b=>b.onclick=()=>{const v=b.dataset.sw2||null;draft[sec.sw2.key]=v;AU.sfx("pick");paintCard(1);paintPanel();paintTry();if(swLocked(sec.sw2,v))toast(`Trying on ${sec.sw2.packN.toLowerCase()}. Unlock it to keep it.`)});
+ p.querySelectorAll("[data-item]").forEach(b=>b.onclick=()=>{const id=b.dataset.item;draft[sec.key]=id;if(sec.cw&&b.closest(".avt")&&!b.classList.contains("on"))draft[sec.cw]=0;AU.sfx("pick");paintCard(1);
+   const keep=p.scrollTop;paintPanel();p.scrollTop=keep;paintTry();if(!owns(k,id)){const pr=priceOf(k,id);toast(`Trying on ${sec.items[id][0]} · ${RAR[pr.r][0]} · ${typeof pr.p==="number"?pr.p+" coins":pr.p}`)}});
+}
+function paintTry(){const t=$("#avTry");if(!t)return;const u=unowned(draft);if(!u.length){t.hidden=true;return}
+ const coins=u.reduce((a,[c,i])=>{const p=itemPrice(c,i).p;return a+(typeof p==="number"?p:0)},0),usd=u.reduce((a,[c,i])=>{const p=itemPrice(c,i).p;return a+(typeof p==="string"&&p[0]==="$"?parseFloat(p.slice(1)):0)},0);
+ t.hidden=false;t.innerHTML=`<div class="avc-try-tx"><b>Trying on ${u.length} item${u.length>1?"s":""}</b><span>${u.map(([c,i])=>itemName(c,i)).join(", ")}</span></div><button class="btn avc-unlock" id="avUnl">${coins?`${COIN}${coins}`:""}${coins&&usd?" + ":""}${usd?"$"+usd.toFixed(2):""} <span>Unlock</span></button>`;
+ $("#avUnl").onclick=()=>checkout(u)}
+function dice(){const r=Math.random,pick=o=>{const k=Object.keys(o);return k[Math.floor(r()*k.length)]};
+ Object.assign(draft,{skin:Math.floor(r()*A.SKIN.length),body:pick(A.BODY),jaw:pick(A.JAW),eyes:pick(A.EYES),brows:pick(A.BROWS),nose:pick(A.NOSE),mouth:pick(A.MOUTH),hair:pick(A.HAIR),hairColor:A.HAIRC[Math.floor(r()*A.HAIRC.length)][1],
+  outfit:pick(A.OUTFIT),outfitColor:Math.floor(r()*4),hat:r()<.45?"none":pick(A.HAT),hatColor:Math.floor(r()*4),eyewear:r()<.6?"none":pick(A.EYEWEAR),beard:r()<.6?"none":pick(A.BEARD),makeup:r()<.6?"none":pick(A.MAKEUP),
+  lips:r()<.6?null:A.LIPC[1+Math.floor(r()*(A.LIPC.length-1))][1],neck:r()<.5?"none":pick(A.NECK),ears:r()<.5?"none":pick(A.EARS),marks:r()<.6?"none":pick(A.MARKS),back:pick(A.BACK),fx:r()<.5?"none":pick(A.FX),prop:r()<.6?"none":pick(A.PROP),pet:r()<.8?"none":pick(A.PET)});
+ AU.sfx("tick");paintCard(1);paintPanel();paintTry()}
+function done(){const u=unowned(draft);
+ if(u.length){modal(`<div class="kicker">Almost there</div><h3>You're trying on ${u.length} item${u.length>1?"s":""} you don't own yet</h3><p class="small">${u.map(([c,i])=>`${itemName(c,i)} (${fmtP(itemPrice(c,i).p)})`).join(", ")}</p>
+  <div class="avm-acts"><button class="btn pri block" id="mUnl">Unlock them</button><button class="btn block" id="mStrip">Save without them</button><button class="btn block" id="mBack">Keep browsing</button></div>`);
+  $("#mUnl").onclick=()=>checkout(u,()=>commit());$("#mStrip").onclick=()=>{const saved=st().cfg;for(const[c,i]of u){if(c==="pack"){if(i==="dye:pack")draft.hairColor=A.DEFAULT.hairColor;else draft.eyeColor=A.DEFAULT.eyeColor}else{const k=SEC[c].key;draft[k]=owns(c,saved[k])?saved[k]:(SEC[c].items.none?"none":A.DEFAULT[k])}}closeModal();commit()};
+  $("#mBack").onclick=closeModal;return}
+ commit()}
+function commit(){const s=st();s.cfg=Object.assign({},draft);s.made=true;save();AU.sfx("seal");
+ if(firstRun&&!s.name){tab="id";paintTabs();paintPanel();toast("Last thing: give your detective a name.");setTimeout(()=>{const i=$("#avName");if(i)i.focus()},300);firstRun=false;$("#avDone").textContent="Enter the house";return}
+ toast(s.name?`Looking sharp, ${s.name}.`:"Look saved.");close(true)}
+
+/* ---------------- modal, checkout, boutique ---------------- */
+function modal(html,wide){const m=$("#avm");$("#avmBox").innerHTML=html;$("#avmBox").classList.toggle("wide",!!wide);m.hidden=false;requestAnimationFrame(()=>m.classList.add("on"));m.onclick=e=>{if(e.target===m)closeModal()}}
+function closeModal(){const m=$("#avm");if(!m)return;m.classList.remove("on");setTimeout(()=>m.hidden=true,250)}
+function checkout(items,after){
+ const coins=items.reduce((a,[c,i])=>{const p=itemPrice(c,i).p;return a+(typeof p==="number"?p:0)},0),usdI=items.filter(([c,i])=>{const p=itemPrice(c,i).p;return typeof p==="string"&&p[0]==="$"}),usd=usdI.reduce((a,[c,i])=>a+parseFloat(itemPrice(c,i).p.slice(1)),0);
+ const short=coins>S.coins;
+ modal(`<div class="kicker">Checkout · preview</div><h3>Unlock ${items.length} item${items.length>1?"s":""}</h3>
+  <div class="avm-items">${items.map(([c,i])=>{const p=itemPrice(c,i);return`<div class="avm-it"><span class="avt-r" style="--rc:${RAR[p.r][1]}">${RAR[p.r][0]}</span><b>${itemName(c,i)}</b><em>${fmtP(p.p)}</em></div>`}).join("")}</div>
+  ${coins?`<div class="avm-row"><span>Coins</span><b>${COIN}${coins}</b><small>You have ${S.coins}</small></div>`:""}${usd?`<div class="avm-row"><span>Premium</span><b>$${usd.toFixed(2)}</b><small>Mock price</small></div>`:""}
+  ${short?`<p class="small warn">You need ${coins-S.coins} more coin${coins-S.coins>1?"s":""}. You earn one for every room you finish.</p><button class="btn block" id="mTest">${COIN} Add 20 test coins (preview only)</button>`:""}
+  <div class="avm-acts"><button class="btn pri block" id="mPay" ${short?"disabled":""}>${usd?`Pay $${usd.toFixed(2)}${coins?` + ${coins} coins`:""}`:`Spend ${coins} coins`}</button><button class="btn block" id="mNo">Not now</button></div>
+  <p class="small">Preview build: nothing is charged and no card is asked for. In the real game this step would use Apple Pay, Google Pay or a card, and coins can never buy clues.</p>`);
+ const t=$("#mTest");if(t)t.onclick=()=>{S.coins+=20;save();paintCoins();AU.sfx("find");checkout(items,after)};
+ $("#mNo").onclick=closeModal;
+ $("#mPay").onclick=()=>{const b=$("#mPay");if(usd&&!b.dataset.sure){b.dataset.sure=1;b.innerHTML="Confirm: no real money (preview)";return}
+  S.coins-=coins;const s=st();items.forEach(([c,i])=>{s.owned[c==="pack"?i:c+":"+i]=true});save();closeModal();celebrate(items.length);paintCoins();paintPanel();paintTry();paintCard(1);if(after)after()}}
+function celebrate(n){AU.sfx("seal");const c=$("#avCard");if(!c)return;const fx=document.createElement("div");fx.className="avconf";fx.innerHTML=Array.from({length:36},(_,i)=>`<i style="--x:${(Math.random()*2-1)*160}px;--y:${-80-Math.random()*220}px;--r:${Math.random()*720}deg;--d:${Math.random()*.25}s;background:${["#f2c14e","#ff3db5","#45f0dc","#fff","#b46cff"][i%5]}"></i>`).join("");c.appendChild(fx);setTimeout(()=>fx.remove(),1600);toast(`Unlocked ${n} item${n>1?"s":""}. It's yours to keep.`)}
+function shop(focus){const s=st();
+ modal(`<div class="avm-head"><div><div class="kicker">The Vault boutique · preview</div><h3>Look the part</h3></div><button class="ibtn" id="mClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <p class="small">Looks only. Nothing here changes a clue, a hint or your odds. Mock prices, no real payments.</p>
+  <div class="avb-pass ${s.owned["pass:pass"]?"own":""}"><div class="avb-pv">${cardHTML(Object.assign({},draft,{outfit:"sequin",outfitColor:2,back:"deco",fx:"sparkle",hat:"crown",pet:"raven",neck:"locket",ears:"diamonds"}),{name:s.name||"You",title:"Heir of Halloway",frame:"pass",noRank:1})}</div>
+   <div class="avb-tx"><span class="avb-tag">Best value</span><b>${PASS.n}</b><p>${PASS.desc}</p><div class="avb-pr"><s>${PASS.was}</s><em>${PASS.price}</em></div>
+   ${s.owned["pass:pass"]?`<span class="avt-own">Owned</span>`:`<button class="btn pri" id="bPass">Get the pass</button>`}</div></div>
+  <div class="avc-sec">Bundles</div><div class="avb-grid">${BUNDLES.map(b=>{const own=b.items.every(x=>s.owned[x]||s.owned["pass:pass"]);return`<div class="avb"><div class="avb-pv">${cardHTML(Object.assign({},draft,b.look),{name:b.n,title:b.tag,noRank:1})}</div>
+   <div class="avb-tx"><b>${b.n}</b><small>${b.items.map(x=>{const[c,i]=x.split(":");return itemName(c,i)}).join(" · ")}</small><div class="avb-pr"><s>${b.was}</s><em>${b.price}</em></div>
+   <div class="avb-acts"><button class="btn" data-try="${b.id}">Try on</button>${own?`<span class="avt-own">Owned</span>`:`<button class="btn pri" data-buy="${b.id}">Buy</button>`}</div></div></div>`}).join("")}</div>
+  <div class="avc-sec">Earn coins</div><p class="small">Finish a room (seal any theory, right or wrong) to earn 1 coin. You have ${COIN}<b>${S.coins}</b>. Coins buy Rare and Epic pieces. Legendary pieces are premium.</p>
+  <button class="btn block" id="bTest" style="margin-top:10px">${COIN} Add 20 test coins (preview only)</button>`,true);
+ $("#mClose").onclick=closeModal;
+ $("#bTest").onclick=()=>{S.coins+=20;save();paintCoins();AU.sfx("find");shop()};
+ const bp=$("#bPass");if(bp)bp.onclick=()=>buyPack("pass:pass",PASS.n,PASS.price);
+ document.querySelectorAll("[data-try]").forEach(b=>b.onclick=()=>{const B=BUNDLES.find(x=>x.id===b.dataset.try);Object.assign(draft,B.look);closeModal();AU.sfx("pick");paintCard(1);paintPanel();paintTry();toast(`Trying on ${B.n}.`)});
+ document.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{const B=BUNDLES.find(x=>x.id===b.dataset.buy);buyPack(B.items,B.n,B.price,B.look)});
+ if(focus==="pass"){const p=document.querySelector(".avb-pass");if(p)p.classList.add("pulse")}
+}
+function buyPack(keys,name,price,look){modal(`<div class="kicker">Checkout · preview</div><h3>${name}</h3><div class="avm-row"><span>Price</span><b>${price}</b><small>Mock price</small></div>
+  <div class="avm-acts"><button class="btn pri block" id="mPay">Pay ${price}</button><button class="btn block" id="mNo">Not now</button></div><p class="small">Preview build: nothing is charged. In the real game this would go through Apple Pay, Google Pay or a card.</p>`);
+ $("#mNo").onclick=()=>shop();$("#mPay").onclick=()=>{const b=$("#mPay");if(!b.dataset.sure){b.dataset.sure=1;b.innerHTML="Confirm: no real money (preview)";return}
+  const s=st();[].concat(keys).forEach(k=>s.owned[k]=true);if(keys==="pass:pass"){s.owned["title:heir"]=true}if(look)Object.assign(draft,look);save();closeModal();celebrate([].concat(keys).length);paintAll()}}
+
+/* ---------------- in-game surfaces ---------------- */
+function headSVG(cfg){return A.render(cfg,{vb:"95 40 210 210",lite:1})}
+function paintDock(){const d=$("#avDock");if(!d)return;const s=st();d.innerHTML=`<span class="avd-face fr-${frameRar(s.cfg)}">${headSVG(s.cfg)}</span>`;d.setAttribute("aria-label",`Your detective${s.name?", "+s.name:""}`)}
+function hubCard(){const s=st();if(!s.made)return`<button class="avhub new" id="avHub"><div class="avhub-pv">${cardHTML(s.cfg,{name:"?",title:"Create your detective",noRank:1})}</div><div class="avhub-tx"><div class="kicker">New</div><b>Create your detective</b><span>Noir, goth, rock, glam, military and more. This is who your crew sees.</span><em class="btn pri">Create</em></div></button>`;
+ const rk=styleRank(styleScore(s.cfg)),n=Object.keys(s.owned).length;
+ return`<div class="avhub"><div class="avhub-pv" id="avHubPv">${cardHTML(s.cfg)}</div><div class="avhub-tx"><div class="kicker">Your detective</div><b>${esc(s.name||"Unnamed detective")}</b><span>${esc((TITLES[s.title]||TITLES.rookie)[0])}</span>
+  <div class="avhub-stats"><span class="r-${rk[1]}">Style: ${rk[0]}</span><span>${COIN}${S.coins} coins</span><span>${n} unlocked</span></div><div class="avhub-acts"><button class="btn pri" id="avHubEdit">Wardrobe</button><button class="btn" id="avHubShop">Boutique</button></div></div></div>
+  <div class="avcrew"><div class="avc-sec">Your crew this week</div><div class="avcrew-row">${CREW.map((c,i)=>`<button class="avcrew-c" data-crew="${i}"><span class="avd-face fr-${frameRar(c[2])}">${headSVG(Object.assign({},A.DEFAULT,c[2]))}</span><b>${c[0]}</b><small>${c[1]}</small></button>`).join("")}</div><p class="small">Sample crew for the preview. Everyone sees the same rooms; only the looks differ.</p></div>`}
+function bindHub(){const s=st();const h=$("#avHub");if(h)h.onclick=()=>openFromGame("looks",true);
+ const e=$("#avHubEdit");if(e)e.onclick=()=>openFromGame("outfit");const sh=$("#avHubShop");if(sh)sh.onclick=()=>{openFromGame("outfit");setTimeout(()=>shop(),400)};
+ const pv=$("#avHubPv");if(pv)pv.onclick=()=>openFromGame("outfit");
+ document.querySelectorAll("[data-crew]").forEach(b=>b.onclick=()=>crewCard(+b.dataset.crew))}
+function openFromGame(t,first){AU.init();AU.resume();AU.sfx("open");open({tab:t,first:!!first,onDone:()=>{if(typeof hubOn!=="undefined"&&hubOn)showHub()}})}
+function crewCard(i){const c=CREW[i],cfg=Object.assign({},A.DEFAULT,c[2]);const leg=Object.keys(SEC).filter(k=>SEC[k].items&&priceOf(k,cfg[SEC[k].key]).r==="l").map(k=>itemName(k,cfg[SEC[k].key]));
+ openSheet(`${c[0]}'s detective`,`<div class="avsheet-card">${cardHTML(cfg,{name:c[0],title:c[1]==="Neon Noir"?"Night Owl":"Private Eye"})}</div>
+  <p class="small" style="margin:12px 2px">Playing in ${c[1]}.${leg.length?` Wearing Legendary: ${leg.join(", ")}.`:""}</p><button class="btn pri block" id="crewTry">Try this look on</button>`,"Crew · week "+S.week);
+ $("#crewTry").onclick=()=>{closeSheet();setTimeout(()=>{open({tab:"outfit",onDone:()=>{if(hubOn)showHub()}});Object.assign(draft,c[2]);paintAll();toast(`Trying on ${c[0]}'s look.`)},380)}}
+function profileSheet(){const s=st();AU.init();AU.resume();AU.sfx("paper");
+ openSheet(s.name||"Your detective",`<div class="avsheet-card">${cardHTML(s.cfg)}</div><div class="avhub-stats" style="justify-content:center;margin:12px 0"><span>${COIN}${S.coins} coins</span><span>${Object.keys(s.owned).length} unlocked</span></div>
+  <button class="btn pri block" id="pfEdit">Open the wardrobe</button><p class="small" style="margin-top:10px">Your look never changes a clue. It's how your crew sees you.</p>`,"Profile");
+ $("#pfEdit").onclick=()=>{closeSheet();setTimeout(()=>open({tab:"outfit",onDone:()=>paintDock()}),380)}}
+function endBlock(){const s=st();if(!s.made)return"";return`<div class="avend"><div class="avend-pv">${cardHTML(s.cfg,{noRank:1})}</div><div><b>${esc(s.name||"Your detective")}</b><span>sealed week ${R.week}. Coins buy looks, never clues.</span><button class="btn" id="avEndW">Spend coins in the wardrobe</button></div></div>`}
+function bindEnd(){const b=$("#avEndW");if(b)b.onclick=()=>open({tab:"outfit",onDone:()=>{const e=document.querySelector(".avend-pv");if(e)e.innerHTML=cardHTML(st().cfg,{noRank:1})}})}
+
+return{open,paintDock,hubCard,bindHub,profileSheet,endBlock,bindEnd,st,cardHTML,LOOKS,BUNDLES};
+})();
+
+/* =====================================================================
    BOOT
    ===================================================================== */
 S.week=Math.max(S.week||1,6);save(); // preview: weeks 2 to 6 back-dated so testers can play all six
@@ -1908,8 +2855,9 @@ document.body.dataset.world=S.world;paintSnd();loadRoom("study");
 $("#startBtn").onclick=()=>{
   AU.init();AU.resume();AU.sfx("open");
   const t=$("#title");t.classList.add("fade");
-  setTimeout(()=>{t.hidden=true;titleOn=false;showHub()},800);
+  setTimeout(()=>{t.hidden=true;titleOn=false;showHub();if(!AVX.st().made)AVX.open({first:true,tab:"looks",onDone:()=>showHub()})},800);
 };
+$("#avDock").onclick=()=>AVX.profileSheet();AVX.paintDock();
 requestAnimationFrame(frame);
 
 </script>
