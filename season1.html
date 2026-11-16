@@ -286,6 +286,9 @@ body[data-world="neon"] .sheetmusic{background:#e4eaff}
 .piano .b.on{background:linear-gradient(#5a4a2a,#2a2010)}
 .played{min-height:44px;margin-top:10px;padding:8px 12px;border-radius:12px;background:rgba(0,0,0,.3);border:1px solid var(--ui-line);font:700 22px var(--serif);letter-spacing:.18em;display:flex;align-items:center;gap:10px}
 .played small{font:500 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ui-muted)}
+body[data-world="gaslight"][data-room="kitchen"]{--wall:#4a3a26;--wallpat:#5a4630}
+body[data-world="gaslight"][data-room="observatory"]{--wall:#1e2638;--wallpat:#28324a}
+body[data-world="gaslight"][data-room="bedroom"]{--wall:#4a2a32;--wallpat:#5e3540}
 
 </style>
 </head>
@@ -336,7 +339,7 @@ body[data-world="neon"] .sheetmusic{background:#e4eaff}
     <div class="kicker">Season 1</div>
     <div class="tmain">THE VAULT</div>
     <div class="tsub">The Halloway Inheritance</div>
-    <div class="tep">Twelve rooms · twelve Fridays · <b>3 rooms open to play now</b></div>
+    <div class="tep">Twelve rooms · twelve Fridays · <b>6 rooms open to play now</b></div>
     <button class="btn pri block" id="startBtn" style="height:56px;font-size:17px">Enter the house</button>
     <div class="tfine">Free to play. Nothing you can buy ever changes a clue. Sound on for the full effect.</div>
   </div>
@@ -347,7 +350,7 @@ body[data-world="neon"] .sheetmusic{background:#e4eaff}
 <script>
 "use strict";
 /* =====================================================================
-   THE VAULT · Season 1 "The Halloway Inheritance" · weeks 1-3 (preview build)
+   THE VAULT · Season 1 "The Halloway Inheritance" · weeks 1-6 (preview build)
    Public build: contains clues only. There is no answer key in this file;
    theories are stored privately and never checked here (L04, L05).
    ===================================================================== */
@@ -357,7 +360,8 @@ const store={get(){try{return JSON.parse(localStorage.getItem("vault-s1")||"null
 const clone=o=>JSON.parse(JSON.stringify(o));
 const EPDEF={study:{seen:{},theory:"",saved:false,order:["anchor","star","moon","raven","key"],lamp:true,caseOpen:false,photoBack:false},
  conservatory:{seen:{},theory:"",saved:false,card:false,laid:false,rot:0},
- music:{seen:{},theory:"",saved:false,lid:false,metro:false}};
+ music:{seen:{},theory:"",saved:false,lid:false,metro:false},
+ kitchen:{seen:{},theory:"",saved:false},observatory:{seen:{},theory:"",saved:false},bedroom:{seen:{},theory:"",saved:false}};
 const DEF={world:"gaslight",sound:true,week:1,coins:0,poll:{},intro:{},eps:{}};
 let S=Object.assign(clone(DEF),store.get()||{});S.eps=S.eps||{};S.poll=S.poll||{};S.intro=S.intro||{};
 for(const k in EPDEF)S.eps[k]=Object.assign(clone(EPDEF[k]),S.eps[k]||{});
@@ -875,7 +879,7 @@ const AU={c:null,m:null,amb:null,timer:null,
     if(n==="step")burst(300,200,.12,.06,"lowpass");
     if(n==="seal"){this.bell(392,.07);setTimeout(()=>this.bell(523.25,.06),180);setTimeout(()=>this.bell(783.99,.05),360)}
     if(n==="spin")burst(800,3000,.6,.08,"bandpass",2);},
-  room(id){this.cur=id;if(!this.c)return;const t=this.c.currentTime,v={study:[.07,600,.05,true],conservatory:[.13,900,0,false],music:[.035,500,0,false]}[id];
+  room(id){this.cur=id;if(!this.c)return;const t=this.c.currentTime,v={study:[.07,600,.05,true],conservatory:[.13,900,0,false],music:[.035,500,0,false],kitchen:[.06,600,.05,true],observatory:[.015,400,0,false],bedroom:[.02,500,0,false]}[id];
     this.rg.gain.setTargetAtTime(v[0],t,.4);this.rhp.frequency.setTargetAtTime(v[1],t,.4);this.fg.gain.setTargetAtTime(v[2],t,.4);this.fire=v[3]},
   piano(m){if(!this.c||!S.sound)return;const c=this.c,t=c.currentTime,f=440*Math.pow(2,(m-69)/12);
     [[1,"triangle",.16],[2,"sine",.06],[3,"sine",.025]].forEach(([k,ty,v])=>{const o=c.createOscillator(),g=this.gain(0);o.type=ty;o.frequency.value=f*k;o.connect(g);g.connect(this.m);g.connect(this.dl);
@@ -906,7 +910,7 @@ function openSheet(title,html,kicker,onClose){
   onCloseSheet=onClose||null;setTimeout(()=>$("#shClose").focus({preventScroll:true}),50);
 }
 function closeSheet(){if(sheet.hidden)return;sheet.classList.remove("on");scrim.classList.remove("on");setTimeout(()=>{sheet.hidden=true;scrim.hidden=true},380);const f=onCloseSheet;onCloseSheet=null;if(f)f();if(lastFocus&&lastFocus.focus&&performance.now()-lastPtr>1500)try{lastFocus.focus({preventScroll:true})}catch(e){}}
-$("#shClose").onclick=closeSheet;scrim.onclick=()=>{if(performance.now()-openedAt>500)closeSheet()}; // ignore the ghost click from the tap that opened itaddEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+$("#shClose").onclick=closeSheet;scrim.onclick=()=>{if(performance.now()-openedAt>500)closeSheet()}; // ignore the ghost click from the tap that opened itaddEventListener("keydown",e=>{if(e.keyCode===27)closeSheet()});
 function markSeen(id){const e=E(),first=!e.seen[id];e.seen[id]=true;save();paintProgress();if(first)AU.sfx("find");return first}
 const notedLine='<div class="noted"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-10"/></svg>Added to your notebook</div>';
 function paintProgress(){const e=E(),n=R.searchable.filter(k=>e.seen[k]).length;$("#nbCount").textContent=n;$("#prog").textContent=n<R.searchable.length?`${n} of ${R.searchable.length} places searched`:"Every place searched";}
@@ -1394,6 +1398,282 @@ function musicNotes(e){const N=[];
 
 
 /* =====================================================================
+   SHARED BITS FOR WEEKS 4-6
+   ===================================================================== */
+const darkMask=holes=>`<defs><radialGradient id="hole" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000"/><stop offset=".55" stop-color="#000" stop-opacity=".7"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <mask id="dark" maskUnits="userSpaceOnUse" x="-800" y="-800" width="3600" height="2600"><rect x="-800" y="-800" width="3600" height="2600" fill="#fff"/>${holes.map(([x,y,r,o])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="url(#hole)" opacity="${o||1}"/>`).join("")}</mask></defs>`;
+const darkRect=`<rect id="darkRect" x="-800" y="-800" width="3600" height="2600" fill="#000" opacity=".5" mask="url(#dark)"/>`;
+function roomShell(floorCls="f-floor"){let floor="";for(let i=-22;i<=22;i++){const xt=1000+i*58,xb=1000+i*58*2.6;floor+=`M${xt} 900L${xb} 1320`}
+  return `<rect x="-600" y="-600" width="3200" height="1400" class="f-wall"/><rect x="-600" y="-600" width="3200" height="1400" fill="url(#damask)"/>
+  <rect x="-600" y="-600" width="3200" height="1500" fill="url(#wallShade)"/><rect x="-600" y="0" width="3200" height="34" class="f-woodD"/><rect x="-600" y="34" width="3200" height="8" class="f-woodL" opacity=".6"/>
+  <rect x="-600" y="884" width="3200" height="18" class="f-woodD"/><rect x="-600" y="900" width="3200" height="500" class="${floorCls}"/><path d="${floor}" stroke="#000" stroke-opacity=".35" stroke-width="2.5"/><rect x="-600" y="900" width="3200" height="500" fill="url(#floorShade)"/>`}
+function windowAt(x0,y0,w,h,skyInner,id="win"){ // a sash window with its own sky; returns markup in scene units
+  return `<clipPath id="${id}C"><rect x="${x0+22}" y="${y0+22}" width="${w-44}" height="${h-44}"/></clipPath>
+  <g clip-path="url(#${id}C)"><g id="far">${skyInner}</g></g>
+  <path fill-rule="evenodd" class="f-woodD" d="M${x0} ${y0}H${x0+w}V${y0+h}H${x0}zM${x0+22} ${y0+22}V${y0+h-22}H${x0+w-22}V${y0+22}z"/>
+  <rect x="${x0+22}" y="${y0+22}" width="${w-44}" height="${h-44}" fill="url(#glassSheen)"/>
+  <rect x="${x0+w/2-4}" y="${y0+22}" width="8" height="${h-44}" class="f-woodD"/><rect x="${x0+22}" y="${y0+h/2-4}" width="${w-44}" height="8" class="f-woodD"/>
+  <rect x="${x0-18}" y="${y0+h-6}" width="${w+36}" height="18" rx="3" class="f-woodL"/>`}
+function flame(x,y,h,c,t,i){const g=cx.createLinearGradient(0,y+3,0,y-h);g.addColorStop(0,rgba(c.fire2,.95));g.addColorStop(1,rgba(c.fire,0));cx.fillStyle=g;cx.beginPath();cx.moveTo(x-3.5,y+3);cx.quadraticCurveTo(x-4,y-h*.4,x+Math.sin(t*5+i),y-h);cx.quadraticCurveTo(x+4,y-h*.4,x+3.5,y+3);cx.fill()}
+function windowRain(x,y,w,h,dt){cx.save();cx.beginPath();cx.rect(x,y,w,h);cx.clip();cx.strokeStyle=`rgba(190,215,235,${S.world==="neon"?.33:.26})`;cx.lineWidth=1.3;cx.beginPath();
+  for(const d of P.rain){d.y+=d.v*dt;d.x-=d.v*dt*.18;if(d.y>y+h){d.y=y-10;d.x=x+Math.random()*(w+40)}cx.moveTo(d.x,d.y);cx.lineTo(d.x+d.l*.18,d.y-d.l)}cx.stroke();
+  if(P.flash>0){cx.fillStyle=`rgba(220,230,255,${P.flash*.8})`;cx.fillRect(x,y,w,h)}cx.restore()}
+const rainIn=(x,y,w,h,n=80)=>{P.rain=Array.from({length:n},()=>({x:x+Math.random()*w,y:y+Math.random()*h,v:900+Math.random()*500,l:14+Math.random()*12}))};
+
+/* =====================================================================
+   WEEK 4 · THE KITCHEN
+   ===================================================================== */
+const DIAL={1:"",2:"ABC",3:"DEF",4:"GHI",5:"JKL",6:"MNO",7:"PRS",8:"TUV",9:"WXY",0:"OPER"};
+const ORDERSLIP=["32","73","23","21","71","32"];
+function dialSVG(){
+  const holes=[1,2,3,4,5,6,7,8,9,0].map((d,k)=>{const a=(-50+k*29)*Math.PI/180,x=150+Math.cos(a)*92,y=150+Math.sin(a)*92;
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="21" fill="#f3ead6" stroke="#2a2018" stroke-width="2"/><text x="${x.toFixed(1)}" y="${(y-1).toFixed(1)}" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" font-size="17" fill="#1a120c">${d}</text><text x="${x.toFixed(1)}" y="${(y+12).toFixed(1)}" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="700" font-size="${DIAL[d].length>3?7:9}" fill="#8e2a22" letter-spacing=".5">${DIAL[d]}</text>`}).join("");
+  return `<svg viewBox="0 0 300 300" role="img" aria-label="Rotary dial. 1 no letters. 2 ABC. 3 DEF. 4 GHI. 5 JKL. 6 MNO. 7 PRS. 8 TUV. 9 WXY. 0 operator."><rect width="300" height="300" fill="#3a2414"/>
+  <circle cx="150" cy="150" r="132" fill="#111" stroke="var(--brass)" stroke-width="5"/><circle cx="150" cy="150" r="128" fill="url(#dialG)"/>
+  <defs><radialGradient id="dialG" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#050505"/></radialGradient></defs>
+  ${holes}<circle cx="150" cy="150" r="46" fill="#efe2c4" stroke="#2a2018" stroke-width="2"/><text x="150" y="146" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="13" fill="#3a2a1a">GRAY HOLLOW</text><text x="150" y="164" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" font-size="16" fill="#3a2a1a">No. 12</text>
+  <path d="M232 210l26 22" stroke="var(--brass)" stroke-width="7" stroke-linecap="round"/></svg>`}
+function kitchenSVG(){
+  let tiles="";for(let y=560;y<884;y+=26)tiles+=`M-600 ${y}H2600`;for(let r=0;r<13;r++)for(let x=-600+(r%2)*26;x<2600;x+=52)tiles+=`M${x} ${560+r*26}v26`;
+  const pot=(x,y,r)=>`<path d="M${x} 300V${y-r}" stroke="var(--iron)" stroke-width="2"/><circle cx="${x}" cy="${y}" r="${r}" fill="#b5652e"/><circle cx="${x}" cy="${y}" r="${r}" fill="url(#brassSheen)"/><rect x="${x-3}" y="${y-r-30}" width="6" height="30" fill="#8a4a20"/>`;
+  return `${baseDefs()}${roomShell("f-tileB")}
+<rect x="-600" y="556" width="3200" height="330" fill="var(--tileA)"/><path d="${tiles}" stroke="#000" stroke-opacity=".18" stroke-width="2"/><rect x="-600" y="556" width="3200" height="330" fill="url(#floorShade)" opacity=".45"/>
+<!-- range -->
+${hot("stove","The kitchen range",150,240,400,660,`
+  <rect x="320" y="60" width="44" height="300" class="f-ebony"/><rect x="160" y="350" width="380" height="40" rx="4" class="f-ebony"/>
+  <rect x="180" y="520" width="340" height="364" class="f-ebony"/><rect x="180" y="520" width="340" height="364" fill="url(#ebonySheen)"/>
+  <rect x="166" y="508" width="368" height="18" rx="4" class="f-ebony"/><rect x="166" y="508" width="368" height="18" fill="#fff" opacity=".06"/>
+  <rect x="204" y="560" width="130" height="120" rx="6" fill="#0b0909" stroke="var(--brass)" stroke-width="3"/><rect x="366" y="560" width="130" height="120" rx="6" fill="#0b0909" stroke="var(--brass)" stroke-width="3"/>
+  <rect x="236" y="720" width="70" height="70" rx="4" fill="#2a0e04" stroke="var(--brass)" stroke-width="3"/><path d="M244 740h54M244 756h54M244 772h54" stroke="#000" stroke-width="4"/>
+  <rect x="366" y="720" width="130" height="140" rx="6" fill="#0b0909" stroke="var(--brass)" stroke-width="3"/>${[260,420].map(x=>`<rect x="${x}" y="612" width="34" height="8" rx="4" class="f-brass"/>`).join("")}
+  <path d="M260 508c-6-40 10-56 40-56h40c30 0 44 16 38 56z" fill="#3a3a3a"/><path d="M372 470q40 -20 50 10" stroke="#3a3a3a" stroke-width="9" fill="none"/>`)}
+<rect x="150" y="296" width="410" height="8" rx="4" class="f-brass"/>${pot(200,350,26)}${pot(270,360,32)}${pot(450,350,24)}${pot(510,356,28)}
+<!-- window + sink -->
+${hot("window","The window over the sink",680,150,400,470,windowAt(720,170,320,340,`<rect x="700" y="150" width="380" height="380" fill="url(#sky)"/><path d="M700 420C780 400 860 380 960 400S1060 390 1080 400V540H700z" fill="#060b10"/><ellipse cx="880" cy="250" rx="140" ry="20" fill="#0a1220" opacity=".6"/>`,"kwin"))}
+<rect x="600" y="600" width="740" height="22" class="f-woodL"/><rect x="600" y="600" width="740" height="22" fill="url(#woodSheen)"/>
+<path d="M740 600q140 40 280 0" fill="#e9e5dc"/><rect x="738" y="566" width="284" height="36" rx="6" fill="#e9e5dc"/><rect x="756" y="572" width="248" height="24" rx="4" fill="#bdb6a6"/>
+<path d="M880 566v-40h30" stroke="var(--brass)" stroke-width="6" fill="none"/>
+<rect x="610" y="622" width="720" height="262" class="f-wood"/><rect x="610" y="622" width="720" height="262" fill="url(#vSheen)"/>
+${[620,800,980,1160].map(x=>`<rect x="${x+8}" y="640" width="160" height="226" rx="4" fill="none" stroke="#000" stroke-opacity=".4" stroke-width="3"/><circle cx="${x+150}" cy="750" r="5" class="f-brass"/>`).join("")}
+${hot("breadbin","The bread bin",1090,520,120,90,`<path d="M1100 600V560Q1100 530 1150 530Q1200 530 1200 560V600z" fill="#5e7a6a"/><path d="M1100 600V560Q1100 530 1150 530Q1200 530 1200 560V600z" fill="url(#brassSheen)"/><text x="1150" y="578" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" font-size="13" fill="#efe2c4">BREAD</text>`)}
+<rect x="1230" y="560" width="22" height="40" rx="4" fill="#d9cfb8"/><rect x="1260" y="548" width="26" height="52" rx="4" fill="#9a6a3a"/>
+<!-- telephone -->
+${hot("phone","A wall telephone",1340,250,150,270,`<rect x="1362" y="270" width="104" height="200" rx="8" class="f-wood"/><rect x="1362" y="270" width="104" height="200" rx="8" fill="url(#vSheen)"/>
+  <circle cx="1394" cy="296" r="13" class="f-brass"/><circle cx="1434" cy="296" r="13" class="f-brass"/><circle cx="1414" cy="380" r="34" fill="#111" stroke="var(--brass)" stroke-width="3"/>
+  ${Array.from({length:10},(_,k)=>{const a=(-50+k*29)*Math.PI/180;return `<circle cx="${(1414+Math.cos(a)*23).toFixed(1)}" cy="${(380+Math.sin(a)*23).toFixed(1)}" r="5" fill="#efe6d4"/>`}).join("")}<circle cx="1414" cy="380" r="11" fill="#efe2c4"/>
+  <rect x="1470" y="320" width="18" height="70" rx="8" fill="#111"/><path d="M1478 390q10 60 -40 90q-30 20 -20 40" stroke="#222" stroke-width="3" fill="none"/>`)}
+${hot("calendar","A kitchen calendar",1500,200,120,180,`<rect x="1510" y="210" width="100" height="150" fill="#efe2c4"/><rect x="1510" y="210" width="100" height="32" fill="#8e2a22"/><path d="${Array.from({length:5},(_,i)=>`M1514 ${256+i*20}H1606`).join("")}${Array.from({length:6},(_,i)=>`M${1524+i*14} 246V350`).join("")}" stroke="#7a6a5a" stroke-width="1"/><circle cx="1566" cy="296" r="9" fill="none" stroke="#8e2a22" stroke-width="2"/><circle cx="1594" cy="316" r="9" fill="none" stroke="#2d4a6b" stroke-width="2"/>`)}
+<!-- bell board + pantry -->
+${hot("bellboard","The servants' bell board",1660,120,260,160,`<rect x="1670" y="130" width="240" height="130" rx="6" class="f-woodD"/><rect x="1670" y="130" width="240" height="130" rx="6" fill="url(#woodSheen)"/>${[0,1,2,3,4].map(i=>`<path d="M${1696+i*44} 160v14" stroke="var(--brass)" stroke-width="2"/><path d="M${1684+i*44} 192q12-22 24 0z" class="f-brass"/><rect x="${1680+i*44}" y="214" width="32" height="14" fill="#efe2c4"/>`).join("")}`)}
+${hot("pantry","The pantry door",1680,290,230,610,`<rect x="1700" y="300" width="190" height="584" class="f-woodD"/><rect x="1712" y="312" width="166" height="572" fill="#0c0806"/>
+  ${[400,500,600,700,800].map(y=>`<rect x="1712" y="${y}" width="166" height="8" class="f-woodL"/>`).join("")}${[[1730,380],[1760,372],[1800,380],[1840,370],[1726,480],[1790,478],[1736,580],[1830,578]].map(([x,y],i)=>`<rect x="${x}" y="${y}" width="22" height="${400-y+20>0?20:20}" rx="3" fill="${["#c9a24a","#7a3a2a","#2d4a6b","#d9cfb8"][i%4]}"/>`).join("")}
+  <path d="M1878 312L1940 330V866L1878 884z" class="f-wood"/><path d="M1878 312L1940 330V866L1878 884z" fill="url(#vSheen)"/><circle cx="1928" cy="600" r="6" class="f-brass"/>`)}
+<!-- table -->
+${hot("table","The kitchen table",1020,610,460,290,`<ellipse cx="1250" cy="892" rx="240" ry="14" fill="url(#contact)"/><rect x="1030" y="716" width="440" height="24" rx="4" class="f-woodL"/><rect x="1030" y="716" width="440" height="24" rx="4" fill="url(#woodSheen)"/>
+  <path d="M1050 740V884M1450 740V884M1080 740V870M1420 740V870" stroke="var(--woodD)" stroke-width="14"/>
+  <path d="M1200 716c-26 0-34-20-30-40 4-24 24-34 40-34s36 10 40 34c4 20-4 40-30 40z" fill="#e8e1d2"/><path d="M1250 680q26 -6 30 -26" stroke="#e8e1d2" stroke-width="7" fill="none"/><path d="M1170 690q-16 0 -16 12" stroke="#e8e1d2" stroke-width="6" fill="none"/>
+  <path d="M1300 716h34l-4-20h-26z" fill="#efe9de"/><path d="M1350 716h34l-4-20h-26z" fill="#efe9de"/><circle cx="1367" cy="700" r="5" fill="#f2d24a"/><ellipse cx="1317" cy="716" rx="26" ry="4" fill="#d9cfb8"/><ellipse cx="1367" cy="716" rx="26" ry="4" fill="#d9cfb8"/>`)}
+<path d="M1250 0V250" stroke="var(--iron)" stroke-width="3"/><path d="M1200 280Q1250 230 1300 280z" class="f-shade"/><rect x="1196" y="278" width="108" height="6" rx="3" class="f-brass"/>`;
+}
+function kitchenFront(){return darkMask([[1250,320,560],[350,780,420],[880,340,280,.7],[1414,380,200,.4]])+`<g id="fg"><path d="M-60 1060L-40 760Q60 740 120 790L160 1060z" class="f-woodD"/><path d="M-60 1060L-40 760Q60 740 120 790" fill="none" stroke="var(--woodL)" stroke-width="4" opacity=".5"/><path d="M2000 1060L2020 800Q2080 780 2120 820L2140 1060z" class="f-woodD"/></g>`+darkRect}
+function kitchenInit(){rainIn(742,192,276,296);P.steam=[];P.next=6}
+function kitchenFX(t,dt,c){
+  const flick=.85+.08*Math.sin(t*6.7)+.07*Math.sin(t*12.9);
+  glow(350,760,420*flick,c.fire,.2*flick);glow(271,755,70,c.fire2,.45*flick);
+  glow(1250,310,560,c.lamp,.17);glow(1250,290,90,c.lamp,.3);
+  glow(880,340,240,c.win,.07);windowRain(742,192,276,296,dt);
+  if(Math.random()<dt*3)P.steam.push({x:286+Math.random()*16,y:452,l:2.5,vx:(Math.random()-.5)*8});
+  P.steam=P.steam.filter(s=>(s.l-=dt)>0);for(const s of P.steam){s.y-=26*dt;s.x+=s.vx*dt+Math.sin(t*2+s.y*.05)*.4;glow(s.x,s.y,22+(2.5-s.l)*14,[230,230,235],.06*s.l)}
+}
+const slipHTML=()=>`<div class="paper hand" style="font-size:24px"><p>Telephone order, grocer:</p><p style="font-size:36px;letter-spacing:.08em;text-align:center;margin:12px 0">${ORDERSLIP.join(" &nbsp;")}</p><p style="text-align:right">A.H.</p></div>`;
+const KITCHEN_CLOSE={
+  phone(){markSeen("phone");AU.sfx("click");
+    openSheet("A wall telephone",`<div class="art" style="max-width:340px;margin:0 auto">${dialSVG()}</div><p class="desc">Ada's telephone is older than the house's wiring. Under each finger hole, the letters of the old dial.</p>${notedLine}`,"By the calendar")},
+  breadbin(){markSeen("breadbin");AU.sfx("open");
+    openSheet("The bread bin",`<p class="desc" style="margin-top:0">No bread. Just a folded slip in Ada's hand, tucked where only someone who cooks would look.</p>${slipHTML()}${notedLine}`,"On the counter")},
+  calendar(){markSeen("calendar");AU.sfx("paper");
+    openSheet("The kitchen calendar",`<div class="paper hand"><p><b>Monday:</b> Grocer, by telephone. Two figures each: the hole, then the place.</p><p><b>Wednesday:</b> Pip's seed.</p><p><b>Thursday:</b> T. to tea. Late.</p></div><p class="desc">Thursday was the night Ada disappeared.</p>${notedLine}`,"On the wall")},
+  table(){markSeen("table");AU.sfx("pick");
+    openSheet("The kitchen table",`<p class="desc" style="margin-top:0">A teapot, cold. Two cups. One has a faint smudge of Ada's lipstick. The other has a slice of lemon in the bottom, and Ada couldn't stand lemon. She had company that night.</p>${notedLine}`,"Centre of the room")},
+  pantry(){markSeen("pantry");AU.sfx("creak");
+    openSheet("The pantry",`<p class="desc" style="margin-top:0">Jars and tins in neat rows, every label in Ada's hand. On the top shelf, a clean square in the dust where a large tin stood. The label left behind on the shelf edge reads <em>"Housekeeping money."</em></p>${notedLine}`,"In the corner")},
+  stove(){markSeen("stove");AU.sfx("open");
+    openSheet("The kitchen range",`<p class="desc" style="margin-top:0">The range is still warm. Somebody has been keeping the fire in, every day since Ada vanished. Penrose's staff say it wasn't them.</p>${notedLine}`,"Against the wall")},
+  bellboard(){markSeen("bellboard");AU.sfx("find");
+    openSheet("The servants' bell board",`<p class="desc" style="margin-top:0">Five bells, one for each room: Study, Conservatory, Music Room, Bedroom, Front Door. As you watch, the bell for the study gives one small, slow swing and goes still.</p>${notedLine}`,"High on the wall")},
+  window(){markSeen("window");AU.sfx("pick");
+    openSheet("The window over the sink",`<p class="desc" style="margin-top:0">Rain again. From here you can see the path down to the old boathouse. The boathouse door is open, banging in the wind.</p>${notedLine}`,"Over the sink")}
+};
+function kitchenNotes(e){const N=[];
+  if(e.seen.breadbin)N.push(["letter","Grocer's slip, from the bread bin",`<div class="hand">${ORDERSLIP.join("&nbsp; ")}</div>`]);
+  if(e.seen.phone)N.push(["clock","Ada's telephone dial",`<p>${[2,3,4,5,6,7,8,9].map(d=>`${d} ${DIAL[d]}`).join(" · ")} · 1 has no letters</p>`]);
+  if(e.seen.calendar)N.push(["photo","Calendar",`<p>"Grocer, by telephone. Two figures each: the hole, then the place." Thursday: "T. to tea. Late."</p>`]);
+  if(e.seen.table)N.push(["desk","Table","<p>Two cups. One with lemon. Ada hated lemon.</p>"]);
+  if(e.seen.pantry)N.push(["shelf","Pantry",`<p>The "housekeeping money" tin is gone.</p>`]);
+  if(e.seen.stove)N.push(["fireplace","Range","<p>Still warm. Someone keeps the fire in.</p>"]);
+  if(e.seen.bellboard)N.push(["clock","Bell board","<p>The study bell swung on its own.</p>"]);
+  if(e.seen.window)N.push(["window","Window","<p>The boathouse door is open.</p>"]);
+  return N}
+
+/* =====================================================================
+   WEEK 5 · THE OBSERVATORY
+   ===================================================================== */
+const MORSE={A:".-",B:"-...",C:"-.-.",D:"-..",E:".",F:"..-.",G:"--.",H:"....",I:"..",J:".---",K:"-.-",L:".-..",M:"--",N:"-.",O:"---",P:".--.",Q:"--.-",R:".-.",S:"...",T:"-",U:"..-",V:"...-",W:".--",X:"-..-",Y:"-.--",Z:"--.."};
+const TAPE=["-...",".",".-","-.-.","---","-."];
+function tapeSVG(){let x=18,s="";TAPE.forEach(code=>{code.split("").forEach(m=>{if(m==="."){s+=`<circle cx="${x+4}" cy="40" r="5" fill="#1a120c"/>`;x+=18}else{s+=`<rect x="${x}" y="35" width="24" height="10" rx="3" fill="#1a120c"/>`;x+=34}});x+=26});
+  return `<svg viewBox="0 0 ${x+10} 80" role="img" aria-label="Paper tape of dots and dashes, with longer gaps between some groups" style="min-width:${Math.round((x+10)*1.15)}px"><rect x="0" y="14" width="${x+10}" height="52" fill="#efe2c4"/><path d="M0 14H${x+10}M0 66H${x+10}" stroke="#b9a882" stroke-width="2"/>${Array.from({length:Math.ceil((x+10)/12)},(_,i)=>`<circle cx="${i*12+6}" cy="22" r="1.8" fill="#b9a882"/>`).join("")}${s}</svg>`}
+function morseCard(){return `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:4px 10px;font:700 15px var(--serif);color:#2a2016">${Object.entries(MORSE).map(([l,c])=>`<div style="display:flex;justify-content:space-between;gap:6px"><span>${l}</span><span style="font-family:var(--sans);letter-spacing:.12em">${c.replace(/\./g,"•").replace(/-/g,"–")}</span></div>`).join("")}</div>`}
+function obsSVG(){
+  let beams="";for(let x=-600;x<2600;x+=200)beams+=`<path d="M${x} 0L${x+60} 120" stroke="var(--woodD)" stroke-width="22"/>`;
+  let planks="";for(let x=-600;x<2600;x+=60)planks+=`M${x} 120V884`;
+  let stars="";const r=rng(55);for(let i=0;i<70;i++){const a=r()*Math.PI*2,d=Math.sqrt(r())*188;stars+=`<circle cx="${(1000+Math.cos(a)*d).toFixed(1)}" cy="${(330+Math.sin(a)*d).toFixed(1)}" r="${(r()*1.6+.5).toFixed(1)}" fill="#fff" opacity="${(.4+r()*.6).toFixed(2)}"/>`}
+  return `${baseDefs()}${roomShell()}
+<path d="${planks}" stroke="#000" stroke-opacity=".25" stroke-width="2"/>
+<path d="M-600 0H2600V120L-600 160z" class="f-woodD"/>${beams}
+<!-- round window -->
+${hot("sky","The round window",790,120,420,420,`<clipPath id="oc"><circle cx="1000" cy="330" r="190"/></clipPath><g clip-path="url(#oc)"><g id="far"><rect x="780" y="110" width="440" height="440" fill="url(#sky)"/>${stars}<circle cx="1080" cy="260" r="28" fill="url(#moonG)"/><path d="M780 470C860 450 940 440 1000 452S1140 450 1220 470V560H780z" class="f-sea"/></g></g>
+  <circle cx="1000" cy="330" r="190" fill="url(#glassSheen)"/><circle cx="1000" cy="330" r="200" fill="none" class="s-woodD" stroke="var(--woodD)" stroke-width="22"/><path d="M1000 140V520M810 330H1190M866 196L1134 464M1134 196L866 464" stroke="var(--woodD)" stroke-width="7"/><circle cx="1000" cy="330" r="24" class="f-woodD"/>`)}
+<!-- star chart -->
+${hot("chart","A star chart",170,200,270,240,`<rect x="180" y="210" width="250" height="220" class="f-woodD"/><rect x="192" y="222" width="226" height="196" fill="#13213a"/>${Array.from({length:30},(_,i)=>`<circle cx="${200+(i*53)%210}" cy="${230+(i*37)%180}" r="${1+(i%3)*.7}" fill="#e9e4cf"/>`).join("")}
+  <path d="M240 260L280 250L320 270L350 255M300 320L330 340L360 330" stroke="#c9a24a" stroke-width="1.2" fill="none"/><circle cx="305" cy="245" r="5" fill="none" stroke="#e05a4a" stroke-width="1.6"/><path d="M305 250V410" stroke="#e05a4a" stroke-width="1.2" stroke-dasharray="4 4"/>`)}
+<!-- desk, logbook, signal lamp -->
+<ellipse cx="320" cy="890" rx="180" ry="12" fill="url(#contact)"/><rect x="150" y="640" width="340" height="22" class="f-woodL"/><rect x="150" y="640" width="340" height="22" fill="url(#woodSheen)"/><path d="M168 662V884M472 662V884" stroke="var(--woodD)" stroke-width="14"/><rect x="168" y="662" width="304" height="70" class="f-wood"/>
+${hot("logbook","A logbook",170,590,140,64,`<path d="M180 640L240 640L246 628L186 626z" class="f-paper"/><path d="M246 640L300 640L294 626L246 628z" class="f-paper"/><path d="M190 634h40M252 634h36" stroke="#555" stroke-opacity=".5"/>`)}
+${hot("lamp","A signal lamp",320,540,160,110,`<rect x="340" y="582" width="96" height="56" rx="8" fill="#2d3a3a"/><circle cx="436" cy="610" r="26" class="f-brass"/><circle cx="436" cy="610" r="19" fill="#d9e4ea"/><circle cx="436" cy="610" r="19" fill="url(#glassSheen)"/><path d="M360 582v-16h40v16" stroke="#2d3a3a" stroke-width="6" fill="none"/><rect x="354" y="600" width="40" height="22" rx="3" fill="#1d2626"/>`)}
+<path d="M200 640v-26M196 614h8" stroke="var(--brass)" stroke-width="4"/><rect x="196" y="596" width="8" height="18" fill="#efe6d4"/>
+<!-- telescope -->
+${hot("telescope","The telescope",780,340,420,560,`<ellipse cx="1000" cy="890" rx="170" ry="12" fill="url(#contact)"/><path d="M1000 640L900 886M1000 640L1100 886M1000 640V890" stroke="var(--woodD)" stroke-width="10" stroke-linecap="round"/>
+  <g transform="rotate(-32 1000 620)"><rect x="840" y="596" width="340" height="48" rx="10" class="f-brass"/><rect x="840" y="596" width="340" height="48" rx="10" fill="url(#brassSheen)"/><rect x="1170" y="586" width="40" height="68" rx="8" class="f-brassD"/><rect x="800" y="606" width="44" height="28" rx="6" class="f-brassD"/><rect x="900" y="592" width="10" height="56" class="f-brassD"/><rect x="1100" y="592" width="10" height="56" class="f-brassD"/></g>
+  <circle cx="1000" cy="636" r="12" class="f-brassD"/>`)}
+${hot("case","An open telescope case",540,760,260,140,`<ellipse cx="670" cy="892" rx="130" ry="10" fill="url(#contact)"/><rect x="560" y="820" width="220" height="64" rx="4" class="f-wood"/><rect x="560" y="820" width="220" height="64" rx="4" fill="url(#vSheen)"/><path d="M560 820L590 770H810L780 820z" class="f-woodL"/><rect x="574" y="826" width="192" height="20" fill="#5a1426"/><circle cx="700" cy="838" r="10" fill="none" stroke="#efe2c4" stroke-width="5"/>`)}
+<!-- orrery -->
+${hot("orrery","An orrery",1280,520,200,250,`<ellipse cx="1380" cy="760" rx="80" ry="8" fill="url(#contact)"/><path d="M1380 760V640M1340 760h80" stroke="var(--brass)" stroke-width="7"/><ellipse cx="1380" cy="620" rx="80" ry="22" fill="none" stroke="var(--brass)" stroke-width="2"/><ellipse cx="1380" cy="620" rx="50" ry="14" fill="none" stroke="var(--brass)" stroke-width="2"/><circle cx="1380" cy="620" r="14" fill="#e8b24a"/>`)}
+<!-- trunk -->
+${hot("trunk","An old travel trunk",1560,700,270,200,`<ellipse cx="1690" cy="892" rx="140" ry="10" fill="url(#contact)"/><rect x="1570" y="760" width="240" height="124" rx="6" fill="#5a3a22"/><rect x="1570" y="760" width="240" height="124" rx="6" fill="url(#vSheen)"/><path d="M1570 760Q1690 712 1810 760" fill="#6b4a2a"/><path d="M1630 740V884M1750 740V884" stroke="#2a190d" stroke-width="10"/><rect x="1676" y="790" width="28" height="22" rx="3" class="f-brass"/>
+  <rect x="1588" y="812" width="34" height="26" rx="3" fill="#d9c38a" transform="rotate(-8 1605 825)"/><rect x="1760" y="800" width="36" height="24" rx="3" fill="#7aa0b0" transform="rotate(6 1778 812)"/>`)}`;
+}
+function obsFront(){return darkMask([[300,580,440],[1000,330,520,.8],[1000,860,340,.5]])+`<g id="fg"><path d="M-80 1060L-60 760Q40 720 120 760L150 1060z" class="f-leather"/><path d="M2060 1060V500L1980 520L1960 1060z" class="f-woodD"/></g>`+darkRect}
+function obsInit(){P.motes=Array.from({length:50},()=>({x:850+Math.random()*300,y:520+Math.random()*380,vx:(Math.random()-.5)*5,vy:(Math.random()-.5)*4,p:Math.random()*6}));P.next=9999}
+function obsFX(t,dt,c){
+  glow(200,600,380,c.fire,.16);glow(200,596,40,c.fire2,.5);flame(200,596,12+2*Math.sin(t*9),c,t,0);
+  const centre=camX+viewW/2-1000+mouseP;
+  cx.save();cx.beginPath();cx.arc(1000,330,190,0,7);cx.clip();for(let i=0;i<14;i++){const x=840+(i*97)%330+centre*.12,y=170+(i*61)%260,a=.5+.5*Math.sin(t*(1.5+i%4)+i);glow(x,y,6,[255,255,255],a*.7)}cx.restore();
+  glow(1080+centre*.12,260,120,[230,235,255],.2);
+  const g=cx.createLinearGradient(1000,330,1000,900);g.addColorStop(0,rgba(c.win,.1));g.addColorStop(1,rgba(c.win,0));cx.fillStyle=g;cx.beginPath();cx.moveTo(880,480);cx.lineTo(1120,480);cx.lineTo(1250,900);cx.lineTo(750,900);cx.closePath();cx.fill();
+  for(const m of P.motes){m.x+=m.vx*dt;m.y+=m.vy*dt+Math.sin(t+m.p)*.08;if(m.x<780||m.x>1220)m.vx*=-1;if(m.y<480||m.y>900)m.vy*=-1;cx.fillStyle=rgba(c.win,.25+.3*Math.sin(t*1.4+m.p));cx.fillRect(m.x,m.y,2.2,2.2)}
+  [[80,22,.6],[50,14,1.1]].forEach(([rx,ry,sp],i)=>{const a=t*sp+i*2;glow(1380+Math.cos(a)*rx,620+Math.sin(a)*ry,10,i?[140,190,255]:[255,170,120],.8)});
+}
+const OBS_CLOSE={
+  case(){markSeen("case");AU.sfx("open");
+    openSheet("The telescope case",`<p class="desc" style="margin-top:0">The telescope's case lies open on the floor. Coiled in the velvet where an eyepiece should be, a long strip of paper tape, punched with marks.</p><div class="art" style="overflow-x:auto;background:#2a1a10;padding:10px 0">${tapeSVG()}</div><p class="small" style="margin-top:8px">Swipe the tape sideways if it runs off the edge.</p>${notedLine}`,"On the floor")},
+  lamp(){markSeen("lamp");AU.sfx("click");
+    openSheet("A signal lamp",`<p class="desc" style="margin-top:0">A ship's signalling lamp with a shutter you work by hand. Pasted inside the lid, a card worn soft with use:</p><div class="paper" style="padding:16px">${morseCard()}</div>${notedLine}`,"On the desk")},
+  logbook(){markSeen("logbook");AU.sfx("paper");
+    openSheet("Ada's logbook",`<div class="paper hand"><p><b>Oct 30.</b> Clear at last. Saturn very fine.</p><p>Tapes from the lighthouse keeper, as agreed. The short gaps sit inside a letter. The long gaps end each letter.</p><p>E. says the sea will be right on the twelfth.</p></div>${notedLine}`,"On the desk")},
+  telescope(){markSeen("telescope");AU.sfx("pick");
+    openSheet("The telescope",`<div class="art"><svg viewBox="0 0 300 300" role="img" aria-label="View through the telescope: dark sea and horizon"><defs><clipPath id="ey"><circle cx="150" cy="150" r="130"/></clipPath></defs><rect width="300" height="300" fill="#000"/><g clip-path="url(#ey)"><rect width="300" height="170" fill="#0b1626"/><rect y="170" width="300" height="130" fill="#08111d"/><path d="M0 170H300" stroke="#9fc3d6" stroke-opacity=".3"/>${Array.from({length:20},(_,i)=>`<circle cx="${(i*47)%300}" cy="${(i*29)%150}" r="1" fill="#fff" opacity=".7"/>`).join("")}<path d="M40 210H90M150 230H210M200 196H260" stroke="#9fc3d6" stroke-opacity=".15"/></g><circle cx="150" cy="150" r="130" fill="none" stroke="#222" stroke-width="10"/></svg></div>
+      <p class="desc">The telescope isn't pointed at the stars. It's aimed low and to the west, at one spot on the horizon where the charts show nothing but water.</p>${notedLine}`,"Centre of the room")},
+  chart(){markSeen("chart");AU.sfx("pick");
+    openSheet("A star chart",`<p class="desc" style="margin-top:0">A hand-inked chart of the northern sky. Ada has circled the North Star in red and drawn a dotted line from it straight down, off the edge of the chart, toward the sea.</p>${notedLine}`,"On the wall")},
+  orrery(){markSeen("orrery");AU.sfx("spin");
+    openSheet("An orrery",`<p class="desc" style="margin-top:0">A brass model of the planets, still turning. Clockwork like this runs down in a day. Somebody wound it recently.</p>${notedLine}`,"On a side table")},
+  trunk(){markSeen("trunk");AU.sfx("creak");
+    openSheet("An old travel trunk",`<p class="desc" style="margin-top:0">Covered in old shipping labels. Inside it's empty, but the dust shows a clean rectangle where a small suitcase stood until very recently.</p>${notedLine}`,"By the wall")},
+  sky(){markSeen("sky");AU.sfx("pick");
+    openSheet("The round window",`<p class="desc" style="margin-top:0">The storm has blown itself out. Stars, a bright moon, and far out on the black water, a single steady light that isn't the lighthouse.</p>${notedLine}`,"Overhead")}
+};
+function obsNotes(e){const N=[];
+  if(e.seen.case)N.push(["letter","Paper tape, from the telescope case",`<div style="overflow-x:auto">${tapeSVG()}</div>`]);
+  if(e.seen.lamp)N.push(["photo","Card inside the signal lamp",`<div style="margin-top:6px;color:var(--ui-text)">${morseCard().replace(/color:#2a2016/,"color:inherit")}</div>`]);
+  if(e.seen.logbook)N.push(["shelf","Logbook",`<p>"Tapes from the lighthouse keeper. The short gaps sit inside a letter. The long gaps end each letter." E. says the sea will be right on the twelfth.</p>`]);
+  if(e.seen.telescope)N.push(["globe","Telescope","<p>Aimed low and west, at empty water.</p>"]);
+  if(e.seen.chart)N.push(["window","Star chart","<p>A line from the North Star down to the sea.</p>"]);
+  if(e.seen.orrery)N.push(["clock","Orrery","<p>Wound recently.</p>"]);
+  if(e.seen.trunk)N.push(["desk","Trunk","<p>A small suitcase was taken from it.</p>"]);
+  if(e.seen.sky)N.push(["window","Round window","<p>A steady light far out on the water.</p>"]);
+  return N}
+
+/* =====================================================================
+   WEEK 6 · ADA'S BEDROOM
+   ===================================================================== */
+const CARVED=String.fromCharCode(73,83,76,65,78,68); // shown only as symbols
+function pigGlyph(ch,s=30,col="#1a120c",w=3){
+  const n=ch.charCodeAt(0)-65;let d="",dot=false;
+  if(n<18){const k=n%9;dot=n>=9;const r=Math.floor(k/3),c=k%3;if(r>0)d+=`M0 0H${s}`;if(r<2)d+=`M0 ${s}H${s}`;if(c>0)d+=`M0 0V${s}`;if(c<2)d+=`M${s} 0V${s}`}
+  else{const k=(n-18)%4;dot=n>=22;const m=s/2;d=[`M0 ${s*.12}L${m} ${s*.85}L${s} ${s*.12}`,`M${s*.12} 0L${s*.85} ${m}L${s*.12} ${s}`,`M${s*.88} 0L${s*.15} ${m}L${s*.88} ${s}`,`M0 ${s*.88}L${m} ${s*.15}L${s} ${s*.88}`][k]}
+  return `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>${dot?`<circle cx="${s/2}" cy="${s/2}" r="${w*1.1}" fill="${col}"/>`:""}`}
+function carvedSVG(){return `<svg viewBox="0 0 360 120" role="img" aria-label="Six symbols carved into the headboard"><defs><linearGradient id="hb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5232"/><stop offset="1" stop-color="#4a2e18"/></linearGradient></defs><rect width="360" height="120" rx="10" fill="url(#hb)"/>
+  ${CARVED.split("").map((ch,i)=>`<g transform="translate(${26+i*54} 38)"><g transform="translate(1.5 1.5)" opacity=".5">${pigGlyph(ch,40,"#f0d8b0",4)}</g>${pigGlyph(ch,40,"#2a160a",4)}</g>`).join("")}</svg>`}
+function samplerSVG(){
+  const grid=(ox,oy,start,dots)=>{let s=`<path d="M${ox+40} ${oy}V${oy+120}M${ox+80} ${oy}V${oy+120}M${ox} ${oy+40}H${ox+120}M${ox} ${oy+80}H${ox+120}" stroke="#7a1f2a" stroke-width="4" stroke-dasharray="6 3"/>`;
+    for(let k=0;k<9;k++){const r=Math.floor(k/3),c=k%3,x=ox+c*40+20,y=oy+r*40+20;s+=`<text x="${x-(dots?7:0)}" y="${y+7}" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" font-size="20" fill="#2d4a3a">${String.fromCharCode(start+k)}</text>${dots?`<circle cx="${x+9}" cy="${y}" r="3.4" fill="#7a1f2a"/>`:""}`}return s};
+  const ex=(ox,oy,start,dots)=>{let s=`<path d="M${ox} ${oy}L${ox+120} ${oy+120}M${ox+120} ${oy}L${ox} ${oy+120}" stroke="#7a1f2a" stroke-width="4" stroke-dasharray="6 3"/>`;
+    [[60,22],[22,60],[98,60],[60,98]].forEach(([x,y],k)=>{s+=`<text x="${ox+x-(dots?6:0)}" y="${oy+y+7}" text-anchor="middle" font-family="Cormorant Garamond,serif" font-weight="700" font-size="20" fill="#2d4a3a">${String.fromCharCode(start+k)}</text>${dots?`<circle cx="${ox+x+9}" cy="${oy+y}" r="3.4" fill="#7a1f2a"/>`:""}`});return s};
+  return `<svg viewBox="0 0 340 360" role="img" aria-label="Embroidered sampler. Two noughts-and-crosses grids: A to I, then J to R with a dot in each cell. Two X shapes: S top, T left, U right, V bottom, then W X Y Z the same way with dots."><rect width="340" height="360" rx="14" fill="#efe6d2"/><rect x="10" y="10" width="320" height="340" rx="10" fill="none" stroke="#c9a24a" stroke-width="3" stroke-dasharray="2 4"/>
+  <text x="170" y="40" text-anchor="middle" font-family="Caveat,cursive" font-size="22" fill="#7a1f2a">My secret stitch</text>${grid(30,56,65,false)}${grid(190,56,74,true)}${ex(30,200,83,false)}${ex(190,200,87,true)}
+  <text x="310" y="346" text-anchor="end" font-family="Caveat,cursive" font-size="17" fill="#6b5536">Ada, aged 10</text></svg>`}
+function bedSVG(){
+  return `${baseDefs()}${roomShell()}
+<rect x="-600" y="700" width="3200" height="200" class="f-wains"/><rect x="-600" y="700" width="3200" height="10" class="f-woodL" opacity=".7"/>
+<ellipse cx="1000" cy="960" rx="620" ry="60" class="f-rug"/><ellipse cx="1000" cy="960" rx="590" ry="52" fill="none" stroke="var(--rug2)" stroke-width="4" stroke-dasharray="14 8" opacity=".6"/>
+<!-- wardrobe -->
+${hot("wardrobe","The wardrobe",30,150,230,750,`<ellipse cx="145" cy="892" rx="120" ry="10" fill="url(#contact)"/><rect x="44" y="170" width="200" height="714" class="f-wood"/><rect x="44" y="170" width="200" height="714" fill="url(#vSheen)"/><rect x="34" y="156" width="220" height="22" class="f-woodL"/>
+  <rect x="60" y="200" width="80" height="640" fill="#0c0806"/><path d="M76 230h48" stroke="var(--brass)" stroke-width="3"/>${[86,104].map(x=>`<path d="M${x} 230l-10 14h20z" fill="none" stroke="var(--brass)" stroke-width="2"/><rect x="${x-12}" y="244" width="24" height="200" rx="4" fill="${x===86?"#5a2a3a":"#2d3a4a"}"/>`).join("")}
+  <path d="M140 200L60 214V826L140 840z" class="f-woodL" opacity=".9"/><rect x="146" y="200" width="82" height="640" fill="none" stroke="#000" stroke-opacity=".4" stroke-width="3"/><circle cx="154" cy="520" r="5" class="f-brass"/>`)}
+<!-- dressing table -->
+${hot("dresser","The dressing table",280,260,320,640,`<ellipse cx="440" cy="892" rx="150" ry="10" fill="url(#contact)"/><ellipse cx="440" cy="420" rx="96" ry="130" class="f-woodD"/><ellipse cx="440" cy="420" rx="82" ry="116" fill="#9fb4bf"/><ellipse cx="440" cy="420" rx="82" ry="116" fill="url(#glassSheen)"/><ellipse cx="440" cy="420" rx="82" ry="116" fill="#000" opacity=".3"/>
+  <rect x="470" y="330" width="36" height="46" fill="#efe2c4" transform="rotate(8 488 353)"/>
+  <rect x="300" y="580" width="280" height="22" class="f-woodL"/><rect x="310" y="602" width="260" height="90" class="f-wood"/><rect x="310" y="602" width="260" height="90" fill="url(#vSheen)"/><path d="M320 692V884M560 692V884" stroke="var(--woodD)" stroke-width="12"/>
+  <rect x="340" y="556" width="18" height="24" rx="4" fill="#c9a2b8"/><rect x="368" y="562" width="14" height="18" rx="3" fill="#8e2a22"/><ellipse cx="530" cy="574" rx="24" ry="6" class="f-brass"/>`)}
+<!-- four-poster bed -->
+<path d="M700 160V884M1300 160V884" stroke="var(--woodD)" stroke-width="22"/><rect x="684" y="140" width="632" height="26" class="f-woodL"/><circle cx="700" cy="134" r="14" class="f-woodL"/><circle cx="1300" cy="134" r="14" class="f-woodL"/>
+<path d="M690 166Q720 300 712 420L700 166z" class="f-curtain"/><path d="M1310 166Q1280 300 1288 420L1300 166z" class="f-curtain"/><path d="M712 166Q1000 230 1288 166" class="f-curtain" opacity=".9"/>
+${hot("headboard","The carved headboard",730,400,540,240,`<path d="M740 640V470Q1000 380 1260 470V640z" class="f-wood"/><path d="M740 640V470Q1000 380 1260 470V640z" fill="url(#vSheen)"/><path d="M760 630V484Q1000 404 1240 484V630z" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="3"/>
+  ${CARVED.split("").map((ch,i)=>`<g transform="translate(${812+i*66} 470)">${pigGlyph(ch,26,"#2a160a",3.4)}</g>`).join("")}`)}
+<rect x="720" y="640" width="560" height="90" rx="10" fill="#efe9de"/><path d="M720 690Q1000 660 1280 690V884H720z" class="f-rug"/><path d="M720 690Q1000 660 1280 690V884H720z" fill="url(#woodSheen)"/><path d="M720 760H1280M720 820H1280" stroke="var(--rug2)" stroke-opacity=".35" stroke-width="3"/>
+<ellipse cx="830" cy="640" rx="84" ry="30" fill="#f4efe6"/><ellipse cx="1170" cy="640" rx="84" ry="30" fill="#f4efe6"/>
+${hot("pillow","An embroidered cushion",940,590,120,90,`<rect x="954" y="604" width="92" height="66" rx="16" fill="#efe6d2"/><path d="M970 620h60M970 636h60M970 652h60M986 610v56M1014 610v56" stroke="#7a1f2a" stroke-width="2" stroke-dasharray="3 2"/>`)}
+<!-- nightstand -->
+${hot("nightstand","The nightstand",1320,500,170,400,`<ellipse cx="1405" cy="892" rx="80" ry="9" fill="url(#contact)"/><rect x="1336" y="600" width="140" height="22" class="f-woodL"/><rect x="1344" y="622" width="124" height="120" class="f-wood"/><path d="M1352 742V884M1460 742V884" stroke="var(--woodD)" stroke-width="10"/>
+  <rect x="1352" y="540" width="44" height="60" rx="2" class="f-brass"/><rect x="1358" y="546" width="32" height="48" fill="#8a7454"/><circle cx="1374" cy="562" r="6" fill="#4a3a28"/><rect x="1368" y="570" width="12" height="22" fill="#2d3a4a"/>
+  <rect x="1436" y="566" width="10" height="34" fill="#efe6d4"/><path d="M1428 600h26l-4-8h-18z" class="f-brass"/>`)}
+<!-- window at dawn -->
+${hot("window","The window",1540,150,320,520,windowAt(1560,170,280,460,`<defs><linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2440"/><stop offset=".6" stop-color="#7a4a6a"/><stop offset=".85" stop-color="#e8a070"/></linearGradient></defs><rect x="1540" y="150" width="320" height="500" fill="url(#dawn)"/><rect x="1540" y="500" width="320" height="150" fill="#2a3048"/><path d="M1600 540l60 6M1640 560l70 8M1690 580l60 4" stroke="#e8c0a0" stroke-opacity=".5" stroke-width="1.5"/><path d="M1700 530l14 -2 4 6h-22z" fill="#111"/>`,"bwin"))}
+<path d="M1530 140H1870" stroke="var(--brass)" stroke-width="8"/><path d="M1536 146H1610C1600 360 1612 600 1600 900H1530z" class="f-curtain"/><path d="M1536 146H1610C1600 360 1612 600 1600 900H1530z" fill="url(#curtainFold)"/><path d="M1864 146H1790C1800 360 1788 600 1800 900H1870z" class="f-curtain"/><path d="M1864 146H1790C1800 360 1788 600 1800 900H1870z" fill="url(#curtainFold)"/>`;
+}
+function bedFront(){return darkMask([[1440,560,460],[1700,400,440,.7],[1000,620,380,.45],[440,420,260,.3]])+`<g id="fg"><path d="M-60 1060L-50 820Q20 800 60 840L80 1060z" class="f-woodD"/><path d="M1980 1060L2000 780Q2060 770 2100 800L2120 1060z" class="f-woodD"/></g>`+darkRect}
+function bedInit(){P.motes=Array.from({length:50},()=>({x:1500+Math.random()*350,y:400+Math.random()*500,vx:(Math.random()-.5)*5,vy:(Math.random()-.5)*4,p:Math.random()*6}));P.next=9999}
+function bedFX(t,dt,c){
+  glow(1441,560,420,c.fire,.17);glow(1441,556,46,c.fire2,.5);flame(1441,563,12+2*Math.sin(t*9),c,t,0);
+  glow(1700,420,360,[255,190,150],.08);
+  const g=cx.createLinearGradient(1700,400,1500,1000);g.addColorStop(0,"rgba(255,200,160,.1)");g.addColorStop(1,"rgba(255,200,160,0)");cx.fillStyle=g;cx.beginPath();cx.moveTo(1582,630);cx.lineTo(1818,630);cx.lineTo(1700,1000);cx.lineTo(1300,1000);cx.closePath();cx.fill();
+  for(const m of P.motes){m.x+=m.vx*dt;m.y+=m.vy*dt+Math.sin(t+m.p)*.08;if(m.x<1300||m.x>1850)m.vx*=-1;if(m.y<400||m.y>1000)m.vy*=-1;cx.fillStyle=`rgba(255,215,180,${.2+.3*Math.sin(t*1.4+m.p)})`;cx.fillRect(m.x,m.y,2.2,2.2)}
+}
+const BED_CLOSE={
+  headboard(){markSeen("headboard");AU.sfx("pick");
+    openSheet("The carved headboard",`<p class="desc" style="margin-top:0">Among the carved vines, six small shapes cut by hand, newer than the rest. Lines and corners, some with a dot.</p><div class="art" style="background:#2a160a">${carvedSVG()}</div>${notedLine}`,"The bed")},
+  pillow(){markSeen("pillow");AU.sfx("pick");
+    openSheet("An embroidered cushion",`<p class="desc" style="margin-top:0">A child's sampler, stitched onto a cushion and kept on Ada's bed for seventy years.</p><div class="art" style="max-width:360px;margin:0 auto;background:#efe6d2">${samplerSVG()}</div>${notedLine}`,"On the bed")},
+  dresser(){markSeen("dresser");AU.sfx("paper");
+    openSheet("The dressing table",`<p class="desc" style="margin-top:0">A note is tucked into the mirror frame, in Ada's hand.</p><div class="paper hand"><p>Grandmother taught me her secret stitch when I was ten. Each letter is the shape of the little room it lives in. The dots matter.</p><p>If you've read this far, you're nearly there. Tell no one at the firm.</p></div>${notedLine}`,"By the wardrobe")},
+  wardrobe(){markSeen("wardrobe");AU.sfx("creak");
+    openSheet("The wardrobe",`<p class="desc" style="margin-top:0">Half the hangers are empty. Her heavy travelling coat is gone, and her walking boots. Whatever happened, Ada had time to pack.</p>${notedLine}`,"In the corner")},
+  nightstand(){markSeen("nightstand");AU.sfx("pick");
+    openSheet("The nightstand",`<p class="desc" style="margin-top:0">A photograph in a brass frame: a young man in a lighthouse keeper's uniform, laughing at whoever held the camera. Across the bottom: <em>"Always, E."</em></p>${notedLine}`,"Beside the bed")},
+  window(){markSeen("window");AU.sfx("pick");
+    openSheet("The window",`<p class="desc" style="margin-top:0">Dawn at last. Out on the flat grey sea, a small boat is heading west, its wake a long silver line behind it.</p>${notedLine}`,"Looking out")}
+};
+function bedNotes(e){const N=[];
+  if(e.seen.headboard)N.push(["letter","Carved into the headboard",`<div class="art" style="background:#2a160a;margin-top:6px">${carvedSVG()}</div>`]);
+  if(e.seen.pillow)N.push(["photo","Ada's sampler: \"my secret stitch\"",`<div style="max-width:260px;margin-top:6px">${samplerSVG()}</div>`]);
+  if(e.seen.dresser)N.push(["shelf","Note in the mirror",`<p>"Each letter is the shape of the little room it lives in. The dots matter." "Tell no one at the firm."</p>`]);
+  if(e.seen.wardrobe)N.push(["desk","Wardrobe","<p>Travelling coat and boots gone. She packed.</p>"]);
+  if(e.seen.nightstand)N.push(["portrait","Photograph",`<p>A young lighthouse keeper. "Always, E."</p>`]);
+  if(e.seen.window)N.push(["window","Window","<p>A small boat heading west at dawn.</p>"]);
+  return N}
+
+
+/* =====================================================================
    ROOMS REGISTRY (one entry per weekly episode)
    ===================================================================== */
 function studyInit(){
@@ -1415,11 +1695,24 @@ const ROOMS={
   music:{week:3,title:"The Music Room",kicker:"Where Ada played every night",svg:()=>musicSVG(),front:()=>musicFront(),init:musicInit,fx:musicFX,bolt:musicBolt,start:940,storm:[20,30],
     searchable:["bench","chart","piano","gramophone","musicbox","cello","window"],close:MUSIC_CLOSE,notes:musicNotes,
     narr:["Week three. Someone in this house has been talking to the newspapers. It wasn't me.","This is Ada's music room. She played every night at eleven. The neighbours set their clocks by it.","On the night she vanished, they say the piano stopped in the middle of a tune. At twenty to midnight."],
-    pulse:["Is Thomas Penrose hiding something?","Yes","No"]}
+    pulse:["Is Thomas Penrose hiding something?","Yes","No"]},
+  kitchen:{week:4,title:"The Kitchen",kicker:"Below stairs",svg:()=>kitchenSVG(),front:()=>kitchenFront(),init:kitchenInit,fx:kitchenFX,bolt:kitchenBolt,start:1000,storm:[10,15],
+    searchable:["phone","breadbin","calendar","table","pantry","stove","bellboard","window"],close:KITCHEN_CLOSE,notes:kitchenNotes,
+    narr:["Week four. Ada's cook left the house the day after she vanished, and nobody has been below stairs since.","And yet every morning there is fresh ash in the stove. Someone is keeping the fire in.","Ada did her shopping by telephone, the old way, with a slip by the phone. She never trusted anything newer than herself."],
+    pulse:["Who had tea with Ada that night?","Thomas Penrose","Someone else"]},
+  observatory:{week:5,title:"The Observatory",kicker:"The top of the tower",svg:()=>obsSVG(),front:()=>obsFront(),init:obsInit,fx:obsFX,bolt:kitchenBolt,start:1000,storm:[9999,1],
+    searchable:["sky","chart","logbook","lamp","telescope","case","orrery","trunk"],close:OBS_CLOSE,notes:obsNotes,
+    narr:["Week five. For the first time since she vanished, the sky over Gray Hollow is clear.","This is Ada's observatory, at the top of the tower. Her father built it to watch the ships come in.","The lighthouse keeper says that on the night she vanished he saw a light up here. Flashing, then dark."],
+    pulse:["Was Ada signalling for help, or making a plan?","Signalling for help","Making a plan"]},
+  bedroom:{week:6,title:"Ada's Bedroom",kicker:"The room she slept in",svg:()=>bedSVG(),front:()=>bedFront(),init:bedInit,fx:bedFX,bolt:kitchenBolt,start:1000,storm:[9999,1],
+    searchable:["wardrobe","dresser","headboard","pillow","nightstand","window"],close:BED_CLOSE,notes:bedNotes,
+    narr:["Week six. Halfway. I have kept this room locked until now, out of respect.","Ada slept in the same bed for sixty years. Her mother carved it, and her mother taught her to keep secrets in plain sight.","The maid says the bed was made, the morning after. Ada never made her own bed in her life."],
+    pulse:["Is Ada still alive?","Yes","No"]}
 };
-const ORDER=["study","conservatory","music"];
+function kitchenBolt(){let x=800+Math.random()*160,y=192;const b=[[x,y]];while(y<470){y+=20+Math.random()*30;x+=(Math.random()-.5)*36;b.push([x,y])}return b}
+const ORDER=["study","conservatory","music","kitchen","observatory","bedroom"];
 const SEALED_NAMES=["","","","Room 4","Room 5","Room 6","Room 7","Room 8","Room 9","Room 10","Room 11","The Vault"];
-const releaseDate=w=>{const d=new Date(2026,9,30+7*(w-1));return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})};
+const releaseDate=w=>{const d=new Date(2026,9,9+7*(w-1));return d.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})};
 let R=ROOMS.study;
 
 /* =====================================================================
@@ -1484,8 +1777,8 @@ function showHub(){
   const rows=[];
   for(let w=1;w<=12;w++){
     const id=ORDER[w-1],r=id&&ROOMS[id],unl=w<=S.week&&r;
-    if(w===5){rows.push(`<div class="epc more">Weeks 5 to 11: seven more rooms of the house</div>`)}
-    if(w>4&&w<12)continue;
+    if(w===8){rows.push(`<div class="epc more">Weeks 8 to 11: four more rooms of the house</div>`)}
+    if(w>7&&w<12)continue;
     if(unl){const e=S.eps[id];
       rows.push(`<button class="epc ${e.saved?"done":"open"}" data-room="${id}"><div class="wk">Week<b>${w}</b></div><div class="tx"><b>${r.title}</b><span>${e.saved?`Your word: ${e.theory}`:`${R_seen(id)} of ${r.searchable.length} places searched`}</span></div><span class="st">${e.saved?"Replay":R_seen(id)?"Continue":"Play"}</span></button>`)}
     else rows.push(`<div class="epc locked"><div class="wk">Week<b>${w}</b></div><div class="tx"><b>${w===12?"The Vault":"Sealed room"}</b><span>${w===12?"All twelve words, one chance at a time":"Penrose unseals it at 6 pm"}</span></div><span class="st">${releaseDate(w)}</span></div>`);
@@ -1495,7 +1788,7 @@ function showHub(){
     <div class="hmeta"><span class="chip"><i></i>${S.coins} Vault Coin${S.coins===1?"":"s"}</span><span class="chip">Week ${S.week} of 12</span><span class="chip">${WORLDS.find(w=>w.id===S.world).n}</span></div>
     <div class="eps">${rows.join("")}</div>
     <div class="vaultbox"><h3>Words for the vault</h3><p>Each room hides one word. The ones you've sealed collect here. Nobody tells you whether they're right until you stand at the vault in week 12.</p><div class="slots">${slots}</div></div>
-    <div class="demo"><p><b>Preview build.</b> Weeks 1 to 3 are already unsealed for testing. Week 4 isn't written yet; in the real game it would unseal on Friday.</p>
+    <div class="demo"><p><b>Preview build.</b> Weeks 1 to 6 are already unsealed for testing. Week 7 isn't written yet; in the real game it would unseal on Friday.</p>
       <div class="row"><button class="btn" id="hubMenu">Worlds and sound</button></div></div>`;
   const hub=$("#hub");hub.hidden=false;hub.scrollTop=0;
   hub.querySelectorAll("[data-room]").forEach(b=>b.onclick=()=>enterRoom(b.dataset.room));
@@ -1610,7 +1903,7 @@ $("#narrSkip").onclick=endIntro;
 /* =====================================================================
    BOOT
    ===================================================================== */
-S.week=Math.max(S.week||1,3);save(); // preview: weeks 2 and 3 back-dated so testers can play all three
+S.week=Math.max(S.week||1,6);save(); // preview: weeks 2 to 6 back-dated so testers can play all six
 document.body.dataset.world=S.world;paintSnd();loadRoom("study");
 $("#startBtn").onclick=()=>{
   AU.init();AU.resume();AU.sfx("open");
